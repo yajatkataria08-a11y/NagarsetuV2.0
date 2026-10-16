@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import type { SosEvent, Incident, DashboardStats, WardStats, Responder } from '@/types';
+import type { SosEvent, Incident, DashboardStats, WardStats, Responder, CitizenUser, NotificationItem } from '@/types';
+
 
 // ─── Mock seed data for local dev (no backend needed) ─────────────────────────
 const MOCK_SOS: SosEvent[] = [
@@ -122,6 +123,23 @@ const MOCK_RESPONDERS: Responder[] = [
   { id: 'off004', name: 'Anita Thakur', badge: 'MP-029', ward: 'Ward 3', phone: '+91-9001234570', status: 'on-duty', assignedCount: 4, resolvedCount: 4, avgResponseMin: 9 },
 ];
 
+const MOCK_USERS: CitizenUser[] = [
+  { id: 'usr001', name: 'Priya Sharma', phone: '+91-9876543210', ward: 'Ward 7', reportsCount: 14, sosCount: 1, falseReportsCount: 0, trustScore: 98, status: 'active', joinedAt: Date.now() - 120 * 86400000 },
+  { id: 'usr002', name: 'Mohit Agrawal', phone: '+91-9826011223', ward: 'Ward 5', reportsCount: 9, sosCount: 0, falseReportsCount: 0, trustScore: 92, status: 'active', joinedAt: Date.now() - 95 * 86400000 },
+  { id: 'usr003', name: 'Ananya Singh', phone: '+91-9123456789', ward: 'Ward 3', reportsCount: 6, sosCount: 1, falseReportsCount: 1, trustScore: 78, status: 'active', joinedAt: Date.now() - 40 * 86400000 },
+  { id: 'usr004', name: 'Vikram Chouhan', phone: '+91-9425099881', ward: 'Ward 9', reportsCount: 22, sosCount: 0, falseReportsCount: 0, trustScore: 99, status: 'active', joinedAt: Date.now() - 210 * 86400000 },
+  { id: 'usr005', name: 'Rohan Meena', phone: '+91-9893077665', ward: 'Ward 12', reportsCount: 5, sosCount: 0, falseReportsCount: 3, trustScore: 42, status: 'flagged', joinedAt: Date.now() - 15 * 86400000 },
+  { id: 'usr006', name: 'Karan Verma', phone: '+91-9755044332', ward: 'Ward 3', reportsCount: 2, sosCount: 0, falseReportsCount: 4, trustScore: 18, status: 'banned', joinedAt: Date.now() - 60 * 86400000 },
+];
+
+const MOCK_NOTIFICATIONS: NotificationItem[] = [
+  { id: 'notif001', type: 'sos', title: 'Critical SOS Activated', message: 'Priya Sharma triggered high-priority SOS near Arera Hills (Ward 7). Responders alerted.', timestamp: Date.now() - 3 * 60000, read: false, priority: 'critical', targetPage: 'sos' },
+  { id: 'notif002', type: 'incident', title: 'Severe Waterlogging Verified', message: 'AI confirmed 2ft deep waterlogging at Habibganj Underpass. Dispatched to Ward 9 team.', timestamp: Date.now() - 8 * 60000, read: false, priority: 'high', targetPage: 'incidents' },
+  { id: 'notif003', type: 'alert', title: 'Dynamic Hazard Geofence Active', message: 'Active flood hazard polygon created at Habibganj Underpass with 120m radius.', timestamp: Date.now() - 15 * 60000, read: false, priority: 'high', targetPage: 'hazards' },
+  { id: 'notif004', type: 'system', title: 'CCTV Vision Stream Online', message: 'Krisis 6-Camera Vision Wall running with automated YOLOv8 hazard detection.', timestamp: Date.now() - 45 * 60000, read: true, priority: 'normal', targetPage: 'surveillance' },
+  { id: 'notif005', type: 'alert', title: 'Citizen Fraud Flag Triggered', message: 'Rohan Meena exceeded false report threshold (3/5 rejected). Account flagged for audit.', timestamp: Date.now() - 120 * 60000, read: true, priority: 'normal', targetPage: 'users' },
+];
+
 // ─── Store State ───────────────────────────────────────────────────────────────
 interface StoreState {
   sos: SosEvent[];
@@ -129,6 +147,8 @@ interface StoreState {
   stats: DashboardStats;
   wards: WardStats[];
   responders: Responder[];
+  users: CitizenUser[];
+  notifications: NotificationItem[];
   connected: boolean;
   lastSync: number;
 }
@@ -140,6 +160,8 @@ export function useStore() {
     stats: MOCK_STATS,
     wards: MOCK_WARDS,
     responders: MOCK_RESPONDERS,
+    users: MOCK_USERS,
+    notifications: MOCK_NOTIFICATIONS,
     connected: false,
     lastSync: Date.now(),
   });
@@ -240,13 +262,64 @@ export function useStore() {
     }));
   }, []);
 
+  const bulkVerifyIncidents = useCallback((ids: string[]) => {
+    setState(s => ({
+      ...s,
+      incidents: s.incidents.map(i => ids.includes(i.id) ? { ...i, status: 'verified' } : i),
+    }));
+  }, []);
+
+  const bulkRejectIncidents = useCallback((ids: string[]) => {
+    setState(s => ({
+      ...s,
+      incidents: s.incidents.map(i => ids.includes(i.id) ? { ...i, status: 'rejected' } : i),
+    }));
+  }, []);
+
+  const bulkAssignIncidents = useCallback((ids: string[], officerName: string) => {
+    setState(s => ({
+      ...s,
+      incidents: s.incidents.map(i => ids.includes(i.id) ? { ...i, assignedOfficer: officerName, status: 'dispatched' } : i),
+    }));
+  }, []);
+
+  const updateUserStatus = useCallback((id: string, status: CitizenUser['status']) => {
+    setState(s => ({
+      ...s,
+      users: s.users.map(u => u.id === id ? { ...u, status } : u),
+    }));
+  }, []);
+
+  const markAllNotificationsRead = useCallback(() => {
+    setState(s => ({
+      ...s,
+      notifications: s.notifications.map(n => ({ ...n, read: true })),
+    }));
+  }, []);
+
+  const markNotificationRead = useCallback((id: string) => {
+    setState(s => ({
+      ...s,
+      notifications: s.notifications.map(n => n.id === id ? { ...n, read: true } : n),
+    }));
+  }, []);
+
+  const unreadNotifsCount = state.notifications.filter(n => !n.read).length;
+
   return {
     ...state,
     activeSos,
     criticalIncidents,
+    unreadNotifsCount,
     resolveSos,
     acknowledgeeSos,
     verifyIncident,
     rejectIncident,
+    bulkVerifyIncidents,
+    bulkRejectIncidents,
+    bulkAssignIncidents,
+    updateUserStatus,
+    markAllNotificationsRead,
+    markNotificationRead,
   };
 }

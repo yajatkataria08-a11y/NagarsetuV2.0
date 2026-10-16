@@ -12,18 +12,19 @@ interface TacticalMapProps {
 
 export default function TacticalMap({ sos, incidents, selectedSosId }: TacticalMapProps) {
   const mapRef   = useRef<HTMLDivElement>(null);
-  const leafRef  = useRef<typeof import('leaflet') | null>(null);
-  const mapInst  = useRef<ReturnType<typeof import('leaflet').default.map> | null>(null);
-  const markersRef = useRef<ReturnType<typeof import('leaflet').default.marker>[]>([]);
+  const leafRef  = useRef<any>(null);
+  const mapInst  = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
 
   // ── Bootstrap map ────────────────────────────────────────────────────────────
   useEffect(() => {
     if (!mapRef.current || mapInst.current) return;
 
-    import('leaflet').then(L => {
+    import('leaflet').then(mod => {
+      const L = (mod as any).default || mod;
       leafRef.current = L;
 
-      const map = L.default.map(mapRef.current!, {
+      const map = L.map(mapRef.current!, {
         center: [23.2599, 77.4126], // Bhopal centre
         zoom: 13,
         zoomControl: false,
@@ -31,16 +32,16 @@ export default function TacticalMap({ sos, incidents, selectedSosId }: TacticalM
       });
 
       // Dark tactical tile layer (CartoDB Dark Matter)
-      L.default.tileLayer(
+      L.tileLayer(
         'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
         { maxZoom: 19 }
       ).addTo(map);
 
       // Zoom control bottom-right
-      L.default.control.zoom({ position: 'bottomright' }).addTo(map);
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
 
       // Attribution bottom-left (minimal)
-      L.default.control.attribution({ prefix: '© OpenStreetMap · CartoDB' })
+      L.control.attribution({ prefix: '© OpenStreetMap · CartoDB' })
         .addTo(map);
 
       mapInst.current = map;
@@ -66,7 +67,7 @@ export default function TacticalMap({ sos, incidents, selectedSosId }: TacticalM
     sos.forEach(s => {
       if (!s.location) return;
       const isActive = s.status === 'active';
-      const icon = L.default.divIcon({
+      const icon = L.divIcon({
         className: '',
         iconSize: [36, 36],
         iconAnchor: [18, 18],
@@ -81,7 +82,7 @@ export default function TacticalMap({ sos, incidents, selectedSosId }: TacticalM
         ">🚨</div>`,
       });
 
-      const marker = L.default.marker([s.location.lat, s.location.lng], { icon, zIndexOffset: 1000 })
+      const marker = L.marker([s.location.lat, s.location.lng], { icon, zIndexOffset: 1000 })
         .addTo(map)
         .bindPopup(`
           <div style="font-family:system-ui;min-width:160px">
@@ -117,7 +118,7 @@ export default function TacticalMap({ sos, incidents, selectedSosId }: TacticalM
           inc.severity >= 4 ? '#F97316' :
           inc.severity >= 3 ? '#F59E0B' : '#10B981';
 
-        const icon = L.default.divIcon({
+        const icon = L.divIcon({
           className: '',
           iconSize: [26, 26],
           iconAnchor: [13, 13],
@@ -129,7 +130,7 @@ export default function TacticalMap({ sos, incidents, selectedSosId }: TacticalM
           ">${emoji}</div>`,
         });
 
-        const marker = L.default.marker([inc.location.lat, inc.location.lng], { icon })
+        const marker = L.marker([inc.location.lat, inc.location.lng], { icon })
           .addTo(map)
           .bindPopup(`
             <div style="font-family:system-ui;min-width:160px">

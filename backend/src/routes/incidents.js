@@ -50,6 +50,30 @@ router.post('/', async (req, res) => {
 
     const newInc = await db.addIncident(incidentData);
     
+    // Asynchronously run AI verification
+    const aiVerifier = require('../services/aiVerifier');
+    aiVerifier.verifyIncident(newInc).then(async (aiRes) => {
+      let updatedStatus = newInc.status;
+      if (aiRes.recommended_action === 'auto_verify') {
+        updatedStatus = 'verified';
+      } else if (aiRes.recommended_action === 'auto_reject') {
+        updatedStatus = 'rejected';
+      } else {
+        updatedStatus = 'ai_verified';
+      }
+
+      const updated = await db.updateIncident(newInc.id, {
+        ai_score: aiRes.score,
+        ai_risk_level: aiRes.risk_level,
+        status: updatedStatus,
+        ai_feedback: aiRes.feedback || null
+      });
+
+      req.app.get('io')?.emit('incident:updated', updated);
+    }).catch(err => {
+      logger.warn('AI background triage error', { error: err.message });
+    });
+
     // Broadcast via WebSockets
     req.app.get('io')?.emit('new_incident', newInc);
     logger.info('Incident created', { id: newInc.id, type: newInc.type, ward: newInc.ward });

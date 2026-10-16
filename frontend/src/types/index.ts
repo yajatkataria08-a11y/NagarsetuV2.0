@@ -131,3 +131,28 @@ export interface TrackingSession {
   expiresAt: number;
   active: boolean;
 }
+
+export interface CitizenUser {
+  id: string;
+  name: string;
+  phone: string;
+  ward: string;
+  reportsCount: number;
+  sosCount: number;
+  falseReportsCount: number;
+  trustScore: number; // 0 - 100
+  status: 'active' | 'flagged' | 'banned';
+  joinedAt: number;
+}
+
+export interface NotificationItem {
+  id: string;
+  type: 'sos' | 'incident' | 'alert' | 'system';
+  title: string;
+  message: string;
+  timestamp: number;
+  read: boolean;
+  priority: 'critical' | 'high' | 'normal';
+  targetPage?: string;
+}
+

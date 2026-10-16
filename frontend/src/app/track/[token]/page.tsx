@@ -28,8 +28,8 @@ export default function TrackingPage({ params }: { params: { token: string } }) 
   const [data, setData] = useState<TrackingData | null>(MOCK_TRACKING);
   const [elapsed, setElapsed] = useState(0);
   const mapRef  = useRef<HTMLDivElement>(null);
-  const mapInst = useRef<ReturnType<typeof import('leaflet').default.map> | null>(null);
-  const markerRef = useRef<ReturnType<typeof import('leaflet').default.circleMarker> | null>(null);
+  const mapInst = useRef<any>(null);
+  const markerRef = useRef<any>(null);
 
   // Tick elapsed timer
   useEffect(() => {
@@ -58,22 +58,23 @@ export default function TrackingPage({ params }: { params: { token: string } }) 
   useEffect(() => {
     if (!mapRef.current || mapInst.current || !data) return;
 
-    import('leaflet').then(L => {
-      const map = L.default.map(mapRef.current!, {
+    import('leaflet').then(mod => {
+      const L = (mod as any).default || mod;
+      const map = L.map(mapRef.current!, {
         center: [data.lat, data.lng],
         zoom: 15,
         zoomControl: false,
         attributionControl: false,
       });
 
-      L.default.tileLayer(
+      L.tileLayer(
         'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
         { maxZoom: 19 }
       ).addTo(map);
 
-      L.default.control.zoom({ position: 'bottomright' }).addTo(map);
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-      const marker = L.default.circleMarker([data.lat, data.lng], {
+      const marker = L.circleMarker([data.lat, data.lng], {
         radius: 14,
         color: '#E53935',
         fillColor: '#E53935',
