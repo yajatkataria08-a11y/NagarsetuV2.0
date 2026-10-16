@@ -5,10 +5,12 @@ import type { Page } from '@/app/page';
 import { cn } from '@/lib/utils';
 
 const PAGE_TITLES: Record<Page, { title: string; subtitle: string }> = {
-  command:    { title: 'Command Center',  subtitle: 'Real-time SOS monitoring & incident triage' },
-  incidents:  { title: 'Incidents',       subtitle: 'Civic reports — AI verification & dispatch' },
-  analytics:  { title: 'Ward Analytics',  subtitle: 'Performance metrics & SLA tracking' },
-  responders: { title: 'Responders',      subtitle: 'Field officer roster & assignment' },
+  command:      { title: 'Command Center',        subtitle: 'Real-time SOS monitoring & incident triage' },
+  surveillance: { title: 'Zero-Scroll CCTV Wall', subtitle: 'Live 6-camera vision grid & automated YOLOv8 hazard detection' },
+  hazards:      { title: 'Hazard Geofences',      subtitle: 'Dynamic temporary danger zones with automated TTL expiration' },
+  incidents:    { title: 'Incidents',             subtitle: 'Civic reports — AI verification & dispatch' },
+  analytics:    { title: 'Ward Analytics',        subtitle: 'Performance metrics & SLA tracking' },
+  responders:   { title: 'Responders',            subtitle: 'Field officer roster & assignment' },
 };
 
 interface TopBarProps {

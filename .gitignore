@@ -44,3 +44,10 @@ nodejs.zip
 # ── IDE ───────────────────────────────────────
 .vscode/settings.json
 .idea/
+
+# ── Credentials & Secrets ──────────────────────
+*credential*
+.git-credentials
+*.key
+*.pem
+*.p12

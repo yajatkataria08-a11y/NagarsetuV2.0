@@ -2,7 +2,7 @@
 
 import {
   LayoutDashboard, AlertOctagon, BarChart3,
-  Users, ShieldCheck, Zap,
+  Users, ShieldCheck, Zap, Video, ShieldAlert,
 } from 'lucide-react';
 import type { Page } from '@/app/page';
 import { cn } from '@/lib/utils';
@@ -28,6 +28,18 @@ const NAV_ITEMS: {
     label: 'Command Center',
     badge: p => p.activeSosCount || null,
     badgeClass: 'bg-siren text-white animate-siren-pulse',
+  },
+  {
+    id: 'surveillance',
+    icon: Video,
+    label: 'CCTV Wall (Krisis)',
+    badge: () => 2,
+    badgeClass: 'bg-siren text-white',
+  },
+  {
+    id: 'hazards',
+    icon: ShieldAlert,
+    label: 'Hazard Geofences',
   },
   {
     id: 'incidents',
@@ -60,7 +72,7 @@ export default function Sidebar({ activePage, onNavigate, activeSosCount, pendin
         </div>
         <div>
           <p className="text-sm font-bold text-ink leading-none">NagarSetu</p>
-          <p className="text-[10px] text-mink tracking-widest uppercase mt-0.5">V2 · Command</p>
+          <p className="text-[10px] text-mink tracking-widest uppercase mt-0.5">V2 · Command Grid</p>
         </div>
       </div>
 

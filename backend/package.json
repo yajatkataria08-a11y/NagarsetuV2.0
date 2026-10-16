@@ -1,0 +1,32 @@
+{
+  "name": "nagarsetu-api-gateway",
+  "version": "2.0.0",
+  "description": "NagarSetu V2 — Unified API Gateway (Phase 3)",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev":   "nodemon src/index.js",
+    "start": "node src/index.js",
+    "lint":  "eslint src/"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.46.1",
+    "cors":                  "^2.8.5",
+    "dotenv":                "^16.4.5",
+    "express":               "^4.21.1",
+    "express-rate-limit":    "^7.4.1",
+    "helmet":                "^8.0.0",
+    "morgan":                "^1.10.0",
+    "socket.io":             "^4.8.0",
+    "twilio":                "^5.3.4",
+    "uuid":                  "^10.0.0",
+    "winston":               "^3.14.2",
+    "ws":                    "^8.18.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

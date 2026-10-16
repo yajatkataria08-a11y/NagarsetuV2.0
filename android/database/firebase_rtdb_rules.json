@@ -1,0 +1,41 @@
+{
+  "rules": {
+    "live_tracks": {
+      "$sessionId": {
+        // Anyone who knows the sessionId can read (trusted contact link sharing)
+        ".read": "auth != null || root.child('live_tracks').child($sessionId).child('active').val() == true",
+
+        // Only the session owner can write GPS points
+        ".write": "auth != null && (
+          !data.exists() ||
+          data.child('owner_uid').val() == auth.uid
+        )",
+
+        "locations": {
+          "$locKey": {
+            // Enforce GPS point schema — no arbitrary data
+            ".validate": "newData.hasChildren(['lat', 'lng', 'accuracy', 'timestamp'])
+              && newData.child('lat').isNumber()
+              && newData.child('lng').isNumber()
+              && newData.child('accuracy').isNumber()
+              && newData.child('timestamp').isNumber()
+              && newData.child('lat').val() >= -90  && newData.child('lat').val() <= 90
+              && newData.child('lng').val() >= -180 && newData.child('lng').val() <= 180"
+          }
+        },
+
+        // Session metadata validation
+        "owner_uid":  { ".validate": "newData.isString() && newData.val().length > 0" },
+        "started_at": { ".validate": "newData.isNumber()" },
+        "expires_at": { ".validate": "newData.isNumber() && newData.val() > data.child('started_at').val()" },
+        "active":     { ".validate": "newData.isBoolean()" }
+      }
+    },
+
+    // All other paths are denied by default
+    "$other": {
+      ".read":  false,
+      ".write": false
+    }
+  }
+}

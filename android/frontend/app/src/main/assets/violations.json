@@ -1,0 +1,5 @@
+[
+  {"id": "v1", "type": "NO_HELMET", "vehicle": "bike", "baseFineInr": 1000},
+  {"id": "v2", "type": "SPEEDING", "vehicle": "car", "baseFineInr": 2000},
+  {"id": "v3", "type": "SIGNAL_JUMP", "vehicle": "car", "baseFineInr": 5000}
+]

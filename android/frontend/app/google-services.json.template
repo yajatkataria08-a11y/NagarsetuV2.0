@@ -1,0 +1,62 @@
+{
+  "_comment": [
+    "═══════════════════════════════════════════════════════════════",
+    "  PLACEHOLDER — Replace with your real google-services.json",
+    "═══════════════════════════════════════════════════════════════",
+    "",
+    "Steps to generate:",
+    "  1. Go to https://console.firebase.google.com",
+    "  2. Create project (or open existing): 'NagarSetu'",
+    "  3. Add Android app:",
+    "       Package name:  com.nagarsetu",
+    "       App nickname:  NagarSetu Android",
+    "       SHA-1:  run `./gradlew signingReport` to get your debug SHA",
+    "  4. Download google-services.json",
+    "  5. Place it at:  frontend/app/google-services.json",
+    "     (alongside the app-level build.gradle.kts)",
+    "",
+    "Enable these Firebase services in the console:",
+    "  ✅ Authentication  → Sign-in method → Google (for optional Google login)",
+    "  ✅ Realtime Database → Create database → Start in test mode",
+    "     then apply database/firebase_rtdb_rules.json",
+    "  ✅ Firestore Database → Create database → Production mode",
+    "     then apply database/firestore_rules.rules",
+    "  ✅ Cloud Messaging  → (auto-enabled)",
+    "  ✅ Analytics        → (auto-enabled with google-services plugin)",
+    "  ✅ Crashlytics      → Enable in Firebase console",
+    "",
+    "After placing the real file, delete this _comment key."
+  ],
+  "project_info": {
+    "project_number": "YOUR_PROJECT_NUMBER",
+    "project_id":     "nagarsetu-bhopal",
+    "storage_bucket": "nagarsetu-bhopal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:YOUR_PROJECT_NUMBER:android:YOUR_APP_ID",
+        "android_client_info": {
+          "package_name": "com.nagarsetu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "YOUR_WEB_CLIENT_ID.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "YOUR_ANDROID_API_KEY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

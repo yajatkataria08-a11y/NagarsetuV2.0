@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "520957675828",
+    "project_id": "nagarsetu-fb203",
+    "storage_bucket": "nagarsetu-fb203.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520957675828:android:6162318e863c77b180fd61",
+        "android_client_info": {
+          "package_name": "com.nagarsetu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7GbQIwYJlgnr3HUem-eDhoog_5XiFLcM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

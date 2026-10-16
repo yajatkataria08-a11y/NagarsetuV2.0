@@ -1,0 +1,324 @@
+{
+  "version": "2026-01",
+  "defaultCity": "Bhopal",
+  "defaultState": "Madhya Pradesh",
+  "lastUpdated": "2026-01-01",
+
+  "violations": [
+    {
+      "id": "VIO_HELMET",
+      "type": "NO_HELMET",
+      "label": "No Helmet",
+      "emoji": "⛑️",
+      "mvActSection": "129",
+      "description": "Riding two-wheeler without ISI-marked helmet",
+      "applies": ["BIKE"],
+      "fines": {
+        "IN": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 },
+        "BD": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "BT": { "base": 300, "repeat": 600, "thirdPlus": 1200 },
+        "MM": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 },
+        "NP": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "LK": { "base": 2500, "repeat": 5000, "thirdPlus": 10000 },
+        "TH": { "base": 500, "repeat": 1000, "thirdPlus": 2000 }
+      },
+      "stateAmendment": {
+        "MP": { "base": 1000, "note": "Applies to rider and pillion both; each charged separately" }
+      },
+      "tipHindi": "Bina helmet ke bike chalana Section 129 ke tahat ₹1,000 ka fine.",
+      "tipEnglish": "No helmet fine ₹1,000 (first offence). Applies to rider AND pillion separately."
+    },
+    {
+      "id": "VIO_SPEED",
+      "type": "SPEEDING",
+      "label": "Speeding",
+      "emoji": "💨",
+      "mvActSection": "183",
+      "description": "Exceeding prescribed speed limit",
+      "applies": ["BIKE", "CAR", "TRUCK", "AUTO", "OTHER"],
+      "fines": {
+        "IN": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 },
+        "BD": { "base": 2000, "repeat": 4000, "thirdPlus": 8000 },
+        "BT": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "MM": { "base": 5000, "repeat": 10000, "thirdPlus": 20000 },
+        "NP": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 },
+        "LK": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 },
+        "TH": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 }
+      },
+      "vehicleMultipliers": {
+        "TRUCK": 2.5, "CAR": 1.0, "BIKE": 1.0, "AUTO": 1.2, "OTHER": 1.5
+      },
+      "stateAmendment": {
+        "MP": { "note": "DL suspension on 3rd offence within 12 months" }
+      },
+      "tipHindi": "Speed limit todne par ₹1,000 (car/bike) aur ₹2,500 (truck) fine. Section 183.",
+      "tipEnglish": "Speeding fine ₹1,000 (car/bike), ₹2,500 (heavy vehicle). 3rd offence = DL suspension."
+    },
+    {
+      "id": "VIO_SIGNAL",
+      "type": "SIGNAL_JUMP",
+      "label": "Signal Jump",
+      "emoji": "🚦",
+      "mvActSection": "119",
+      "description": "Jumping red traffic signal",
+      "applies": ["BIKE", "CAR", "TRUCK", "AUTO", "OTHER"],
+      "fines": {
+        "IN": { "base": 1000, "repeat": 5000, "thirdPlus": 10000 },
+        "BD": { "base": 1500, "repeat": 3000, "thirdPlus": 6000 },
+        "BT": { "base": 300, "repeat": 600, "thirdPlus": 1200 },
+        "MM": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 },
+        "NP": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 },
+        "LK": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 },
+        "TH": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 }
+      },
+      "stateAmendment": {
+        "MP": { "note": "Camera-based e-challan to registered mobile. Repeat = DL suspension." }
+      },
+      "tipHindi": "Red light jump: ₹1,000. Camera se e-challan directly registered number pe. Repeat pe ₹5,000.",
+      "tipEnglish": "Red light jump ₹1,000 (first), ₹5,000 + DL suspension (repeat). E-challan via camera."
+    },
+    {
+      "id": "VIO_DRUNK",
+      "type": "DRUNK_DRIVING",
+      "label": "Drunk Driving",
+      "emoji": "🍺",
+      "mvActSection": "185",
+      "description": "Driving under influence of alcohol or drugs (BAC > 30mg/100ml)",
+      "applies": ["BIKE", "CAR", "TRUCK", "AUTO", "OTHER"],
+      "fines": {
+        "IN": { "base": 10000, "repeat": 15000, "thirdPlus": 20000 },
+        "BD": { "base": 5000, "repeat": 10000, "thirdPlus": 20000 },
+        "BT": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 },
+        "MM": { "base": 50000, "repeat": 100000, "thirdPlus": 200000 },
+        "NP": { "base": 5000, "repeat": 10000, "thirdPlus": 20000 },
+        "LK": { "base": 15000, "repeat": 25000, "thirdPlus": 50000 },
+        "TH": { "base": 10000, "repeat": 20000, "thirdPlus": 40000 }
+      },
+      "additionalPenalties": "6 months imprisonment (first), 2 years (repeat)",
+      "stateAmendment": {
+        "MP": { "note": "Mandatory sobriety test at police station. DL revoked on first offence." }
+      },
+      "tipHindi": "Drunk driving: ₹10,000 + 6 mahine jail. Repeat mein ₹15,000 + 2 saal. Section 185.",
+      "tipEnglish": "DUI: ₹10,000 + 6 months jail (first). ₹15,000 + 2 years (repeat). DL revoked."
+    },
+    {
+      "id": "VIO_PARKING",
+      "type": "PARKING",
+      "label": "Illegal Parking",
+      "emoji": "🅿️",
+      "mvActSection": "122",
+      "description": "Parking in prohibited zone or blocking traffic",
+      "applies": ["BIKE", "CAR", "TRUCK", "AUTO", "OTHER"],
+      "fines": {
+        "IN": { "base": 500, "repeat": 1500, "thirdPlus": 3000 },
+        "BD": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "BT": { "base": 200, "repeat": 400, "thirdPlus": 800 },
+        "MM": { "base": 2000, "repeat": 4000, "thirdPlus": 8000 },
+        "NP": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "LK": { "base": 2500, "repeat": 5000, "thirdPlus": 10000 },
+        "TH": { "base": 500, "repeat": 1000, "thirdPlus": 2000 }
+      },
+      "additionalPenalties": "Vehicle towing charge ₹500 extra in Bhopal",
+      "stateAmendment": {
+        "MP": { "note": "Bhopal BMC may tow vehicle; additional ₹500 towing + impound fee." }
+      },
+      "tipHindi": "Galat parking: ₹500. Towing bhi ho sakti hai - ₹500 towing charge extra. Section 122.",
+      "tipEnglish": "Illegal parking ₹500 in Bhopal. Vehicle may be towed + ₹500 towing charge."
+    },
+    {
+      "id": "VIO_NO_INSURANCE",
+      "type": "NO_INSURANCE",
+      "label": "No Insurance",
+      "emoji": "📋",
+      "mvActSection": "196",
+      "description": "Driving without valid third-party motor insurance",
+      "applies": ["BIKE", "CAR", "TRUCK", "AUTO", "OTHER"],
+      "fines": {
+        "IN": { "base": 2000, "repeat": 4000, "thirdPlus": 8000 },
+        "BD": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 },
+        "BT": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "MM": { "base": 10000, "repeat": 20000, "thirdPlus": 40000 },
+        "NP": { "base": 2000, "repeat": 4000, "thirdPlus": 8000 },
+        "LK": { "base": 5000, "repeat": 10000, "thirdPlus": 20000 },
+        "TH": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 }
+      },
+      "stateAmendment": {
+        "MP": { "note": "Third-party insurance mandatory. Repeat = 3-month DL suspension." }
+      },
+      "tipHindi": "Bina insurance: ₹2,000 pehli baar, ₹4,000 dobara. Third-party insurance compulsory.",
+      "tipEnglish": "No insurance: ₹2,000 first, ₹4,000 repeat. Third-party cover is mandatory (Section 196)."
+    },
+    {
+      "id": "VIO_NO_LICENSE",
+      "type": "NO_LICENSE",
+      "label": "No License",
+      "emoji": "🪪",
+      "mvActSection": "3/181",
+      "description": "Driving without a valid driving licence",
+      "applies": ["BIKE", "CAR", "TRUCK", "AUTO", "OTHER"],
+      "fines": {
+        "IN": { "base": 5000, "repeat": 10000, "thirdPlus": 15000 },
+        "BD": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 },
+        "BT": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 },
+        "MM": { "base": 10000, "repeat": 20000, "thirdPlus": 40000 },
+        "NP": { "base": 2000, "repeat": 4000, "thirdPlus": 8000 },
+        "LK": { "base": 5000, "repeat": 10000, "thirdPlus": 20000 },
+        "TH": { "base": 5000, "repeat": 10000, "thirdPlus": 20000 }
+      },
+      "additionalPenalties": "Up to 3 months imprisonment",
+      "stateAmendment": {
+        "MP": { "note": "Section 3 read with 181. Also possible 3-month imprisonment." }
+      },
+      "tipHindi": "Bina DL ke: ₹5,000 fine + 3 mahine jail possible. Section 3/181 MV Act.",
+      "tipEnglish": "No DL: ₹5,000 fine + up to 3 months imprisonment. Section 3/181 MV Act."
+    },
+    {
+      "id": "VIO_NO_SEATBELT",
+      "type": "NO_SEATBELT",
+      "label": "No Seat Belt",
+      "emoji": "🔒",
+      "mvActSection": "138",
+      "description": "Not wearing seat belt — applies to all occupants",
+      "applies": ["CAR", "TRUCK", "OTHER"],
+      "fines": {
+        "IN": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 },
+        "BD": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "BT": { "base": 200, "repeat": 400, "thirdPlus": 800 },
+        "MM": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 },
+        "NP": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "LK": { "base": 2500, "repeat": 5000, "thirdPlus": 10000 },
+        "TH": { "base": 500, "repeat": 1000, "thirdPlus": 2000 }
+      },
+      "stateAmendment": {
+        "MP": { "note": "₹1,000 per person not wearing seatbelt. Driver liable for all passengers." }
+      },
+      "tipHindi": "Bina seat belt: ₹1,000 per person. Driver + sabhi passengers ke liye. Section 138.",
+      "tipEnglish": "No seat belt ₹1,000 per occupant. Driver liable for all passengers. Section 138 MV Act."
+    },
+    {
+      "id": "VIO_MOBILE",
+      "type": "MOBILE_DRIVING",
+      "label": "Phone While Driving",
+      "emoji": "📱",
+      "mvActSection": "184",
+      "description": "Using mobile phone without hands-free while driving",
+      "applies": ["BIKE", "CAR", "TRUCK", "AUTO", "OTHER"],
+      "fines": {
+        "IN": { "base": 1000, "repeat": 5000, "thirdPlus": 10000 },
+        "BD": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 },
+        "BT": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "MM": { "base": 5000, "repeat": 10000, "thirdPlus": 20000 },
+        "NP": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "LK": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 },
+        "TH": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 }
+      },
+      "stateAmendment": {
+        "MP": { "note": "₹1,000 first offence. Repeat = ₹5,000 + DL suspension. Hands-free allowed." }
+      },
+      "tipHindi": "Mobile use karte hue drive: ₹1,000. Hands-free allowed. Repeat pe ₹5,000 + DL suspend.",
+      "tipEnglish": "Phone while driving ₹1,000 (first), ₹5,000 + DL suspension (repeat). Hands-free OK."
+    },
+    {
+      "id": "VIO_OVERLOAD",
+      "type": "OVERLOADING",
+      "label": "Overloading",
+      "emoji": "⚖️",
+      "mvActSection": "194",
+      "description": "Carrying load beyond permitted weight (trucks/commercial)",
+      "applies": ["TRUCK", "OTHER"],
+      "fines": {
+        "IN": { "base": 20000, "repeat": 40000, "thirdPlus": 80000 },
+        "BD": { "base": 10000, "repeat": 20000, "thirdPlus": 40000 },
+        "BT": { "base": 5000, "repeat": 10000, "thirdPlus": 20000 },
+        "MM": { "base": 50000, "repeat": 100000, "thirdPlus": 200000 },
+        "NP": { "base": 10000, "repeat": 20000, "thirdPlus": 40000 },
+        "LK": { "base": 15000, "repeat": 30000, "thirdPlus": 60000 },
+        "TH": { "base": 10000, "repeat": 20000, "thirdPlus": 40000 }
+      },
+      "additionalPenalties": "₹2,000 per extra tonne + vehicle detained",
+      "stateAmendment": {
+        "MP": { "note": "Vehicle detained at weigh station until excess load removed. Driver AND owner both liable." }
+      },
+      "tipHindi": "Overloading: ₹20,000 + ₹2,000 per extra tonne. Gaadi detained. Section 194.",
+      "tipEnglish": "Overloading: ₹20,000 + ₹2,000/extra tonne. Vehicle detained until unloaded. Section 194."
+    },
+    {
+      "id": "VIO_TRIPLE",
+      "type": "TRIPLE_RIDING",
+      "label": "Triple Riding",
+      "emoji": "🏍️",
+      "mvActSection": "128",
+      "description": "Three or more persons on a two-wheeler",
+      "applies": ["BIKE"],
+      "fines": {
+        "IN": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 },
+        "BD": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "BT": { "base": 300, "repeat": 600, "thirdPlus": 1200 },
+        "MM": { "base": 2000, "repeat": 4000, "thirdPlus": 8000 },
+        "NP": { "base": 500, "repeat": 1000, "thirdPlus": 2000 },
+        "LK": { "base": 2500, "repeat": 5000, "thirdPlus": 10000 },
+        "TH": { "base": 500, "repeat": 1000, "thirdPlus": 2000 }
+      },
+      "stateAmendment": {
+        "MP": { "note": "Maximum 2 persons on two-wheeler. Fine ₹1,000. Section 128." }
+      },
+      "tipHindi": "Triple riding: ₹1,000 fine. Sirf 2 log two-wheeler par allowed. Section 128.",
+      "tipEnglish": "Triple riding (3+ on 2-wheeler): ₹1,000. Max 2 persons allowed. Section 128 MV Act."
+    },
+    {
+      "id": "VIO_RC_EXPIRED",
+      "type": "EXPIRED_RC",
+      "label": "Expired RC",
+      "emoji": "📄",
+      "mvActSection": "192",
+      "description": "Driving with expired Registration Certificate",
+      "applies": ["BIKE", "CAR", "TRUCK", "AUTO", "OTHER"],
+      "fines": {
+        "IN": { "base": 5000, "repeat": 10000, "thirdPlus": 15000 },
+        "BD": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 },
+        "BT": { "base": 1000, "repeat": 2000, "thirdPlus": 4000 },
+        "MM": { "base": 10000, "repeat": 20000, "thirdPlus": 40000 },
+        "NP": { "base": 2000, "repeat": 4000, "thirdPlus": 8000 },
+        "LK": { "base": 5000, "repeat": 10000, "thirdPlus": 20000 },
+        "TH": { "base": 3000, "repeat": 6000, "thirdPlus": 12000 }
+      },
+      "stateAmendment": {
+        "MP": { "note": "Renew RC at nearest RTO within 30 days of expiry. Online via Vahan portal." }
+      },
+      "tipHindi": "Expired RC: ₹5,000 fine. Nearest RTO ya Vahan portal se renew karein.",
+      "tipEnglish": "Expired RC: ₹5,000 fine. Renew at Bhopal RTO (TT Nagar) or vahan.parivahan.gov.in."
+    }
+  ],
+
+  "quickChips": [
+    "Helmet fine kitna hai?",
+    "Red light jump penalty",
+    "Drunk driving challan",
+    "Speeding fine for bike",
+    "No parking challan",
+    "Overloading truck fine",
+    "Triple riding fine",
+    "Bina license ke fine",
+    "Seat belt rule",
+    "Challan kaise bhare"
+  ],
+
+  "emergencyContacts": {
+    "IN": { "traffic": "0755-2443344", "emergency": "112", "rto": "0755-2770180" },
+    "BD": { "traffic": "9999", "emergency": "999" },
+    "BT": { "traffic": "112", "emergency": "112" },
+    "MM": { "traffic": "199", "emergency": "999" },
+    "NP": { "traffic": "103", "emergency": "100" },
+    "LK": { "traffic": "1990", "emergency": "1990" },
+    "TH": { "traffic": "1192", "emergency": "1669" }
+  },
+
+  "bhopalRto": {
+    "name": "Regional Transport Office, Bhopal",
+    "address": "T.T. Nagar, Bhopal, MP 462003",
+    "phone": "0755-2770180",
+    "hours": "Mon–Fri 10:00 AM – 5:00 PM",
+    "website": "https://transport.mp.gov.in",
+    "echallanPortal": "https://echallan.parivahan.gov.in"
+  }
+}

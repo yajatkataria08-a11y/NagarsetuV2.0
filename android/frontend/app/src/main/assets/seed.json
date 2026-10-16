@@ -1,0 +1,261 @@
+{
+  "reports": [
+    {
+      "id": "seed_001",
+      "type": "POTHOLE",
+      "description": "Deep pothole at Karond Square, 2 feet wide. Multiple tire bursts reported.",
+      "latitude": 23.258,
+      "longitude": 77.438,
+      "severity": 5,
+      "status": "open",
+      "reportedBy": "citizen",
+      "createdAt": "2026-05-18T10:30:00Z"
+    },
+    {
+      "id": "seed_002",
+      "type": "POOR_LIGHTING",
+      "description": "Complete darkness on Berasia Road near jail. Unsafe for pedestrians and women at night.",
+      "latitude": 23.268,
+      "longitude": 77.388,
+      "severity": 4,
+      "status": "verified",
+      "reportedBy": "demo",
+      "createdAt": "2026-05-17T20:15:00Z"
+    },
+    {
+      "id": "seed_003",
+      "type": "BROKEN_SIGNAL",
+      "description": "Traffic signal not working at 6 No. Stop, MP Nagar. Heavy traffic jam during peak hours.",
+      "latitude": 23.242,
+      "longitude": 77.468,
+      "severity": 4,
+      "status": "assigned",
+      "reportedBy": "citizen",
+      "createdAt": "2026-05-16T09:00:00Z"
+    },
+    {
+      "id": "seed_004",
+      "type": "SUSPICIOUS_ACTIVITY",
+      "description": "Chain snatching reported in Indrapuri Sector C. Two men on bike snatched gold chain.",
+      "latitude": 23.222,
+      "longitude": 77.398,
+      "severity": 5,
+      "status": "under_investigation",
+      "reportedBy": "victim",
+      "createdAt": "2026-05-15T19:45:00Z"
+    },
+    {
+      "id": "seed_005",
+      "type": "POTHOLE",
+      "description": "Large pothole on Hoshangabad Road near Ashima Mall. Causes traffic slowdown every evening.",
+      "latitude": 23.215,
+      "longitude": 77.432,
+      "severity": 5,
+      "status": "verified",
+      "reportedBy": "citizen",
+      "createdAt": "2026-05-14T15:20:00Z"
+    },
+    {
+      "id": "seed_006",
+      "type": "POOR_LIGHTING",
+      "description": "Streetlights not working on Shivaji Nagar main road for last 2 weeks. Accident risk high.",
+      "latitude": 23.245,
+      "longitude": 77.44,
+      "severity": 4,
+      "status": "open",
+      "reportedBy": "demo",
+      "createdAt": "2026-05-13T18:30:00Z"
+    },
+    {
+      "id": "seed_007",
+      "type": "BROKEN_SIGNAL",
+      "description": "Traffic signal malfunctioning at Danish Kunj Square. Blinking continuously for 3 days.",
+      "latitude": 23.225,
+      "longitude": 77.415,
+      "severity": 3,
+      "status": "assigned",
+      "reportedBy": "citizen",
+      "createdAt": "2026-05-12T11:00:00Z"
+    },
+    {
+      "id": "seed_008",
+      "type": "WATER_LOGGING",
+      "description": "Severe water logging at Kolar Road after light rain. Drainage completely blocked.",
+      "latitude": 23.192,
+      "longitude": 77.408,
+      "severity": 4,
+      "status": "in_progress",
+      "reportedBy": "citizen",
+      "createdAt": "2026-05-11T08:00:00Z"
+    },
+    {
+      "id": "seed_009",
+      "type": "FALLEN_TREE",
+      "description": "Large tree fallen on road near MP Nagar Bypass. Blocking one lane completely.",
+      "latitude": 23.242,
+      "longitude": 77.468,
+      "severity": 4,
+      "status": "resolved",
+      "reportedBy": "citizen",
+      "createdAt": "2026-05-10T07:30:00Z",
+      "resolvedAt": "2026-05-10T14:00:00Z"
+    },
+    {
+      "id": "seed_010",
+      "type": "GARBAGE_DUMPING",
+      "description": "Illegal garbage dumping at Bairagarh open space. Bad smell and stray animals gathering.",
+      "latitude": 23.252,
+      "longitude": 77.37,
+      "severity": 3,
+      "status": "open",
+      "reportedBy": "demo",
+      "createdAt": "2026-05-09T09:45:00Z"
+    },
+    {
+      "id": "seed_011",
+      "type": "ROAD_DAMAGE",
+      "description": "Road completely broken on Jahangirabad Main Road near police station. Vehicles struggling.",
+      "latitude": 23.255,
+      "longitude": 77.405,
+      "severity": 5,
+      "status": "verified",
+      "reportedBy": "citizen",
+      "createdAt": "2026-05-08T12:00:00Z"
+    },
+    {
+      "id": "seed_012",
+      "type": "SUSPICIOUS_ACTIVITY",
+      "description": "Strange vehicle roaming at night in Arera Colony. Police patrolling requested.",
+      "latitude": 23.228,
+      "longitude": 77.435,
+      "severity": 3,
+      "status": "under_investigation",
+      "reportedBy": "citizen",
+      "createdAt": "2026-05-07T22:30:00Z"
+    },
+    {
+      "id": "seed_013",
+      "type": "POOR_LIGHTING",
+      "description": "Entire street dark in MP Nagar Zone 2. Women safety concern.",
+      "latitude": 23.24,
+      "longitude": 77.465,
+      "severity": 4,
+      "status": "assigned",
+      "reportedBy": "demo",
+      "createdAt": "2026-05-06T20:00:00Z"
+    },
+    {
+      "id": "seed_014",
+      "type": "POTHOLE",
+      "description": "Series of potholes on Arera Colony main road. Dangerous for two-wheelers.",
+      "latitude": 23.225,
+      "longitude": 77.43,
+      "severity": 4,
+      "status": "open",
+      "reportedBy": "citizen",
+      "createdAt": "2026-05-05T14:30:00Z"
+    },
+    {
+      "id": "seed_015",
+      "type": "ENVIRONMENTAL",
+      "description": "Drainage water overflowing on Indrapuri road. Health hazard for residents.",
+      "latitude": 23.215,
+      "longitude": 77.415,
+      "severity": 4,
+      "status": "in_progress",
+      "reportedBy": "citizen",
+      "createdAt": "2026-05-04T10:00:00Z"
+    }
+  ],
+  "riskScores": {
+    "W01": {
+      "accident": 0.384,
+      "flood": 0.216,
+      "crime": 0.343,
+      "health": 0.265
+    },
+    "W02": {
+      "accident": 0.361,
+      "flood": 0.208,
+      "crime": 0.324,
+      "health": 0.255
+    },
+    "W03": {
+      "accident": 0.494,
+      "flood": 0.282,
+      "crime": 0.439,
+      "health": 0.333
+    },
+    "W04": {
+      "accident": 0.307,
+      "flood": 0.188,
+      "crime": 0.281,
+      "health": 0.231
+    },
+    "W05": {
+      "accident": 0.457,
+      "flood": 0.262,
+      "crime": 0.409,
+      "health": 0.314
+    },
+    "W06": {
+      "accident": 0.434,
+      "flood": 0.254,
+      "crime": 0.39,
+      "health": 0.304
+    },
+    "W07": {
+      "accident": 0.275,
+      "flood": 0.174,
+      "crime": 0.255,
+      "health": 0.217
+    },
+    "W08": {
+      "accident": 0.381,
+      "flood": 0.234,
+      "crime": 0.347,
+      "health": 0.28
+    },
+    "W09": {
+      "accident": 0.323,
+      "flood": 0.208,
+      "crime": 0.299,
+      "health": 0.25
+    },
+    "W10": {
+      "accident": 0.419,
+      "flood": 0.254,
+      "crime": 0.381,
+      "health": 0.302
+    },
+    "W11": {
+      "accident": 0.348,
+      "flood": 0.221,
+      "crime": 0.322,
+      "health": 0.265
+    },
+    "W12": {
+      "accident": 0.399,
+      "flood": 0.252,
+      "crime": 0.367,
+      "health": 0.297
+    },
+    "W13": {
+      "accident": 0.499,
+      "flood": 0.308,
+      "crime": 0.453,
+      "health": 0.356
+    }
+  },
+  "modelMeta": {
+    "trainedAt": "2026-05-29T16:04:50.595041",
+    "datasets": [
+      "NCRB 2022",
+      "IMD Bhopal Rainfall Normals",
+      "data.gov.in Road Accidents",
+      "OSM Overpass"
+    ],
+    "algorithm": "Ridge Regression (sklearn)",
+    "featureCount": 5
+  }
+}

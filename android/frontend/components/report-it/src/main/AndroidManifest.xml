@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fix #11: report-it module was missing this file, causing Gradle manifest merge failure -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" />

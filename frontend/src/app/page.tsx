@@ -8,8 +8,10 @@ import CommandPage from '@/components/pages/CommandPage';
 import IncidentsPage from '@/components/pages/IncidentsPage';
 import AnalyticsPage from '@/components/pages/AnalyticsPage';
 import RespondersPage from '@/components/pages/RespondersPage';
+import SurveillancePage from '@/components/pages/SurveillancePage';
+import HazardsPage from '@/components/pages/HazardsPage';
 
-export type Page = 'command' | 'incidents' | 'analytics' | 'responders';
+export type Page = 'command' | 'surveillance' | 'hazards' | 'incidents' | 'analytics' | 'responders';
 
 export default function Home() {
   const [activePage, setActivePage] = useState<Page>('command');
@@ -37,10 +39,12 @@ export default function Home() {
 
         {/* Page Content */}
         <main className="flex-1 overflow-hidden">
-          {activePage === 'command'    && <CommandPage   store={store} />}
-          {activePage === 'incidents'  && <IncidentsPage store={store} />}
-          {activePage === 'analytics'  && <AnalyticsPage store={store} />}
-          {activePage === 'responders' && <RespondersPage store={store} />}
+          {activePage === 'command'      && <CommandPage      store={store} />}
+          {activePage === 'surveillance' && <SurveillancePage />}
+          {activePage === 'hazards'      && <HazardsPage />}
+          {activePage === 'incidents'    && <IncidentsPage    store={store} />}
+          {activePage === 'analytics'    && <AnalyticsPage    store={store} />}
+          {activePage === 'responders'   && <RespondersPage   store={store} />}
         </main>
       </div>
     </div>

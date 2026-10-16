@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── city_alerts ─────────────────────────────────────────────────────────
+    // Ephemeral broadcast alerts (< 24h TTL).
+    // Written by Supabase Edge Functions / Firebase Admin SDK (server-side).
+    // Read by all authenticated users (and anonymous — alerts are public civic info).
+    match /city_alerts/{alertId} {
+      allow read:  if true;           // Public civic data — any device may read
+      allow write: if false;          // Only server (Admin SDK) may write — never client
+    }
+
+    // ── Default deny ────────────────────────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

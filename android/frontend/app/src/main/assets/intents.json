@@ -1,0 +1,37 @@
+{
+  "driveLegal": [
+    "pay challan", "helmet fine", "speed limit", "challan kaise bhare",
+    "red light fine", "drunk driving penalty", "ocr number plate"
+  ],
+  "reportIt": [
+    "report garbage", "open drain", "street light broken", "encroachment complaint",
+    "civic ticket", "ward authority"
+  ],
+  "parkEase": [
+    "parking near mp nagar", "hold parking slot", "qr parking ticket", "db city parking"
+  ],
+  "chargeUp": [
+    "ev charging", "start charging session", "soc battery", "tata power charger"
+  ],
+  "emergency": [
+    "sos ambulance", "golden hour", "call 108", "trauma centre bhopal"
+  ],
+  "roadWatch": [
+    "pothole report", "ai pothole detection", "road heatmap", "rw ticket"
+  ],
+  "greenRoute": [
+    "eco route", "bus br-101", "cycle dock", "co2 saved navigate"
+  ],
+  "healthWatch": [
+    "telemedicine doctor", "dengue hotspot", "online consultation"
+  ],
+  "predictive": [
+    "7 day forecast", "flood risk", "civic rag query"
+  ],
+  "raksha": [
+    "shake sos", "fake call safety", "share location contacts"
+  ],
+  "assistant": [
+    "nagarsetu ai help", "what can you do", "bhopal civic services"
+  ]
+}

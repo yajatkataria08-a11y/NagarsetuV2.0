@@ -1,0 +1,213 @@
+{
+  "city": "Bhopal",
+  "state": "Madhya Pradesh",
+  "country": "India",
+  "center_lat": 23.2599,
+  "center_lng": 77.4126,
+
+  "wards": [
+    {"id": "W01", "name": "Berasia", "latitude": 23.2820, "longitude": 77.3550, "authorityName": "Rajesh Sharma", "authorityHelpline": "+917552874100", "complaintCount": 142, "resolvedCount": 128, "budgetSanctioned": 8500000, "budgetSpent": 7200000, "slaBreaches": 14},
+    {"id": "W02", "name": "Kothakhaira", "latitude": 23.2700, "longitude": 77.3700, "authorityName": "Neha Verma", "authorityHelpline": "+917552874110", "complaintCount": 98, "resolvedCount": 85, "budgetSanctioned": 6200000, "budgetSpent": 5800000, "slaBreaches": 13},
+    {"id": "W03", "name": "Chunar Ganj", "latitude": 23.2550, "longitude": 77.3850, "authorityName": "Mohammed Khan", "authorityHelpline": "+917552874120", "complaintCount": 156, "resolvedCount": 132, "budgetSanctioned": 7200000, "budgetSpent": 6500000, "slaBreaches": 24},
+    {"id": "W04", "name": "Ayodhya Nagar", "latitude": 23.2380, "longitude": 77.3950, "authorityName": "Suresh Patel", "authorityHelpline": "+917552874130", "complaintCount": 88, "resolvedCount": 80, "budgetSanctioned": 7500000, "budgetSpent": 6800000, "slaBreaches": 8},
+    {"id": "W05", "name": "Govindpura", "latitude": 23.2220, "longitude": 77.4020, "authorityName": "Anita Rajput", "authorityHelpline": "+917552874140", "complaintCount": 175, "resolvedCount": 158, "budgetSanctioned": 11000000, "budgetSpent": 9800000, "slaBreaches": 17},
+    {"id": "W06", "name": "Indrapuri", "latitude": 23.2150, "longitude": 77.4150, "authorityName": "Vikram Singh", "authorityHelpline": "+917552874150", "complaintCount": 112, "resolvedCount": 95, "budgetSanctioned": 6800000, "budgetSpent": 6200000, "slaBreaches": 17},
+    {"id": "W07", "name": "Arera Colony", "latitude": 23.2280, "longitude": 77.4380, "authorityName": "Priyanka Mishra", "authorityHelpline": "+917552874160", "complaintCount": 95, "resolvedCount": 90, "budgetSanctioned": 12000000, "budgetSpent": 11000000, "slaBreaches": 5},
+    {"id": "W08", "name": "TT Nagar", "latitude": 23.2320, "longitude": 77.4580, "authorityName": "Rakesh Gupta", "authorityHelpline": "+917552874170", "complaintCount": 108, "resolvedCount": 96, "budgetSanctioned": 9500000, "budgetSpent": 8800000, "slaBreaches": 12},
+    {"id": "W09", "name": "MP Nagar", "latitude": 23.2400, "longitude": 77.4650, "authorityName": "Sanjay Mehta", "authorityHelpline": "+917552874180", "complaintCount": 132, "resolvedCount": 124, "budgetSanctioned": 15000000, "budgetSpent": 13800000, "slaBreaches": 8},
+    {"id": "W10", "name": "Shahpura", "latitude": 23.2100, "longitude": 77.4300, "authorityName": "Geeta Thakur", "authorityHelpline": "+917552874190", "complaintCount": 145, "resolvedCount": 130, "budgetSanctioned": 10500000, "budgetSpent": 9500000, "slaBreaches": 15},
+    {"id": "W11", "name": "Bairagarh", "latitude": 23.2520, "longitude": 77.3700, "authorityName": "Rahul Soni", "authorityHelpline": "+917552874200", "complaintCount": 78, "resolvedCount": 70, "budgetSanctioned": 5800000, "budgetSpent": 5200000, "slaBreaches": 8},
+    {"id": "W12", "name": "Karond", "latitude": 23.2580, "longitude": 77.4380, "authorityName": "Meena Gupta", "authorityHelpline": "+917552874210", "complaintCount": 95, "resolvedCount": 82, "budgetSanctioned": 6500000, "budgetSpent": 5900000, "slaBreaches": 13},
+    {"id": "W13", "name": "Misrod", "latitude": 23.2100, "longitude": 77.4050, "authorityName": "Arun Tiwari", "authorityHelpline": "+917552874220", "complaintCount": 168, "resolvedCount": 145, "budgetSanctioned": 7800000, "budgetSpent": 7100000, "slaBreaches": 23}
+  ],
+
+  "parkEase": [
+    {"id": "park_001", "name": "DB City Mall Parking", "latitude": 23.2330, "longitude": 77.4293, "totalSlots": 800, "availableSlots": 45, "occupancyRate": 94, "pricing": {"hourly": 30, "daily": 150, "monthly": 3000}, "hasEVCharging": true, "hasWheelchairAccess": true, "multiLevel": true, "openHours": "24x7", "indoorMapAvailable": true},
+    {"id": "park_002", "name": "Aashima Mall Parking", "latitude": 23.2150, "longitude": 77.4320, "totalSlots": 600, "availableSlots": 120, "occupancyRate": 80, "pricing": {"hourly": 20, "daily": 100, "monthly": 2000}, "hasEVCharging": true, "hasWheelchairAccess": true, "multiLevel": false, "openHours": "08:00-23:00", "indoorMapAvailable": false},
+    {"id": "park_003", "name": "Board Office Parking", "latitude": 23.2450, "longitude": 77.4280, "totalSlots": 200, "availableSlots": 15, "occupancyRate": 92, "pricing": {"hourly": 20, "daily": 80, "monthly": 1500}, "hasEVCharging": false, "hasWheelchairAccess": false, "multiLevel": false, "openHours": "07:00-22:00", "indoorMapAvailable": false},
+    {"id": "park_004", "name": "MP Nagar Multi-level Parking", "latitude": 23.2400, "longitude": 77.4650, "totalSlots": 450, "availableSlots": 78, "occupancyRate": 83, "pricing": {"hourly": 25, "daily": 120, "monthly": 2500}, "hasEVCharging": true, "hasWheelchairAccess": true, "multiLevel": true, "openHours": "24x7", "indoorMapAvailable": true},
+    {"id": "park_005", "name": "New Market Parking", "latitude": 23.2300, "longitude": 77.4200, "totalSlots": 150, "availableSlots": 8, "occupancyRate": 95, "pricing": {"hourly": 15, "daily": 60, "monthly": 1200}, "hasEVCharging": false, "hasWheelchairAccess": false, "multiLevel": false, "openHours": "09:00-21:00", "indoorMapAvailable": false},
+    {"id": "park_006", "name": "Rani Kamlapati Station Parking", "latitude": 23.2600, "longitude": 77.4120, "totalSlots": 300, "availableSlots": 56, "occupancyRate": 81, "pricing": {"hourly": 15, "daily": 70, "monthly": 1400}, "hasEVCharging": false, "hasWheelchairAccess": true, "multiLevel": false, "openHours": "24x7", "indoorMapAvailable": false}
+  ],
+
+  "greenRoute": {
+    "busRoutes": [
+      {"routeNo": "BR-101", "name": "BRTS Route 1", "stops": ["Misrod", "Shahpura", "MP Nagar", "Board Office", "Rani Kamlapati Station"], "frequency_mins": 15, "operatingHours": "06:00-22:00", "latitude": 23.2380, "longitude": 77.4620},
+      {"routeNo": "CB-11", "name": "City Bus 11", "stops": ["Bairagarh", "Karond", "Jahangirabad", "Rani Kamlapati Station"], "frequency_mins": 30, "operatingHours": "07:00-21:00", "latitude": 23.2520, "longitude": 77.3700},
+      {"routeNo": "CB-23", "name": "City Bus 23", "stops": ["Govindpura", "Indrapuri", "Arera Colony", "MP Nagar"], "frequency_mins": 20, "operatingHours": "06:30-22:30", "latitude": 23.2220, "longitude": 77.4020},
+      {"routeNo": "CB-45", "name": "City Bus 45", "stops": ["TT Nagar", "Arera Colony", "Board Office", "Shahpura", "Misrod"], "frequency_mins": 25, "operatingHours": "06:00-21:00", "latitude": 23.2320, "longitude": 77.4580}
+    ],
+    "busStops": [
+      {"id": "stop_001", "name": "MP Nagar Bus Stop", "latitude": 23.2380, "longitude": 77.4620, "routes": ["BR-101", "CB-23"]},
+      {"id": "stop_002", "name": "Board Office Bus Stop", "latitude": 23.2450, "longitude": 77.4280, "routes": ["BR-101", "CB-45"]},
+      {"id": "stop_003", "name": "Shahpura Bus Stop", "latitude": 23.2100, "longitude": 77.4300, "routes": ["BR-101", "CB-45"]},
+      {"id": "stop_004", "name": "Arera Colony Bus Stop", "latitude": 23.2280, "longitude": 77.4380, "routes": ["CB-23", "CB-45"]},
+      {"id": "stop_005", "name": "Rani Kamlapati Station", "latitude": 23.2600, "longitude": 77.4120, "routes": ["BR-101", "CB-11"]}
+    ],
+    "cycleStands": [
+      {"id": "cycle_001", "location": "MP Nagar Cycle Dock", "latitude": 23.2380, "longitude": 77.4620, "capacity": 20, "available_bikes": 12},
+      {"id": "cycle_002", "location": "Board Office Cycle Dock", "latitude": 23.2450, "longitude": 77.4280, "capacity": 15, "available_bikes": 5},
+      {"id": "cycle_003", "location": "DB City Cycle Dock", "latitude": 23.2330, "longitude": 77.4293, "capacity": 18, "available_bikes": 8},
+      {"id": "cycle_004", "location": "Rani Kamlapati Station Cycle Dock", "latitude": 23.2600, "longitude": 77.4120, "capacity": 12, "available_bikes": 3}
+    ],
+    "autoRickshawStands": [
+      {"id": "auto_001", "area": "Board Office Stand", "latitude": 23.2450, "longitude": 77.4280, "available_autos": 8},
+      {"id": "auto_002", "area": "MP Nagar Stand", "latitude": 23.2380, "longitude": 77.4620, "available_autos": 12},
+      {"id": "auto_003", "area": "Rani Kamlapati Station", "latitude": 23.2600, "longitude": 77.4120, "available_autos": 20},
+      {"id": "auto_004", "area": "Shahpura Stand", "latitude": 23.2100, "longitude": 77.4300, "available_autos": 6}
+    ]
+  },
+
+  "chargeUp": [
+    {"id": "ev_001", "name": "Ola Hypercharger - Pushpa Nagar", "latitude": 23.2350, "longitude": 77.4250, "chargerTypes": ["DC_FAST"], "totalSlots": 2, "availableSlots": 1, "pricing": 15, "operatingHours": "24x7", "nearbyParking": true, "connector": "CCS2"},
+    {"id": "ev_002", "name": "Tata Power - Extoll College", "latitude": 23.2400, "longitude": 77.4300, "chargerTypes": ["AC_SLOW"], "totalSlots": 1, "availableSlots": 1, "pricing": 12, "operatingHours": "24x7", "nearbyParking": true, "connector": "Type-2"},
+    {"id": "ev_003", "name": "IOCL - Mamnoon", "latitude": 23.2450, "longitude": 77.4350, "chargerTypes": ["DC_FAST"], "totalSlots": 2, "availableSlots": 2, "pricing": 14, "operatingHours": "24x7", "nearbyParking": true, "connector": "CCS2/CHAdeMO"},
+    {"id": "ev_004", "name": "Mahindra - First Choice Misrod", "latitude": 23.2200, "longitude": 77.4100, "chargerTypes": ["DC_FAST"], "totalSlots": 2, "availableSlots": 0, "pricing": 16, "operatingHours": "09:00-21:00", "nearbyParking": true, "connector": "CCS2"},
+    {"id": "ev_005", "name": "Tata Power - Khajuri", "latitude": 23.2480, "longitude": 77.4380, "chargerTypes": ["DC_FAST"], "totalSlots": 2, "availableSlots": 1, "pricing": 15, "operatingHours": "24x7", "nearbyParking": true, "connector": "CCS2"},
+    {"id": "ev_006", "name": "Tata Power - Taj Lakefront", "latitude": 23.2280, "longitude": 77.4380, "chargerTypes": ["AC_SLOW"], "totalSlots": 1, "availableSlots": 1, "pricing": 13, "operatingHours": "24x7", "nearbyParking": true, "connector": "Type-2"},
+    {"id": "ev_007", "name": "MG - Hriday Cars", "latitude": 23.2220, "longitude": 77.4120, "chargerTypes": ["DC_FAST"], "totalSlots": 2, "availableSlots": 1, "pricing": 17, "operatingHours": "10:00-20:00", "nearbyParking": true, "connector": "CCS2"}
+  ],
+
+  "healthWatch": {
+    "hospitals": [
+      {"id": "hosp_001", "name": "JP Hospital", "latitude": 23.2480, "longitude": 77.4280, "specialties": ["Cardiology", "Neurology", "Orthopedics"], "telemedicine": true, "beds": 300, "emergency": true, "phone": "+917552761515"},
+      {"id": "hosp_002", "name": "Bansal Hospital", "latitude": 23.2000, "longitude": 77.4200, "specialties": ["Cardiology", "Oncology", "Gastroenterology"], "telemedicine": true, "beds": 250, "emergency": true, "phone": "+917554095000"},
+      {"id": "hosp_003", "name": "Narmada Trauma Centre", "latitude": 23.2300, "longitude": 77.4400, "specialties": ["Trauma", "Emergency"], "telemedicine": false, "beds": 120, "emergency": true, "phone": "+917554040000"},
+      {"id": "hosp_004", "name": "Chirayu Hospital", "latitude": 23.2250, "longitude": 77.4350, "specialties": ["Cardiology", "Neurology"], "telemedicine": true, "beds": 180, "emergency": true, "phone": "+917554096000"},
+      {"id": "hosp_005", "name": "Sagar Hospital", "latitude": 23.2380, "longitude": 77.4620, "specialties": ["Orthopedics", "Gynecology"], "telemedicine": false, "beds": 150, "emergency": true, "phone": "+917554047000"},
+      {"id": "hosp_006", "name": "Ballabh ENT Hospital", "latitude": 23.2633, "longitude": 77.3993, "specialties": ["ENT"], "telemedicine": false, "beds": 50, "emergency": false, "phone": ""}
+    ],
+    "diagnosticLabs": [
+      {"id": "lab_001", "name": "Dr Lal PathLabs MP Nagar", "latitude": 23.2380, "longitude": 77.4620, "commonTests": ["CBC", "Lipid Profile", "Thyroid", "Liver Function"], "avgPrice": 800, "homeCollection": true},
+      {"id": "lab_002", "name": "SRL Diagnostics Arera Colony", "latitude": 23.2280, "longitude": 77.4350, "commonTests": ["CBC", "Kidney Function", "Diabetes Panel", "Vitamin Profile"], "avgPrice": 1200, "homeCollection": true},
+      {"id": "lab_003", "name": "Metropolis Healthcare Board Office", "latitude": 23.2450, "longitude": 77.4280, "commonTests": ["Full Body Checkup", "Cardiac Panel", "Allergy Tests"], "avgPrice": 1500, "homeCollection": true}
+    ],
+    "pharmacies": [
+      {"id": "med_001", "name": "Apollo Pharmacy MP Nagar", "latitude": 23.2380, "longitude": 77.4620, "24x7": true, "phone": "+917554088300"},
+      {"id": "med_002", "name": "MedPlus Arera Colony", "latitude": 23.2280, "longitude": 77.4380, "24x7": false, "phone": "+917554088400"},
+      {"id": "med_003", "name": "Wellness Pharmacy Board Office", "latitude": 23.2450, "longitude": 77.4280, "24x7": true, "phone": "+917554088500"}
+    ],
+    "epidemicData": {
+      "dengue": {"riskLevel": "MEDIUM", "casesLastWeek": 12, "hotspots": ["Kolar", "Misrod", "Karond"]},
+      "malaria": {"riskLevel": "LOW", "casesLastWeek": 3, "hotspots": ["Bairagarh", "Berasia"]},
+      "covid": {"riskLevel": "LOW", "casesLastWeek": 0, "hotspots": []},
+      "lastUpdated": "2026-05-20"
+    }
+  },
+
+  "emergencyAI": {
+    "traumaCentres": [
+      {"id": "trauma_001", "name": "Narmada Trauma Centre", "latitude": 23.2300, "longitude": 77.4400, "phone": "+917554040000", "icuBeds": 12, "goldenHourCapable": true},
+      {"id": "trauma_002", "name": "JP Hospital Emergency", "latitude": 23.2480, "longitude": 77.4280, "phone": "+917552761515", "icuBeds": 8, "goldenHourCapable": true}
+    ],
+    "fireStations": [
+      {"id": "fire_001", "name": "Fire Station HQ", "latitude": 23.2650, "longitude": 77.4150, "phone": "101", "responseTime": 5},
+      {"id": "fire_002", "name": "Govindpura Fire Station", "latitude": 23.2200, "longitude": 77.4050, "phone": "101", "responseTime": 7}
+    ],
+    "policeStations": [
+      {"id": "ps_001", "name": "Shahpura Police Station", "latitude": 23.2000, "longitude": 77.4220, "phone": "100", "jurisdiction": "Shahpura"},
+      {"id": "ps_002", "name": "MP Nagar Police Station", "latitude": 23.2380, "longitude": 77.4620, "phone": "100", "jurisdiction": "MP Nagar"},
+      {"id": "ps_003", "name": "Arera Colony Police Station", "latitude": 23.2280, "longitude": 77.4350, "phone": "100", "jurisdiction": "Arera Colony"},
+      {"id": "ps_004", "name": "Govindpura Police Station", "latitude": 23.2220, "longitude": 77.4080, "phone": "100", "jurisdiction": "Govindpura"},
+      {"id": "ps_005", "name": "Jahangirabad Police Station", "latitude": 23.2500, "longitude": 77.4050, "phone": "100", "jurisdiction": "Jahangirabad"},
+      {"id": "ps_006", "name": "Bairagarh Police Station", "latitude": 23.2520, "longitude": 77.3700, "phone": "100", "jurisdiction": "Bairagarh"},
+      {"id": "ps_007", "name": "Kolar Police Station", "latitude": 23.1920, "longitude": 77.4080, "phone": "100", "jurisdiction": "Kolar"},
+      {"id": "ps_008", "name": "Misrod Police Station", "latitude": 23.2080, "longitude": 77.4030, "phone": "100", "jurisdiction": "Misrod"}
+    ],
+    "emergencyNumbers": {
+      "police": "100",
+      "ambulance": "102",
+      "ambulance_alt": "108",
+      "fire": "101",
+      "women_helpline": "1091",
+      "childline": "1098",
+      "disaster_mgmt": "1077"
+    },
+    "signalOverrideIntersections": [
+      {"id": "so_001", "name": "MP Nagar 6 No. Stop", "latitude": 23.2420, "longitude": 77.4680},
+      {"id": "so_002", "name": "Board Office Square", "latitude": 23.2450, "longitude": 77.4280},
+      {"id": "so_003", "name": "Ashima Mall Square", "latitude": 23.2150, "longitude": 77.4320}
+    ]
+  },
+
+  "raksha": {
+    "safeZones": [
+      {"id": "safe_001", "name": "Shahpura Police Station", "type": "POLICE_STATION", "latitude": 23.2000, "longitude": 77.4220, "contact": "100", "openHours": "24x7"},
+      {"id": "safe_002", "name": "JP Hospital Emergency", "type": "HOSPITAL", "latitude": 23.2480, "longitude": 77.4280, "contact": "+917552761515", "openHours": "24x7"},
+      {"id": "safe_003", "name": "Narmada Trauma Centre", "type": "HOSPITAL", "latitude": 23.2300, "longitude": 77.4400, "contact": "+917554040000", "openHours": "24x7"},
+      {"id": "safe_004", "name": "Women Police Station (Mahila Thana)", "type": "POLICE_STATION", "latitude": 23.2504, "longitude": 77.4142, "contact": "1091", "openHours": "24x7"},
+      {"id": "safe_005", "name": "DB City Mall", "type": "SHOP", "latitude": 23.2330, "longitude": 77.4293, "contact": "+917556668888", "openHours": "10:00-23:00"},
+      {"id": "safe_006", "name": "MP Nagar Police Station", "type": "POLICE_STATION", "latitude": 23.2380, "longitude": 77.4620, "contact": "100", "openHours": "24x7"},
+      {"id": "safe_007", "name": "Arera Colony Police Station", "type": "POLICE_STATION", "latitude": 23.2280, "longitude": 77.4350, "contact": "100", "openHours": "24x7"},
+      {"id": "safe_008", "name": "Govindpura Police Station", "type": "POLICE_STATION", "latitude": 23.2220, "longitude": 77.4080, "contact": "100", "openHours": "24x7"}
+    ],
+    "unsafeZones": [
+      {"id": "unsafe_001", "name": "Karond Marg", "latitude": 23.2580, "longitude": 77.4380, "riskLevel": "HIGH", "bestAvoidTime": "NIGHT", "reason": "Poor lighting, multiple chain snatching incidents"},
+      {"id": "unsafe_002", "name": "Jahangirabad Old City", "latitude": 23.2500, "longitude": 77.4050, "riskLevel": "MEDIUM", "bestAvoidTime": "EVENING", "reason": "Narrow lanes, less crowd after 8 PM"},
+      {"id": "unsafe_003", "name": "Indrapuri Backlanes", "latitude": 23.2220, "longitude": 77.3980, "riskLevel": "HIGH", "bestAvoidTime": "NIGHT", "reason": "No streetlights, isolated area"},
+      {"id": "unsafe_004", "name": "Berasia Road Isolated Stretch", "latitude": 23.2680, "longitude": 77.3880, "riskLevel": "HIGH", "bestAvoidTime": "NIGHT", "reason": "Desolate after 9 PM"}
+    ],
+    "womenHelplines": [
+      {"name": "MP Women Helpline", "phone": "1091", "service": "24x7 Government Helpline"},
+      {"name": "Sakhi Samiti Bhopal", "phone": "+917554040500", "service": "NGO Counselling & Support"},
+      {"name": "Nirbhaya Helpline", "phone": "181", "service": "Women Safety Helpline"},
+      {"name": "Mahila Thana Bhopal", "phone": "+917552678500", "service": "Women Police Station"}
+    ]
+  },
+
+  "predictiveHazards": {
+    "accidentBlackspots": [
+      {"id": "abs_001", "name": "Misrod Square", "latitude": 23.2100, "longitude": 77.4050, "riskScore": 92, "incidentsLastYear": 24},
+      {"id": "abs_002", "name": "Board Office Square", "latitude": 23.2450, "longitude": 77.4280, "riskScore": 88, "incidentsLastYear": 18},
+      {"id": "abs_003", "name": "Rani Kamlapati Station Road", "latitude": 23.2580, "longitude": 77.4100, "riskScore": 75, "incidentsLastYear": 15},
+      {"id": "abs_004", "name": "Karond Square", "latitude": 23.2580, "longitude": 77.4380, "riskScore": 70, "incidentsLastYear": 12},
+      {"id": "abs_005", "name": "MP Nagar Bypass", "latitude": 23.2420, "longitude": 77.4680, "riskScore": 65, "incidentsLastYear": 10}
+    ],
+    "floodZones": [
+      {"id": "flood_001", "area": "Kolar Road", "latitude": 23.1920, "longitude": 77.4100, "riskScore": 85, "drainageStatus": "POOR", "proximityToWater": "Upper Lake"},
+      {"id": "flood_002", "area": "Ayodhya Bypass", "latitude": 23.2350, "longitude": 77.3850, "riskScore": 70, "drainageStatus": "POOR", "proximityToWater": "Lower Lake"},
+      {"id": "flood_003", "area": "Bairagarh Low Lying", "latitude": 23.2520, "longitude": 77.3700, "riskScore": 80, "drainageStatus": "POOR", "proximityToWater": "Kaliyasot River"}
+    ],
+    "crimeHotspotsByTime": {
+      "morning": [
+        {"area": "Board Office Bus Stand", "riskScore": 65, "crimeType": "Pickpocketing"}
+      ],
+      "afternoon": [
+        {"area": "New Market", "riskScore": 55, "crimeType": "Chain Snatching"}
+      ],
+      "evening": [
+        {"area": "New Market", "riskScore": 85, "crimeType": "Chain Snatching"},
+        {"area": "Board Office Bus Stand", "riskScore": 70, "crimeType": "Pickpocketing"}
+      ],
+      "night": [
+        {"area": "Karond Marg", "riskScore": 90, "crimeType": "Eve Teasing"},
+        {"area": "Indrapuri Backlanes", "riskScore": 88, "crimeType": "Theft"}
+      ]
+    }
+  },
+
+  "driveLegal": {
+    "speedCameras": [
+      {"id": "sc_001", "location": "MP Nagar Square", "latitude": 23.2380, "longitude": 77.4620, "speedLimit": 50, "fineAmount": 2000},
+      {"id": "sc_002", "location": "Board Office Square", "latitude": 23.2450, "longitude": 77.4280, "speedLimit": 50, "fineAmount": 2000},
+      {"id": "sc_003", "location": "Jyoti Talkies", "latitude": 23.2600, "longitude": 77.4020, "speedLimit": 40, "fineAmount": 2000},
+      {"id": "sc_004", "location": "Karond Square", "latitude": 23.2580, "longitude": 77.4380, "speedLimit": 50, "fineAmount": 2000},
+      {"id": "sc_005", "location": "Bairagarh Square", "latitude": 23.2520, "longitude": 77.3700, "speedLimit": 60, "fineAmount": 2000},
+      {"id": "sc_006", "location": "Ashima Mall", "latitude": 23.2150, "longitude": 77.4320, "speedLimit": 40, "fineAmount": 2000}
+    ],
+    "redLightCameras": [
+      {"id": "rlc_001", "intersection": "6 No. Stop MP Nagar", "latitude": 23.2420, "longitude": 77.4680},
+      {"id": "rlc_002", "intersection": "Board Office Square", "latitude": 23.2450, "longitude": 77.4280},
+      {"id": "rlc_003", "intersection": "Karond Square", "latitude": 23.2580, "longitude": 77.4380}
+    ],
+    "accidentBlackspots": [
+      {"id": "abs_001", "name": "Misrod Square", "latitude": 23.2100, "longitude": 77.4050, "incidents_past_year": 24, "severity": "HIGH"},
+      {"id": "abs_002", "name": "Board Office Square", "latitude": 23.2450, "longitude": 77.4280, "incidents_past_year": 18, "severity": "HIGH"}
+    ],
+    "trafficFines": {
+      "bike": {"speeding": 2000, "redLight": 5000, "noHelmet": 1000},
+      "car": {"speeding": 2000, "redLight": 5000, "noSeatbelt": 1000},
+      "truck": {"overweight": 5000, "speeding": 2000}
+    }
+  }
+}
