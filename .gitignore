@@ -1,0 +1,46 @@
+# ── Node ──────────────────────────────────────
+node_modules/
+.npm
+.yarn/cache
+
+# ── Next.js ───────────────────────────────────
+.next/
+out/
+dist/
+
+# ── Environment ───────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Python ────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+*.joblib
+*.pkl
+
+# ── Misc ──────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+*.zip
+mingit/
+node-v20.18.0-win-x64/
+temp_repo/
+nagarsetu.zip
+raksha.zip
+krisis.zip
+mingit.zip
+nodejs.zip
+
+# ── IDE ───────────────────────────────────────
+.vscode/settings.json
+.idea/
