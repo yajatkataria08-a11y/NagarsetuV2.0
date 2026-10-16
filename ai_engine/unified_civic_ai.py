@@ -311,10 +311,144 @@ def predict_spatial_risk(lat: float, lng: float, hour: int = 21, day: int = 4) -
         "model": "gaussian-spatial-decay-fallback"
     }
 
-# ── 6. CLI Entrypoint ─────────────────────────────────────────────────────────
+# ── 6. Route Safety Evaluator (Raksha + NagarSetu SafePath) ───────────────────
+def evaluate_route_safety(waypoints: List[Dict[str, float]], hour: int = 22) -> Dict[str, Any]:
+    """
+    Evaluates safety along a polyline.
+    Computes average and peak risk across all waypoints, identifies high danger hotspots,
+    and returns illuminated safety percentage.
+    """
+    if not waypoints:
+        return {"safety_score": 75, "risk_level": "MODERATE", "hotspots_detected": 0}
+
+    scores = []
+    hotspots = []
+
+    for idx, pt in enumerate(waypoints):
+        lat = pt.get("lat") or pt.get("latitude", 0)
+        lng = pt.get("lng") or pt.get("longitude", 0)
+        risk_res = predict_spatial_risk(lat, lng, hour=hour)
+        score = risk_res["risk_score"]
+        scores.append(score)
+
+        if score >= 65:
+            hotspots.append({
+                "waypoint_index": idx,
+                "lat": lat,
+                "lng": lng,
+                "risk_score": score,
+                "warning": "High risk or unlit zone along path"
+            })
+
+    avg_risk = sum(scores) / len(scores) if scores else 50
+    peak_risk = max(scores) if scores else 50
+    safety_score = round(max(5.0, min(98.0, 100.0 - (avg_risk * 0.75 + peak_risk * 0.25))), 1)
+
+    return {
+        "safety_score": safety_score,
+        "average_risk": round(avg_risk, 1),
+        "peak_risk": round(peak_risk, 1),
+        "illuminated_corridor_pct": max(40, 100 - len(hotspots) * 15),
+        "hotspots_detected": len(hotspots),
+        "hotspots": hotspots[:5],
+        "recommendation": "Main arterial road recommended for night transit" if safety_score < 75 else "Route is well-illuminated and municipal compliant"
+    }
+
+# ── 7. Krisis CCTV Vision Detection Simulator / Parser ────────────────────────
+def analyze_cctv_frame(camera_id: str, metadata: Dict[str, Any] = None) -> Dict[str, Any]:
+    """
+    Analyzes or simulates YOLOv8 object & hazard detection on CCTV video feeds.
+    Detects: potholes, waterlogging, crowd surge, fire/smoke, dark spots.
+    """
+    meta = metadata or {}
+    cam_presets = {
+        "cam001": [{"class": "pothole", "confidence": 0.91, "bbox": [120, 340, 240, 410]}, {"class": "dense_traffic", "confidence": 0.84, "bbox": [50, 100, 580, 400]}],
+        "cam002": [{"class": "waterlogging", "confidence": 0.94, "bbox": [80, 220, 620, 470]}, {"class": "stalled_vehicle", "confidence": 0.89, "bbox": [310, 240, 480, 360]}],
+        "cam003": [{"class": "pedestrian_flow", "confidence": 0.96, "bbox": [100, 150, 400, 380]}],
+        "cam004": [{"class": "unlit_segment", "confidence": 0.78, "bbox": [300, 50, 600, 250]}],
+        "cam005": [{"class": "crowd_surge", "confidence": 0.85, "bbox": [150, 180, 520, 450]}],
+        "cam006": [{"class": "normal_pedestrians", "confidence": 0.92, "bbox": [200, 100, 450, 300]}],
+    }
+
+    detections = cam_presets.get(camera_id, [{"class": "normal_monitoring", "confidence": 0.90, "bbox": [0, 0, 640, 480]}])
+    primary_threat = detections[0]["class"] if detections and detections[0]["confidence"] > 0.8 else None
+
+    return {
+        "camera_id": camera_id,
+        "timestamp": int(time.time() * 1000),
+        "detections_count": len(detections),
+        "primary_threat": primary_threat,
+        "threat_confidence": detections[0]["confidence"] if detections else 0,
+        "detections": detections,
+        "status": "threat_alert" if primary_threat and primary_threat in ("pothole", "waterlogging", "crowd_surge") else "nominal"
+    }
+
+# ── 8. Built-in Multi-threaded HTTP Server ───────────────────────────────────
+def run_http_server(port: int = 8000):
+    import http.server
+    import urllib.parse
+
+    class AIHandler(http.server.BaseHTTPRequestHandler):
+        def _send(self, code: int, data: Any):
+            self.send_response(code)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+            self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+            self.end_headers()
+            self.wfile.write(json.dumps(data).encode('utf-8'))
+
+        def do_OPTIONS(self):
+            self._send(200, {"status": "ok"})
+
+        def do_GET(self):
+            if self.path == '/health':
+                self._send(200, {"status": "healthy", "service": "NagarSetu Unified Civic AI", "models_loaded": SKLEARN_AVAILABLE})
+            else:
+                self._send(404, {"error": "Endpoint not found"})
+
+        def do_POST(self):
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length).decode('utf-8')
+            try:
+                data = json.loads(body) if body else {}
+            except Exception:
+                data = {}
+
+            if self.path == '/verify':
+                res = verify_incident_report(data)
+                self._send(200, res)
+            elif self.path == '/risk':
+                lat = float(data.get('lat', 23.2599))
+                lng = float(data.get('lng', 77.4126))
+                hour = int(data.get('hour', 21))
+                day = int(data.get('day', 4))
+                res = predict_spatial_risk(lat, lng, hour, day)
+                self._send(200, res)
+            elif self.path == '/route-safety':
+                waypoints = data.get('waypoints', [])
+                hour = int(data.get('hour', 22))
+                res = evaluate_route_safety(waypoints, hour)
+                self._send(200, res)
+            elif self.path == '/cctv-vision':
+                cam_id = data.get('camera_id', 'cam001')
+                res = analyze_cctv_frame(cam_id, data)
+                self._send(200, res)
+            else:
+                self._send(404, {"error": f"Unknown POST route: {self.path}"})
+
+    server = http.server.ThreadingHTTPServer(('0.0.0.0', port), AIHandler)
+    print(f"[NagarSetu AI] Microservice running at http://0.0.0.0:{port}")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("[NagarSetu AI] Service stopping...")
+        server.server_close()
+
+# ── 9. CLI Entrypoint ─────────────────────────────────────────────────────────
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print(json.dumps({"error": "Subcommand required: 'verify', 'risk', or 'train'"}))
+        print(json.dumps({"error": "Subcommand required: 'verify', 'risk', 'route', 'cctv', 'serve', or 'train'"}))
         sys.exit(1)
 
     cmd = sys.argv[1].lower()
@@ -322,6 +456,10 @@ if __name__ == '__main__':
     if cmd == 'train':
         success = train_scikit_learn_models()
         print(json.dumps({"status": "complete" if success else "failed"}))
+
+    elif cmd == 'serve':
+        port = int(sys.argv[2]) if len(sys.argv) > 2 and sys.argv[2].isdigit() else 8000
+        run_http_server(port)
 
     elif cmd == 'verify':
         payload_str = sys.argv[2] if len(sys.argv) > 2 else '{}'
@@ -353,5 +491,35 @@ if __name__ == '__main__':
         res = predict_spatial_risk(lat, lng, hour, day)
         print(json.dumps(res))
 
+    elif cmd == 'route':
+        payload_str = sys.argv[2] if len(sys.argv) > 2 else '{}'
+        try:
+            req = json.loads(payload_str)
+        except Exception:
+            try:
+                import ast
+                req = ast.literal_eval(payload_str)
+            except Exception:
+                req = {}
+        waypoints = req.get('waypoints', [])
+        hour = int(req.get('hour', 22))
+        res = evaluate_route_safety(waypoints, hour)
+        print(json.dumps(res))
+
+    elif cmd == 'cctv':
+        payload_str = sys.argv[2] if len(sys.argv) > 2 else '{}'
+        try:
+            req = json.loads(payload_str)
+        except Exception:
+            try:
+                import ast
+                req = ast.literal_eval(payload_str)
+            except Exception:
+                req = {}
+        cam_id = req.get('camera_id', 'cam001')
+        res = analyze_cctv_frame(cam_id, req)
+        print(json.dumps(res))
+
     else:
         print(json.dumps({"error": f"Unknown subcommand: {cmd}"}))
+

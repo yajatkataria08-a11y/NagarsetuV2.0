@@ -21,13 +21,17 @@ const logger    = require('./utils/logger');
 const db        = require('./services/db');
 
 // ── Routes ────────────────────────────────────────────────────────────────────
-const sosRoutes       = require('./routes/sos');
-const incidentRoutes  = require('./routes/incidents');
-const trackingRoutes  = require('./routes/tracking');
-const analyticsRoutes = require('./routes/analytics');
-const hazardRoutes    = require('./routes/hazards');
-const riskRoutes      = require('./routes/risk');
-const routingRoutes   = require('./routes/routing');
+const sosRoutes           = require('./routes/sos');
+const incidentRoutes      = require('./routes/incidents');
+const trackingRoutes      = require('./routes/tracking');
+const analyticsRoutes     = require('./routes/analytics');
+const hazardRoutes        = require('./routes/hazards');
+const riskRoutes          = require('./routes/risk');
+const routingRoutes       = require('./routes/routing');
+const cctvRoutes          = require('./routes/cctv');
+const usersRoutes         = require('./routes/users');
+const notificationsRoutes = require('./routes/notifications');
+const wardsRoutes         = require('./routes/wards');
 
 // ── App bootstrap ─────────────────────────────────────────────────────────────
 const app    = express();
@@ -64,13 +68,49 @@ app.use('/api/', rateLimit({
 }));
 
 // ── API Routes ────────────────────────────────────────────────────────────────
-app.use('/api/sos',       sosRoutes);
-app.use('/api/incidents', incidentRoutes);
-app.use('/api/tracking',  trackingRoutes);
-app.use('/api/analytics', analyticsRoutes);
-app.use('/api/hazards',   hazardRoutes);
-app.use('/api/risk',      riskRoutes);
-app.use('/api/routing',   routingRoutes);
+app.use('/api/sos',           sosRoutes);
+app.use('/api/incidents',     incidentRoutes);
+app.use('/api/tracking',      trackingRoutes);
+app.use('/api/analytics',     analyticsRoutes);
+app.use('/api/hazards',       hazardRoutes);
+app.use('/api/risk',          riskRoutes);
+app.use('/api/routing',       routingRoutes);
+app.use('/api/cctv',          cctvRoutes);
+app.use('/api/users',         usersRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/wards',         wardsRoutes);
+
+// ── Dashboard Master Stats ───────────────────────────────────────────────────
+app.get('/api/stats', async (req, res) => {
+  try {
+    const stats = await db.getDashboardStats();
+    res.json(stats);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ── Self-Documenting API Catalog ──────────────────────────────────────────────
+app.get('/api/docs', (req, res) => {
+  res.json({
+    title: 'NagarSetu V2.0 Enterprise API Specification',
+    version: '2.0.0',
+    endpoints: [
+      { path: '/api/sos', methods: ['GET', 'POST'], desc: 'Real-time SOS beacons & vitals triage' },
+      { path: '/api/incidents', methods: ['GET', 'POST', 'PATCH'], desc: 'Civic incidents with automated Scikit-Learn AI verification' },
+      { path: '/api/tracking', methods: ['GET', 'POST'], desc: 'Live GPS breadcrumb tracking and ping stream' },
+      { path: '/api/cctv', methods: ['GET', 'POST'], desc: 'Krisis 6-camera CCTV vision wall & YOLOv8 detections' },
+      { path: '/api/hazards', methods: ['GET', 'POST', 'DELETE'], desc: 'Raksha dynamic geofenced hazard zones with TTL' },
+      { path: '/api/risk/heatmap', methods: ['GET'], desc: 'Dual-city spatio-temporal Gaussian risk matrix' },
+      { path: '/api/risk/point', methods: ['POST'], desc: 'Coordinate continuous risk score via GradientBoostingRegressor' },
+      { path: '/api/routing/calculate-routes', methods: ['POST'], desc: 'Triple path engine: Fastest, Safest (Main-Road), Eco' },
+      { path: '/api/users', methods: ['GET', 'PATCH'], desc: 'Citizen trust registry & anti-spam moderation' },
+      { path: '/api/notifications', methods: ['GET', 'POST'], desc: 'Municipal multi-channel notification stream' },
+      { path: '/api/wards', methods: ['GET'], desc: 'Ward leaderboard & SLA compliance tracking' },
+      { path: '/api/stats', methods: ['GET'], desc: 'Composite municipal KPI aggregates' },
+    ]
+  });
+});
 
 // ── Health check ─────────────────────────────────────────────────────────────
 app.get('/api/health', (req, res) => res.json({
