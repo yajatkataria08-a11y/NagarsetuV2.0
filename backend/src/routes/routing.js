@@ -112,83 +112,9 @@ router.post('/calculate-routes', async (req, res) => {
     const eLat = parseFloat(endLat);
     const eLng = parseFloat(endLng);
 
-    // Baseline straight-line distance
-    const dLat    = (eLat - sLat) * 111.0;
-    const dLng    = (eLng - sLng) * 111.0 * Math.cos(sLat * Math.PI / 180.0);
-    const directKm = Math.sqrt(dLat * dLat + dLng * dLng);
-
-    // ── Try OSRM for real road geometry ────────────────────────────────────
-    let osrmWaypoints = null;
-    try {
-      osrmWaypoints = await fetchOsrmWaypoints(sLat, sLng, eLat, eLng);
-      logger.info('[Routing] OSRM route geometry acquired', { points: osrmWaypoints.length });
-    } catch (osrmErr) {
-      logger.debug('[Routing] OSRM unavailable, using synthetic waypoints', { reason: osrmErr.message });
-    }
-
-    const isNight = timeHour >= 20 || timeHour <= 5;
-
-    // 1. FASTEST ROUTE: Minimizes time, standard streets
-    const fastest = {
-      id:          'route_fastest',
-      name:        'Fastest Route',
-      type:        'FASTEST',
-      distanceKm:  parseFloat((directKm * 1.15).toFixed(2)),
-      durationMin: Math.round(directKm * 1.15 * (mode === 'WALKING' ? 12 : 3)),
-      safetyScore: 68,
-      carbonGrams: Math.round(directKm * 1.15 * (mode === 'WALKING' ? 0 : 120)),
-      pathType:    'Direct street network (includes minor roads)',
-      tag:         'Fastest ETA',
-      waypoints:   osrmWaypoints || [
-        { lat: sLat, lng: sLng },
-        { lat: sLat + (eLat - sLat) * 0.5, lng: sLng + (eLng - sLng) * 0.4 },
-        { lat: eLat, lng: eLng },
-      ],
-    };
-
-    // 2. SAFEST ROUTE: Main Road Arterial Bias + high street lighting + avoids hazard zones
-    const safest = {
-      id:          'route_safest',
-      name:        'Safest Route (Main Road Bias)',
-      type:        'SAFEST',
-      distanceKm:  parseFloat((directKm * 1.30).toFixed(2)),
-      durationMin: Math.round(directKm * 1.30 * (mode === 'WALKING' ? 12 : 3)),
-      safetyScore: 94,
-      carbonGrams: Math.round(directKm * 1.30 * (mode === 'WALKING' ? 0 : 130)),
-      pathType:    'High-density commercial spine, 95% illuminated streetlights, CCTV coverage',
-      tag:         isNight ? 'Recommended for Night Transit' : 'Highest Safety Score',
-      waypoints:   osrmWaypoints || [
-        { lat: sLat, lng: sLng },
-        { lat: sLat + (eLat - sLat) * 0.3, lng: sLng + (eLng - sLng) * 0.7 },
-        { lat: sLat + (eLat - sLat) * 0.7, lng: sLng + (eLng - sLng) * 0.8 },
-        { lat: eLat, lng: eLng },
-      ],
-    };
-
-    // 3. ECO ROUTE: Municipal BRTS Green Corridor — prioritizes BRTS bus corridor & cycle tracks
-    const eco = {
-      id:          'route_eco',
-      name:        'Green Eco Route',
-      type:        'ECO',
-      distanceKm:  parseFloat((directKm * 1.22).toFixed(2)),
-      durationMin: Math.round(directKm * 1.22 * 4),
-      safetyScore: 82,
-      carbonGrams: Math.round(directKm * 15), // Very low carbon via public transit
-      pathType:    'Bhopal City Link (BCLL) BRTS transit lanes & dedicated pedestrian footways',
-      tag:         'Zero / Low Carbon',
-      waypoints:   osrmWaypoints || [
-        { lat: sLat, lng: sLng },
-        { lat: sLat + (eLat - sLat) * 0.5, lng: sLng + (eLng - sLng) * 0.55 },
-        { lat: eLat, lng: eLng },
-      ],
-    };
-
-    res.json({
-      start:       { lat: sLat, lng: sLng },
-      destination: { lat: eLat, lng: eLng },
-      osrmUsed:    osrmWaypoints !== null,
-      routes:      [safest, fastest, eco],
-    });
+    const localRouter = require('../services/localRouter');
+    const result = localRouter.calculateDeterministicRoutes(sLat, sLng, eLat, eLng, mode, timeHour);
+    res.json(result);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -203,43 +129,9 @@ router.post('/evaluate-safety', async (req, res) => {
       return res.status(400).json({ error: 'waypoints array required' });
     }
 
-    const payload = { waypoints, hour };
-    const staticFallback = { safety_score: 75, average_risk: 45, recommendation: 'Standard municipal corridor' };
-
-    // ── Tier 1: HTTP microservice ──────────────────────────────────────────
-    try {
-      const result = await httpRouteSafety(payload);
-      return res.json(result);
-    } catch (httpErr) {
-      logger.debug('[Routing] HTTP safety eval unavailable, trying spawn', { reason: httpErr.message });
-    }
-
-    // ── Tier 2: Python spawn ───────────────────────────────────────────────
-    const py = spawn(PYTHON_BIN, [AI_SCRIPT, 'route', JSON.stringify(payload)]);
-    let output   = '';
-    let responded = false;
-
-    const timer = setTimeout(() => {
-      py.kill();
-      if (!responded) { responded = true; res.json(staticFallback); }
-    }, 2500);
-
-    py.stdout.on('data', chunk => { output += chunk.toString(); });
-
-    py.on('close', code => {
-      clearTimeout(timer);
-      if (responded) return;
-      responded = true;
-      if (code === 0 && output.trim()) {
-        try { return res.json(JSON.parse(output.trim())); } catch {}
-      }
-      res.json(staticFallback);
-    });
-
-    py.on('error', () => {
-      clearTimeout(timer);
-      if (!responded) { responded = true; res.json(staticFallback); }
-    });
+    const aiMicroservice = require('../services/aiMicroservice');
+    const result = await aiMicroservice.evaluateRouteSafety(waypoints, hour);
+    res.json(result);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

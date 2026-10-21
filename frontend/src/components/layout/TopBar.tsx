@@ -15,6 +15,7 @@ const PAGE_TITLES: Record<Page, { title: string; subtitle: string }> = {
   analytics:     { title: 'Ward Analytics & SLA Metrics',       subtitle: 'Performance benchmarks, complaint volume & resolution rates' },
   wards:         { title: 'Ward & Officer Leaderboard',         subtitle: 'Ward rankings, municipal budget tracking & officer dispatch roster' },
   users:         { title: 'Citizen Trust Registry',             subtitle: 'Citizen reliability scoring, spam detection & moderation tools' },
+  legal:         { title: 'DriveLegal™ BIMSTEC Knowledge Base', subtitle: '154 codified traffic violations across 7 nations with dynamic fine resolution' },
   notifications: { title: 'Municipal Notifications Hub',       subtitle: 'Real-time multi-channel incident, SOS & system alerts' },
   settings:      { title: 'System Configuration & APIs',        subtitle: 'Supabase PostGIS, Firebase sync, AI thresholds & native app bridge' },
 };

@@ -42,7 +42,7 @@ class HazardZoneFetcher @Inject constructor(
         return if (!override.isNullOrBlank()) {
             if (override.startsWith("http")) override else "http://$override"
         } else {
-            "http://10.0.2.2:8080"
+            "http://10.0.2.2:4000"
         }.removeSuffix("/")
     }
 
@@ -52,7 +52,7 @@ class HazardZoneFetcher @Inject constructor(
      */
     suspend fun fetchActiveZones(): List<HazardZone> = withContext(Dispatchers.IO) {
         val request = Request.Builder()
-            .url("${baseUrl()}/api/hazard-zones?active=true")
+            .url("${baseUrl()}/api/hazards")
             .get()
             .build()
 

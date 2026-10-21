@@ -25,6 +25,30 @@ router.get('/', async (req, res) => {
   }
 });
 
+// ── GET /api/hazards/summary ──────────────────────────────────────────────────
+router.get('/summary', async (req, res) => {
+  try {
+    const summary = await db.getHazardSummary();
+    res.json({ status: 'success', ...summary });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ── POST /api/hazards/check-point ─────────────────────────────────────────────
+router.post('/check-point', async (req, res) => {
+  try {
+    const { lat, lng } = req.body;
+    if (lat === undefined || lng === undefined) {
+      return res.status(400).json({ error: 'lat and lng are required in body' });
+    }
+    const result = await db.checkHazardCollision(lat, lng);
+    res.json({ status: 'success', lat: parseFloat(lat), lng: parseFloat(lng), ...result });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // ── POST /api/hazards ─────────────────────────────────────────────────────────
 router.post('/', async (req, res) => {
   try {

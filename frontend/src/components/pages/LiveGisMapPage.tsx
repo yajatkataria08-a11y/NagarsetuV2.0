@@ -45,6 +45,12 @@ export default function LiveGisMapPage({ store }: { store: Store }) {
   const [heatmapConnected, setHeatmapConnected] = useState(false);
   const [heatmapLoading, setHeatmapLoading] = useState(false);
 
+  // ── Phase 4: Tactical Facility GIS & Multi-Level Floorplan State ──────────
+  const [viewScope, setViewScope] = useState<'city' | 'facility'>('city');
+  const [activeFacility, setActiveFacility] = useState<'habibganj' | 'aiims'>('habibganj');
+  const [activeFloor, setActiveFloor] = useState<0 | 1>(0);
+  const floorOverlayRef = useRef<any>(null);
+
   const mapRef = useRef<HTMLDivElement>(null);
   const leafRef = useRef<any>(null);
   const mapInst = useRef<any>(null);
@@ -253,6 +259,31 @@ export default function LiveGisMapPage({ store }: { store: Store }) {
     renderMarkers();
   }, [mapMode, showIncidents, showSos, showHeat, showWards, searchQuery, store.incidents, store.sos, currentCity, heatmapData]);
 
+  // ── Phase 4: Facility Floorplan Overlay Lifecycle ─────────────────────────
+  useEffect(() => {
+    if (!mapInst.current || !leafRef.current) return;
+    const L = leafRef.current;
+    const map = mapInst.current;
+
+    if (floorOverlayRef.current) {
+      map.removeLayer(floorOverlayRef.current);
+      floorOverlayRef.current = null;
+    }
+
+    if (viewScope === 'facility') {
+      const bounds: [[number, number], [number, number]] = activeFacility === 'habibganj'
+        ? [[23.2640, 77.4260], [23.2720, 77.4340]]
+        : [[23.2040, 77.4540], [23.2120, 77.4620]];
+
+      const imgUrl = activeFacility === 'habibganj'
+        ? `/floorplans/habibganj_floor_${activeFloor}.png`
+        : `/floorplans/aiims_floor_0.png`;
+
+      floorOverlayRef.current = L.imageOverlay(imgUrl, bounds, { opacity: 0.95 }).addTo(map);
+      map.flyToBounds(bounds, { duration: 0.8 });
+    }
+  }, [viewScope, activeFacility, activeFloor]);
+
   // ── Switch City ──────────────────────────────────────────────────────────
   const handleCitySwitch = (city: City) => {
     setCurrentCity(city);
@@ -288,31 +319,92 @@ export default function LiveGisMapPage({ store }: { store: Store }) {
     <div className="flex flex-col h-full overflow-hidden bg-void">
       {/* ── 1. Top City & Map Mode Bar ───────────────────────────────── */}
       <div className="flex-shrink-0 px-4 py-2.5 bg-abyss border-b border-white/5 flex flex-wrap items-center justify-between gap-3">
-        {/* City Toggle */}
+        {/* Scope Toggle: City Macro vs Facility Micro Floorplan */}
         <div className="flex items-center gap-1 bg-surface p-1 rounded-lg border border-white/10">
           <button
-            onClick={() => handleCitySwitch('bhopal')}
+            onClick={() => setViewScope('city')}
             className={cn(
-              'px-3 py-1 rounded text-xs font-bold transition-all',
-              currentCity === 'bhopal'
-                ? 'bg-civic text-white shadow-glow-civic'
-                : 'text-mink hover:text-ink'
+              'px-2.5 py-1 rounded text-xs font-bold transition-all',
+              viewScope === 'city' ? 'bg-civic text-white' : 'text-mink hover:text-ink'
             )}
           >
-            🏛️ Bhopal Central
+            🗺️ City GIS
           </button>
           <button
-            onClick={() => handleCitySwitch('indore')}
+            onClick={() => setViewScope('facility')}
             className={cn(
-              'px-3 py-1 rounded text-xs font-bold transition-all',
-              currentCity === 'indore'
-                ? 'bg-cyber text-void shadow-glow-cyber font-black'
-                : 'text-mink hover:text-ink'
+              'px-2.5 py-1 rounded text-xs font-bold transition-all',
+              viewScope === 'facility' ? 'bg-cyber text-void font-black' : 'text-mink hover:text-ink'
             )}
           >
-            🏙️ Indore SmartCity
+            🏢 Facility Floorplan
           </button>
         </div>
+
+        {/* Facility Specific Controls */}
+        {viewScope === 'facility' ? (
+          <div className="flex items-center gap-2">
+            <select
+              value={activeFacility}
+              onChange={(e) => setActiveFacility(e.target.value as any)}
+              className="input-dark text-xs py-1 px-2.5 bg-surface cursor-pointer font-semibold text-cyber"
+            >
+              <option value="habibganj">Habibganj Transit Center</option>
+              <option value="aiims">AIIMS Bhopal Trauma Wing</option>
+            </select>
+            {activeFacility === 'habibganj' && (
+              <div className="flex items-center gap-1 bg-surface p-1 rounded-lg border border-white/10">
+                <button
+                  onClick={() => setActiveFloor(0)}
+                  className={cn(
+                    'px-2 py-0.5 rounded text-[11px] font-bold transition-all',
+                    activeFloor === 0 ? 'bg-raised text-ink' : 'text-mink'
+                  )}
+                >
+                  Floor 0 (Ground)
+                </button>
+                <button
+                  onClick={() => setActiveFloor(1)}
+                  className={cn(
+                    'px-2 py-0.5 rounded text-[11px] font-bold transition-all',
+                    activeFloor === 1 ? 'bg-raised text-ink' : 'text-mink'
+                  )}
+                >
+                  Floor 1 (Mezzanine)
+                </button>
+              </div>
+            )}
+            <span className="text-[10px] text-safe font-mono bg-safe/10 border border-safe/20 px-2 py-1 rounded">
+              ● 2 Hydrants · 1 Panic Beacon Active
+            </span>
+          </div>
+        ) : (
+          /* City Toggle */
+          <div className="flex items-center gap-1 bg-surface p-1 rounded-lg border border-white/10">
+            <button
+              onClick={() => handleCitySwitch('bhopal')}
+              className={cn(
+                'px-3 py-1 rounded text-xs font-bold transition-all',
+                currentCity === 'bhopal'
+                  ? 'bg-civic text-white shadow-glow-civic'
+                  : 'text-mink hover:text-ink'
+              )}
+            >
+              🏛️ Bhopal Central
+            </button>
+            <button
+              onClick={() => handleCitySwitch('indore')}
+              className={cn(
+                'px-3 py-1 rounded text-xs font-bold transition-all',
+                currentCity === 'indore'
+                  ? 'bg-cyber text-void shadow-glow-cyber font-black'
+                  : 'text-mink hover:text-ink'
+              )}
+            >
+              🏙️ Indore SmartCity
+            </button>
+          </div>
+        )}
 
         {/* Mode Switcher */}
         <div className="flex items-center gap-1 bg-surface p-1 rounded-lg border border-white/10">

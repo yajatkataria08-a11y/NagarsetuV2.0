@@ -38,48 +38,32 @@ router.post('/:id/detect', async (req, res) => {
 router.post('/:id/analyze-frame', async (req, res) => {
   try {
     const { image, photo, type, description } = req.body;
-    const config = require('../config');
-    const { spawn } = require('child_process');
+    const aiMicroservice = require('../services/aiMicroservice');
 
-    const payload = JSON.stringify({
+    const result = await aiMicroservice.analyzeFrame({
       image: image || photo,
       type: type || 'ROAD_HAZARD',
       description: description || ''
     });
 
-    const py = spawn(config.PYTHON_BIN, [config.AI_SCRIPT, 'vision', payload]);
-    let output = '';
+    if (result && result.primary_threat && result.primary_threat !== 'none') {
+      await db.updateCctvDetection(
+        req.params.id,
+        result.primary_threat,
+        result.confidence || 0.85,
+        result.detections || []
+      );
 
-    py.stdout.on('data', chunk => { output += chunk.toString(); });
-    py.on('close', async (code) => {
-      let result = { verified: false, primary_threat: 'none', detections: [] };
-      if (code === 0 && output.trim()) {
-        try { result = JSON.parse(output.trim()); } catch (_) {}
-      }
+      req.app.get('io')?.emit('cctv:detection', {
+        cameraId: req.params.id,
+        threat: result.primary_threat,
+        confidence: result.confidence,
+        detections: result.detections,
+        timestamp: Date.now()
+      });
+    }
 
-      if (result.primary_threat && result.primary_threat !== 'none') {
-        await db.updateCctvDetection(
-          req.params.id,
-          result.primary_threat,
-          result.confidence || 0.85,
-          result.detections || []
-        );
-
-        req.app.get('io')?.emit('cctv:detection', {
-          cameraId: req.params.id,
-          threat: result.primary_threat,
-          confidence: result.confidence,
-          detections: result.detections,
-          timestamp: Date.now()
-        });
-      }
-
-      res.json({ success: true, analysis: result });
-    });
-
-    py.on('error', () => {
-      res.json({ success: false, error: 'Vision inference failed' });
-    });
+    res.json({ success: true, analysis: result });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

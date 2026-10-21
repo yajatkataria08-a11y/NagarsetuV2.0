@@ -153,12 +153,13 @@ CREATE TABLE IF NOT EXISTS public.tracking_sessions (
     active       BOOLEAN NOT NULL DEFAULT true
 );
 
--- ─── 6. DYNAMIC HAZARD ZONES (Raksha Dynamic Geofencing) ──────
+-- ─── 6. DYNAMIC HAZARD ZONES (Raksha Dynamic Geofencing & PostGIS) ──
 CREATE TABLE IF NOT EXISTS public.hazard_zones (
     id             UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name           TEXT NOT NULL,
     center_lat     DOUBLE PRECISION NOT NULL,
     center_lng     DOUBLE PRECISION NOT NULL,
+    location       GEOGRAPHY(Point, 4326),
     radius_meters  INT NOT NULL DEFAULT 300,
     risk_boost     DOUBLE PRECISION NOT NULL DEFAULT 1.5,
     risk_level     TEXT NOT NULL DEFAULT 'HIGH',
@@ -168,6 +169,52 @@ CREATE TABLE IF NOT EXISTS public.hazard_zones (
     expires_at     TIMESTAMPTZ,
     active         BOOLEAN NOT NULL DEFAULT true
 );
+
+CREATE INDEX IF NOT EXISTS idx_hazard_zones_location ON public.hazard_zones USING GIST (location);
+CREATE INDEX IF NOT EXISTS idx_hazard_zones_active   ON public.hazard_zones (active, expires_at);
+
+-- Auto-sync trigger for hazard_zones location
+CREATE OR REPLACE FUNCTION public.sync_hazard_zone_location()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.location := ST_SetSRID(ST_MakePoint(NEW.center_lng, NEW.center_lat), 4326)::geography;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trg_hazard_zones_location ON public.hazard_zones;
+CREATE TRIGGER trg_hazard_zones_location
+    BEFORE INSERT OR UPDATE OF center_lat, center_lng ON public.hazard_zones
+    FOR EACH ROW EXECUTE FUNCTION public.sync_hazard_zone_location();
+
+-- PostGIS Fast Collision RPC Function
+CREATE OR REPLACE FUNCTION public.check_hazard_collision(p_lat DOUBLE PRECISION, p_lng DOUBLE PRECISION)
+RETURNS TABLE (
+    id UUID,
+    name TEXT,
+    distance_meters DOUBLE PRECISION,
+    radius_meters INT,
+    risk_boost DOUBLE PRECISION,
+    risk_level TEXT,
+    note TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        hz.id,
+        hz.name,
+        ST_Distance(hz.location, ST_SetSRID(ST_MakePoint(p_lng, p_lat), 4326)::geography) AS distance_meters,
+        hz.radius_meters,
+        hz.risk_boost,
+        hz.risk_level,
+        hz.note
+    FROM public.hazard_zones hz
+    WHERE hz.active = true
+      AND (hz.expires_at IS NULL OR hz.expires_at > now())
+      AND ST_DWithin(hz.location, ST_SetSRID(ST_MakePoint(p_lng, p_lat), 4326)::geography, hz.radius_meters)
+    ORDER BY distance_meters ASC;
+END;
+$$ LANGUAGE plpgsql;
 
 -- ─── 7. RESPONDERS ROSTER (Krisis Smart Notification Engine) ──
 CREATE TABLE IF NOT EXISTS public.responders (

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import {
   LayoutDashboard, AlertOctagon, Map, Video, ShieldAlert,
   ClipboardList, BarChart3, Building2, Users, Bell, Settings,
-  Zap, Sun, Moon, ShieldCheck
+  Zap, Sun, Moon, ShieldCheck, Scale
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -18,6 +18,7 @@ export type Page =
   | 'analytics'
   | 'wards'
   | 'users'
+  | 'legal'
   | 'notifications'
   | 'settings';
 
@@ -55,6 +56,7 @@ const NAV_ITEMS: {
   { id: 'analytics',    icon: BarChart3,        label: 'Analytics & Trends', section: 'MUNICIPAL OPERATIONS' },
   { id: 'wards',        icon: Building2,        label: 'Ward & Officers',    section: 'MUNICIPAL OPERATIONS' },
   { id: 'users',        icon: Users,            label: 'Citizen Registry',   section: 'MUNICIPAL OPERATIONS' },
+  { id: 'legal',        icon: Scale,            label: 'DriveLegal BIMSTEC', section: 'MUNICIPAL OPERATIONS', badge: () => 154, badgeClass: 'bg-amber-500/20 text-amber-400 border border-amber-500/40' },
 
   // System
   { id: 'notifications',icon: Bell,             label: 'Notifications',      section: 'SYSTEM', badge: p => p.unreadNotifsCount || null, badgeClass: 'bg-cyber text-void' },

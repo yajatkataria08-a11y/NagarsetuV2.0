@@ -17,6 +17,7 @@ import WardsLeaderboardPage from '@/components/pages/WardsLeaderboardPage';
 import CitizenRegistryPage from '@/components/pages/CitizenRegistryPage';
 import NotificationsHubPage from '@/components/pages/NotificationsHubPage';
 import SettingsPage from '@/components/pages/SettingsPage';
+import DriveLegalPage from '@/components/pages/DriveLegalPage';
 
 export default function Home() {
   const [activePage, setActivePage] = useState<Page>('dashboard');
@@ -71,6 +72,7 @@ export default function Home() {
           {activePage === 'analytics'     && <AnalyticsPage store={store} />}
           {activePage === 'wards'         && <WardsLeaderboardPage store={store} />}
           {activePage === 'users'         && <CitizenRegistryPage store={store} />}
+          {activePage === 'legal'         && <DriveLegalPage />}
           {activePage === 'notifications' && <NotificationsHubPage store={store} onNavigate={setActivePage} />}
           {activePage === 'settings'      && <SettingsPage />}
         </main>

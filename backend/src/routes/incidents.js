@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../services/db');
 const logger = require('../utils/logger');
+const aiMicroservice = require('../services/aiMicroservice');
 
 // GET /api/incidents — list incidents with filtering
 router.get('/', async (req, res) => {
@@ -24,6 +25,33 @@ router.get('/:id', async (req, res) => {
     if (!inc) return res.status(404).json({ error: 'Incident not found' });
     res.json(inc);
   } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /api/incidents/triage — Real-time Multilingual SLA & Duplicate Triage (Phase 12)
+router.post('/triage', async (req, res) => {
+  try {
+    const { description, lat, lng, photos } = req.body;
+    if (!description) {
+      return res.status(400).json({ error: 'Description is required for triage' });
+    }
+
+    const existing = await db.getIncidents({ status: 'pending' });
+    const triageResult = await aiMicroservice.triageIncident({
+      description,
+      lat: lat ? parseFloat(lat) : undefined,
+      lng: lng ? parseFloat(lng) : undefined,
+      imageUrl: Array.isArray(photos) ? photos[0] : photos,
+      existingIncidents: existing
+    });
+
+    res.json({
+      status: 'success',
+      ...triageResult
+    });
+  } catch (e) {
+    logger.error('Incident triage failed', { error: e.message });
     res.status(500).json({ error: e.message });
   }
 });

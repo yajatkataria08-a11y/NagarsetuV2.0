@@ -51,6 +51,31 @@ export const cctvApi = {
     api.post(`/api/cctv/${id}/detect`, body),
 };
 
+export const legalApi = {
+  nations: () => api.get<{ status: string; totalNations: number; nations: any[] }>('/api/legal/nations'),
+  categories: () => api.get<{ status: string; totalCategories: number; categories: any[] }>('/api/legal/categories'),
+  violations: (params?: { q?: string; category?: string; nation?: string; urgency?: string; page?: number; limit?: number }) => {
+    const query = new URLSearchParams();
+    if (params) {
+      Object.entries(params).forEach(([k, v]) => {
+        if (v !== undefined && v !== null && v !== '') query.set(k, String(v));
+      });
+    }
+    return api.get<{ status: string; total: number; page: number; limit: number; totalPages: number; violations: any[]; nation: any }>(`/api/legal/violations?${query.toString()}`);
+  },
+  calculateFine: (body: { violationId?: string; violationIds?: string[]; vehicleType?: string; repeatOffence?: number; nationCode?: string }) =>
+    api.post<{ status: string; calculation: any }>('/api/legal/calculate-fine', body),
+  queryBot: (body: { query: string; nationCode?: string; vehicleType?: string }) =>
+    api.post<{ status: string; answer: string; matchedViolation: any; topSuggestions?: string[]; suggestions?: string[] }>('/api/legal/query-bot', body),
+};
+
+export const contractorApi = {
+  list: (status?: string) => api.get<{ status: string; total: number; contractors: any[] }>(`/api/contractors${status ? `?status=${status}` : ''}`),
+  auditTrail: () => api.get<{ status: string; totalEntries: number; auditTrail: any[] }>('/api/contractors/audit-trail'),
+  penalize: (id: string, body: { penaltyAmount: number; breachReason: string; officerBadge?: string }) =>
+    api.post<{ status: string; contractor: any; auditEntry: any }>(`/api/contractors/${id}/penalize`, body),
+};
+
 export const riskApi = {
   heatmap: (city: 'bhopal' | 'indore') => api.get<RiskHeatmap>(`/api/risk/heatmap?city=${city}`),
   point: (body: { lat: number; lng: number; hour?: number; day?: number }) =>

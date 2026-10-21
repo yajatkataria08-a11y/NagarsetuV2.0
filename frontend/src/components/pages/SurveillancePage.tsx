@@ -5,125 +5,83 @@ import { Camera, Video, AlertTriangle, RefreshCw, Wifi, WifiOff, Maximize2 } fro
 import { cn } from '@/lib/utils';
 import { cctvApi, type CctvCamera } from '@/lib/api';
 
-// Fallback seed cameras used when backend is unreachable
+// Fallback seed cameras with hardware-accelerated streaming loops
 const SEED_CAMERAS: CctvCamera[] = [
-  { id: 'CAM-01', name: 'MP Nagar Zone-1 Chowk', ward: 'Ward 3', lat: 23.2340, lng: 77.4320, feed_url: '', status: 'online', fps: 30, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [] },
-  { id: 'CAM-02', name: 'TT Nagar Stadium North', ward: 'Ward 5', lat: 23.2430, lng: 77.4050, feed_url: '', status: 'alert', fps: 28, resolution: '1080p', active_threat: 'crowd_surge', threat_confidence: 0.91, detections: [{ label: 'crowd_surge', confidence: 0.91 }] },
-  { id: 'CAM-03', name: 'Habibganj Underpass', ward: 'Ward 9', lat: 23.2680, lng: 77.4300, feed_url: '', status: 'alert', fps: 28, resolution: '4K', active_threat: 'waterlogging', threat_confidence: 0.94, detections: [{ label: 'waterlogging', confidence: 0.94 }] },
-  { id: 'CAM-04', name: 'Arera Hills VIP Spine', ward: 'Ward 7', lat: 23.2190, lng: 77.4250, feed_url: '', status: 'online', fps: 30, resolution: '4K', active_threat: undefined, threat_confidence: 0, detections: [] },
-  { id: 'CAM-05', name: 'New Market Central Square', ward: 'Ward 4', lat: 23.2520, lng: 77.4060, feed_url: '', status: 'online', fps: 30, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [] },
-  { id: 'CAM-06', name: 'Kolar Transit Depot', ward: 'Ward 6', lat: 23.1990, lng: 77.4670, feed_url: '', status: 'online', fps: 28, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [] },
+  { id: 'CAM-01', name: 'MP Nagar Zone-1 Chowk', ward: 'Ward 3', lat: 23.2340, lng: 77.4320, feed_url: '/streams/cam-01.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [] },
+  { id: 'CAM-02', name: 'TT Nagar Stadium North', ward: 'Ward 5', lat: 23.2430, lng: 77.4050, feed_url: '/streams/cam-02.mp4', status: 'alert', fps: 28, resolution: '1080p', active_threat: 'crowd_surge', threat_confidence: 0.91, detections: [{ label: 'crowd_surge', confidence: 0.91, bbox: [200, 195, 260, 85] }] },
+  { id: 'CAM-03', name: 'Habibganj Underpass Flood Cam', ward: 'Ward 9', lat: 23.2680, lng: 77.4300, feed_url: '/streams/cam-03.mp4', status: 'alert', fps: 28, resolution: '4K', active_threat: 'waterlogging', threat_confidence: 0.96, detections: [{ label: 'waterlogging', confidence: 0.96, bbox: [100, 210, 440, 120] }] },
+  { id: 'CAM-04', name: 'Arera Hills VIP Spine', ward: 'Ward 7', lat: 23.2190, lng: 77.4250, feed_url: '/streams/cam-04.mp4', status: 'online', fps: 30, resolution: '4K', active_threat: undefined, threat_confidence: 0, detections: [] },
+  { id: 'CAM-05', name: 'Rajwada Historical Plaza', ward: 'Ward 18', lat: 22.7185, lng: 75.8560, feed_url: '/streams/cam-05.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [] },
+  { id: 'CAM-06', name: 'Vijay Nagar Square', ward: 'Ward 24', lat: 22.7533, lng: 75.8937, feed_url: '/streams/cam-06.mp4', status: 'online', fps: 28, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [] },
 ];
 
-// Cycle through video stream loop — if a real stream URL is provided use it,
-// otherwise render a deterministic static SVG frame that simulates scan-line video
-function CameraFrame({ cam, isAlert }: { cam: CctvCamera; isAlert: boolean }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  // Animate a simulated "video static" effect on canvas when no real stream
-  useEffect(() => {
-    if (cam.feed_url) return; // let <video> handle real feeds
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    let frameId: number;
-
-    const cityColors = isAlert
-      ? ['#FF2D55', '#FF6B35', '#FF2D5540']
-      : ['#00E5FF', '#0066CC', '#00E5FF20'];
-
-    function drawFrame() {
-      if (!ctx || !canvas) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Dark background
-      ctx.fillStyle = '#0A0F1A';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Grid lines (simulated street/zone overlay)
-      ctx.strokeStyle = isAlert ? '#FF2D5518' : '#00E5FF12';
-      ctx.lineWidth = 1;
-      for (let i = 0; i < canvas.width; i += 32) {
-        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
-      }
-      for (let j = 0; j < canvas.height; j += 32) {
-        ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke();
-      }
-
-      // Noise pixels for realism
-      const imageData = ctx.createImageData(canvas.width, canvas.height);
-      for (let p = 0; p < imageData.data.length; p += 4) {
-        const noise = Math.random() * 18;
-        imageData.data[p] = noise;
-        imageData.data[p + 1] = noise;
-        imageData.data[p + 2] = isAlert ? noise * 1.6 : noise;
-        imageData.data[p + 3] = 45;
-      }
-      ctx.putImageData(imageData, 0, 0);
-
-      // Scan line
-      const scanY = (Date.now() / 8) % canvas.height;
-      const grad = ctx.createLinearGradient(0, scanY - 4, 0, scanY + 4);
-      grad.addColorStop(0, 'transparent');
-      grad.addColorStop(0.5, cityColors[0] + '60');
-      grad.addColorStop(1, 'transparent');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, scanY - 4, canvas.width, 8);
-
-      // Bounding box for alert cams
-      if (isAlert && cam.detections?.length) {
-        ctx.strokeStyle = '#FF2D55';
-        ctx.lineWidth = 2;
-        ctx.setLineDash([6, 4]);
-        const bw = canvas.width * 0.45, bh = canvas.height * 0.50;
-        const bx = (canvas.width - bw) * 0.55, by = (canvas.height - bh) * 0.3;
-        ctx.strokeRect(bx, by, bw, bh);
-        ctx.setLineDash([]);
-        // Label
-        ctx.fillStyle = '#FF2D55';
-        ctx.fillRect(bx, by - 16, bw * 0.85, 16);
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 9px monospace';
-        ctx.fillText(
-          `YOLO: ${cam.detections[0].label.toUpperCase()} ${Math.round(cam.threat_confidence * 100)}%`,
-          bx + 4, by - 4
-        );
-      }
-
-      // Crosshair center
-      ctx.strokeStyle = cityColors[0] + '80';
-      ctx.lineWidth = 1;
-      const cx = canvas.width / 2, cy = canvas.height / 2;
-      ctx.beginPath(); ctx.moveTo(cx - 12, cy); ctx.lineTo(cx + 12, cy); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(cx, cy - 12); ctx.lineTo(cx, cy + 12); ctx.stroke();
-
-      frameId = requestAnimationFrame(drawFrame);
-    }
-
-    drawFrame();
-    return () => cancelAnimationFrame(frameId);
-  }, [cam, isAlert]);
+// Continuous video player with overlaid SVG bounding box layer
+function CameraFrame({ cam, isAlert, videoRef }: { cam: CctvCamera; isAlert: boolean; videoRef?: React.RefObject<HTMLVideoElement> }) {
+  const localRef = useRef<HTMLVideoElement>(null);
+  const activeRef = videoRef || localRef;
 
   if (cam.feed_url) {
     return (
-      <video
-        src={cam.feed_url}
-        className="w-full h-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-      />
+      <div className="relative w-full h-full bg-black overflow-hidden flex items-center justify-center">
+        <video
+          ref={activeRef}
+          src={cam.feed_url}
+          className="w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
+        {/* Real-time YOLOv8 SVG bounding box overlay layer */}
+        {isAlert && cam.detections && cam.detections.length > 0 && (
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 640 360" preserveAspectRatio="none">
+            {cam.detections.map((d: any, idx: number) => {
+              const bbox = d.bbox || [180, 160, 280, 140];
+              const [x, y, w, h] = bbox;
+              return (
+                <g key={idx}>
+                  <rect
+                    x={x}
+                    y={y}
+                    width={w}
+                    height={h}
+                    fill="none"
+                    stroke="#FF2D55"
+                    strokeWidth="3"
+                    strokeDasharray="6,4"
+                    className="animate-pulse"
+                  />
+                  <rect
+                    x={x}
+                    y={Math.max(0, y - 24)}
+                    width={Math.min(260, w + 40)}
+                    height="24"
+                    fill="#FF2D55"
+                    rx="3"
+                  />
+                  <text
+                    x={x + 6}
+                    y={Math.max(16, y - 7)}
+                    fill="#FFFFFF"
+                    fontSize="11"
+                    fontFamily="monospace"
+                    fontWeight="bold"
+                  >
+                    {`YOLO: ${d.label?.replace(/_/g, ' ').toUpperCase()} ${Math.round((d.confidence || 0.9) * 100)}%`}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        )}
+      </div>
     );
   }
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={320}
-      height={200}
-      className="w-full h-full object-cover"
-    />
+    <div className="relative w-full h-full bg-slate-900 flex items-center justify-center text-xs text-mink">
+      <span>NO SIGNAL</span>
+    </div>
   );
 }
 
@@ -325,8 +283,41 @@ export default function SurveillancePage() {
                 </div>
               )}
               <div className="flex gap-2">
-                <button className="btn-ghost text-xs flex-1 flex items-center justify-center gap-1.5">
-                  <Maximize2 size={12} /> Fullscreen
+                <button
+                  onClick={() => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 640;
+                    canvas.height = 360;
+                    const ctx = canvas.getContext('2d');
+                    if (ctx) {
+                      ctx.fillStyle = '#0A0F1A';
+                      ctx.fillRect(0, 0, 640, 360);
+                      ctx.fillStyle = '#00E5FF';
+                      ctx.font = 'bold 14px monospace';
+                      ctx.fillText(`NAGARSETU TACTICAL CCTV EVIDENCE`, 20, 35);
+                      ctx.fillStyle = '#FFFFFF';
+                      ctx.font = 'bold 16px sans-serif';
+                      ctx.fillText(`${selectedCam.name} [${selectedCam.id}]`, 20, 65);
+                      ctx.font = '12px monospace';
+                      ctx.fillStyle = '#94A3B8';
+                      ctx.fillText(`Timestamp: ${new Date().toISOString()} | Ward: ${selectedCam.ward}`, 20, 95);
+                      if (selectedCam.active_threat) {
+                        ctx.fillStyle = '#FF2D55';
+                        ctx.font = 'bold 14px monospace';
+                        ctx.fillText(`DETECTION: ${selectedCam.active_threat.toUpperCase()} (${Math.round((selectedCam.threat_confidence || 0.9) * 100)}% CONFIDENCE)`, 20, 130);
+                        ctx.strokeStyle = '#FF2D55';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(180, 160, 280, 140);
+                      }
+                      const a = document.createElement('a');
+                      a.href = canvas.toDataURL('image/png');
+                      a.download = `nagarsetu-${selectedCam.id}-snapshot-${Date.now()}.png`;
+                      a.click();
+                    }
+                  }}
+                  className="btn-ghost text-xs flex-1 flex items-center justify-center gap-1.5"
+                >
+                  <Camera size={12} /> 📸 Export Snapshot
                 </button>
                 <button
                   onClick={fetchCameras}

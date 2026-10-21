@@ -53,10 +53,9 @@ router.post('/', async (req, res) => {
     // Broadcast to all admin dashboards via Socket.IO
     req.app.get('io')?.emit('new_sos', sos);
 
-    // Send Twilio SMS to emergency contacts with live tracking link
+    // Multi-tier emergency escalation: SMS + WhatsApp + 60s Voice IVR fallback
     if (contacts?.length) {
-      const msg = `🚨 EMERGENCY: ${userName || 'Someone'} has triggered an SOS alert in ${ward}.\n📍 Live Track: ${trackingUrl}\n🔋 Battery: ${batteryLevel}%\nPowered by NagarSetu`;
-      await twilio.sendSmsToAll(contacts, msg);
+      twilio.dispatchEmergencyEscalation(sos, req.app.get('io'));
     }
 
     logger.info('SOS triggered', { id: sos.id, user: userName, ward, trackingUrl });

@@ -51,64 +51,15 @@ function httpVerify(payload) {
   });
 }
 
+const aiMicroservice = require('./aiMicroservice');
+
 /**
  * Verifies incident credibility using Scikit-Learn NLP model + NagarSetu heuristics.
  * @param {object} incident
  * @returns {Promise<object>}
  */
 async function verifyIncident(incident) {
-  const payload = {
-    description: incident.description || '',
-    severity:    incident.severity    || 3,
-    ward:        incident.ward        || '',
-    timestamp:   Date.now(),
-  };
-
-  // ── Tier 1: HTTP microservice ──────────────────────────────────────────────
-  try {
-    const result = await httpVerify(payload);
-    logger.info('[AI] Verified via HTTP microservice');
-    return result;
-  } catch (httpErr) {
-    logger.debug('[AI] HTTP microservice unavailable, falling back to spawn', { reason: httpErr.message });
-  }
-
-  // ── Tier 2: Python child_process ───────────────────────────────────────────
-  return new Promise((resolve) => {
-    const jsonPayload = JSON.stringify(payload);
-    const py = spawn(config.PYTHON_BIN, [config.AI_SCRIPT, 'verify', jsonPayload]);
-    let output   = '';
-    let timedOut = false;
-
-    const timer = setTimeout(() => {
-      timedOut = true;
-      py.kill();
-      resolve(fallbackHeuristicVerification(incident));
-    }, 2500);
-
-    py.stdout.on('data', (chunk) => { output += chunk.toString(); });
-
-    py.on('close', (code) => {
-      clearTimeout(timer);
-      if (timedOut) return;
-
-      if (code === 0 && output.trim()) {
-        try {
-          const res = JSON.parse(output.trim());
-          if (res.score != null) return resolve(res);
-        } catch (e) {
-          logger.warn('[AI] Failed to parse Python output, using heuristics', { error: e.message });
-        }
-      }
-      resolve(fallbackHeuristicVerification(incident));
-    });
-
-    py.on('error', (err) => {
-      clearTimeout(timer);
-      logger.warn('[AI] Python spawn failed, using in-memory verification', { error: err.message });
-      resolve(fallbackHeuristicVerification(incident));
-    });
-  });
+  return aiMicroservice.verifyIncident(incident);
 }
 
 /**

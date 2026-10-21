@@ -106,12 +106,30 @@ export default function ReportQrPage() {
   return (
     <div className="min-h-screen bg-void flex flex-col">
       {/* Header */}
-      <header className="flex-shrink-0 px-5 py-4 border-b border-white/5 bg-abyss">
-        <div className="flex items-center gap-2">
-          <AlertOctagon size={18} className="text-siren" />
-          <span className="font-bold text-ink text-sm">NagarSetu — Emergency Report</span>
+      <header className="flex-shrink-0 px-5 py-4 border-b border-white/5 bg-abyss flex items-center justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <AlertOctagon size={18} className="text-siren" />
+            <span className="font-bold text-ink text-sm">NagarSetu — Emergency Report</span>
+          </div>
+          <p className="text-[11px] text-mink mt-0.5">Quick incident submission · No app required</p>
         </div>
-        <p className="text-[11px] text-mink mt-0.5">Quick incident submission · No app required</p>
+
+        {/* Phase 7: Quick Deterrent Links */}
+        <div className="flex items-center gap-2">
+          <a
+            href="/report/qr/fake-call"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold hover:bg-rose-500/20 transition-all"
+          >
+            📞 Fake Call
+          </a>
+          <a
+            href="/report/qr/voice-coach"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold hover:bg-cyan-500/20 transition-all"
+          >
+            🔊 Voice Coach
+          </a>
+        </div>
       </header>
 
       <main className="flex-1 px-5 py-6 max-w-lg mx-auto w-full">
