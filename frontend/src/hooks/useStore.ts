@@ -1,7 +1,59 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import type { SosEvent, Incident, DashboardStats, WardStats, Responder, CitizenUser, NotificationItem } from '@/types';
+import { api, incidentsApi, usersApi } from '@/lib/api';
+import type {
+  SosEvent, Incident, DashboardStats, WardStats,
+  Responder, CitizenUser, NotificationItem, SeverityLevel,
+  IncidentStatus, SosStatus
+} from '@/types';
+
+function normalizeIncident(raw: any): Incident {
+  return {
+    id: raw.id,
+    type: raw.type || 'OTHER',
+    description: raw.description || '',
+    location: {
+      lat: raw.lat ?? raw.location?.lat ?? 23.2599,
+      lng: raw.lng ?? raw.location?.lng ?? 77.4126
+    },
+    address: raw.address || '',
+    ward: raw.ward || 'General',
+    severity: (raw.severity || 3) as SeverityLevel,
+    status: (raw.status || 'pending') as IncidentStatus,
+    photos: raw.photos || [],
+    reportedBy: raw.reported_by || raw.reportedBy || 'anonymous',
+    reportedAt: raw.reported_at ? new Date(raw.reported_at).getTime() : (raw.reportedAt || Date.now()),
+    aiScore: raw.ai_score ?? raw.aiScore,
+    aiRiskLevel: raw.ai_risk_level ?? raw.aiRiskLevel,
+    assignedOfficer: raw.assigned_officer ?? raw.assignedOfficer,
+    resolvedAt: raw.resolved_at ? new Date(raw.resolved_at).getTime() : raw.resolvedAt,
+  };
+}
+
+function normalizeSos(raw: any): SosEvent {
+  return {
+    id: raw.id,
+    userId: raw.user_id || raw.userId || 'usr_anon',
+    userName: raw.user_name || raw.userName || 'Citizen',
+    phone: raw.phone || '+91-XXXXXXXXXX',
+    ward: raw.ward || 'General',
+    location: {
+      lat: raw.lat ?? raw.location?.lat ?? 23.2599,
+      lng: raw.lng ?? raw.location?.lng ?? 77.4126
+    },
+    address: raw.address,
+    batteryLevel: raw.battery_level ?? raw.batteryLevel ?? 80,
+    heartRate: raw.heart_rate ?? raw.heartRate,
+    status: (raw.status || 'active') as SosStatus,
+    triggeredAt: raw.triggered_at ? new Date(raw.triggered_at).getTime() : (raw.triggeredAt || Date.now()),
+    acknowledgedAt: raw.acknowledged_at ? new Date(raw.acknowledged_at).getTime() : raw.acknowledgedAt,
+    resolvedAt: raw.resolved_at ? new Date(raw.resolved_at).getTime() : raw.resolvedAt,
+    trackingToken: raw.tracking_token || raw.trackingToken,
+    contacts: raw.contacts || [],
+    sirenType: raw.siren_type || raw.sirenType || 'CRITICAL'
+  };
+}
 
 
 // ─── Mock seed data for local dev (no backend needed) ─────────────────────────
@@ -168,9 +220,33 @@ export function useStore() {
 
   const socketRef = useRef<ReturnType<typeof import('socket.io-client').io> | null>(null);
 
-  // ── Try connecting to backend Socket.IO (if running) ────────────────────────
+  // ── Initial REST load & Socket.IO sync ─────────────────────────────────────
   useEffect(() => {
     let mounted = true;
+
+    // Load initial data from backend REST API
+    const loadInitialData = async () => {
+      try {
+        const [incRes, sosRes] = await Promise.allSettled([
+          api.get<any[]>('/api/incidents'),
+          api.get<any[]>('/api/sos'),
+        ]);
+        if (!mounted) return;
+        setState(s => ({
+          ...s,
+          incidents: incRes.status === 'fulfilled' && incRes.value?.length
+            ? incRes.value.map(normalizeIncident)
+            : s.incidents,
+          sos: sosRes.status === 'fulfilled' && sosRes.value?.length
+            ? sosRes.value.map(normalizeSos)
+            : s.sos,
+          connected: incRes.status === 'fulfilled' || sosRes.status === 'fulfilled',
+          lastSync: Date.now(),
+        }));
+      } catch (_) {}
+    };
+
+    loadInitialData();
 
     const tryConnect = async () => {
       try {
@@ -191,22 +267,31 @@ export function useStore() {
           if (!mounted) return;
           setState(s => ({
             ...s,
-            sos: data.sos?.length ? data.sos : s.sos,
-            incidents: data.incidents?.length ? data.incidents : s.incidents,
+            sos: data.sos?.length ? data.sos.map(normalizeSos) : s.sos,
+            incidents: data.incidents?.length ? data.incidents.map(normalizeIncident) : s.incidents,
             stats: data.stats ?? s.stats,
             wards: data.wards?.length ? data.wards : s.wards,
             responders: data.responders?.length ? data.responders : s.responders,
           }));
         });
 
-        socket.on('new_sos', (sos: SosEvent) => {
+        socket.on('new_sos', (sos: any) => {
           if (!mounted) return;
-          setState(s => ({ ...s, sos: [sos, ...s.sos] }));
+          setState(s => ({ ...s, sos: [normalizeSos(sos), ...s.sos] }));
         });
 
-        socket.on('new_incident', (inc: Incident) => {
+        socket.on('new_incident', (inc: any) => {
           if (!mounted) return;
-          setState(s => ({ ...s, incidents: [inc, ...s.incidents] }));
+          setState(s => ({ ...s, incidents: [normalizeIncident(inc), ...s.incidents] }));
+        });
+
+        socket.on('incident:updated', (inc: any) => {
+          if (!mounted) return;
+          const normalized = normalizeIncident(inc);
+          setState(s => ({
+            ...s,
+            incidents: s.incidents.map(i => i.id === normalized.id ? normalized : i),
+          }));
         });
 
         socket.on('disconnect', () => {
@@ -216,7 +301,6 @@ export function useStore() {
 
         socketRef.current = socket;
       } catch {
-        // Backend not running — use mock data (dev mode)
         console.info('[NagarSetu] Backend offline — using mock data');
       }
     };
@@ -235,6 +319,7 @@ export function useStore() {
   );
 
   const resolveSos = useCallback((id: string) => {
+    api.patch(`/api/sos/${id}`, { status: 'resolved' }).catch(() => {});
     setState(s => ({
       ...s,
       sos: s.sos.map(e => e.id === id ? { ...e, status: 'resolved', resolvedAt: Date.now() } : e),
@@ -242,6 +327,7 @@ export function useStore() {
   }, []);
 
   const acknowledgeeSos = useCallback((id: string) => {
+    api.patch(`/api/sos/${id}`, { status: 'acknowledged' }).catch(() => {});
     setState(s => ({
       ...s,
       sos: s.sos.map(e => e.id === id ? { ...e, status: 'acknowledged', acknowledgedAt: Date.now() } : e),
@@ -249,6 +335,7 @@ export function useStore() {
   }, []);
 
   const verifyIncident = useCallback((id: string) => {
+    incidentsApi.update(id, { status: 'verified' }).catch(() => {});
     setState(s => ({
       ...s,
       incidents: s.incidents.map(i => i.id === id ? { ...i, status: 'verified' } : i),
@@ -256,6 +343,7 @@ export function useStore() {
   }, []);
 
   const rejectIncident = useCallback((id: string) => {
+    incidentsApi.update(id, { status: 'rejected' }).catch(() => {});
     setState(s => ({
       ...s,
       incidents: s.incidents.map(i => i.id === id ? { ...i, status: 'rejected' } : i),
@@ -263,6 +351,7 @@ export function useStore() {
   }, []);
 
   const bulkVerifyIncidents = useCallback((ids: string[]) => {
+    ids.forEach(id => incidentsApi.update(id, { status: 'verified' }).catch(() => {}));
     setState(s => ({
       ...s,
       incidents: s.incidents.map(i => ids.includes(i.id) ? { ...i, status: 'verified' } : i),
@@ -270,6 +359,7 @@ export function useStore() {
   }, []);
 
   const bulkRejectIncidents = useCallback((ids: string[]) => {
+    ids.forEach(id => incidentsApi.update(id, { status: 'rejected' }).catch(() => {}));
     setState(s => ({
       ...s,
       incidents: s.incidents.map(i => ids.includes(i.id) ? { ...i, status: 'rejected' } : i),
@@ -277,6 +367,7 @@ export function useStore() {
   }, []);
 
   const bulkAssignIncidents = useCallback((ids: string[], officerName: string) => {
+    ids.forEach(id => incidentsApi.update(id, { assignedOfficer: officerName, status: 'dispatched' }).catch(() => {}));
     setState(s => ({
       ...s,
       incidents: s.incidents.map(i => ids.includes(i.id) ? { ...i, assignedOfficer: officerName, status: 'dispatched' } : i),
@@ -284,6 +375,7 @@ export function useStore() {
   }, []);
 
   const updateUserStatus = useCallback((id: string, status: CitizenUser['status']) => {
+    usersApi.updateStatus(id, status).catch(() => {});
     setState(s => ({
       ...s,
       users: s.users.map(u => u.id === id ? { ...u, status } : u),

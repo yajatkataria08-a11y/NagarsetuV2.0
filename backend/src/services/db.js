@@ -346,16 +346,57 @@ async function getActiveHazardZones() {
   return memoryStore.hazard_zones.filter(h => h.active && new Date(h.expires_at).getTime() > now);
 }
 
+/** @deprecated Use createHazardZone instead */
 async function addHazardZone(data) {
+  return createHazardZone(data);
+}
+
+/**
+ * Persist a new hazard zone to memory + disk store.
+ * Called by hazards.js POST fallback branch and sensors.js auto-escalation.
+ */
+async function createHazardZone(data) {
   const item = {
-    id: data.id || 'haz_' + Date.now(),
-    active: true,
+    id:         data.id || 'haz_' + Date.now(),
+    active:     true,
     expires_at: data.expires_at || new Date(Date.now() + 120 * 60000).toISOString(),
-    ...data
+    ...data,
   };
   memoryStore.hazard_zones.unshift(item);
   saveDiskStore();
   return item;
+}
+
+/**
+ * Remove a hazard zone by id from memory + disk store.
+ * @returns {object|null} the deleted item, or null if not found
+ */
+async function deleteHazardZone(id) {
+  const idx = memoryStore.hazard_zones.findIndex(h => h.id === id);
+  if (idx === -1) return null;
+  const [deleted] = memoryStore.hazard_zones.splice(idx, 1);
+  saveDiskStore();
+  return deleted;
+}
+
+/**
+ * TTL janitor: removes expired zones from the store, persists, and
+ * returns the list of expired items so callers can emit Socket.IO events.
+ * @returns {Array} expired zone objects
+ */
+async function expireHazardZones() {
+  const now     = Date.now();
+  const expired = memoryStore.hazard_zones.filter(
+    h => h.active && h.expires_at && new Date(h.expires_at).getTime() <= now
+  );
+  if (expired.length > 0) {
+    memoryStore.hazard_zones = memoryStore.hazard_zones.filter(
+      h => !(h.active && h.expires_at && new Date(h.expires_at).getTime() <= now)
+    );
+    saveDiskStore();
+    logger.info(`[DB] Expired ${expired.length} hazard zone(s)`);
+  }
+  return expired;
 }
 
 // 7. CCTV Cameras
@@ -448,7 +489,7 @@ module.exports = {
   getWards, getResponders,
   getUsers, updateUserStatus,
   getNotifications, markAllNotificationsRead,
-  getActiveHazardZones, addHazardZone,
+  getActiveHazardZones, addHazardZone, createHazardZone, deleteHazardZone, expireHazardZones,
   getCctvCameras, updateCctvDetection,
   createTrackingSession, getTrackingSession, updateTrackingLocation,
   getDashboardStats,

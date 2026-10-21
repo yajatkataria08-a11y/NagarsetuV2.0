@@ -46,8 +46,9 @@ const NAV_ITEMS: {
   { id: 'map',          icon: Map,              label: 'Live GIS Map',       section: 'COMMAND' },
   
   // Tactical Intelligence
-  { id: 'surveillance', icon: Video,            label: 'CCTV Wall (Krisis)', section: 'TACTICAL INTELLIGENCE', badge: () => 2, badgeClass: 'bg-siren text-white' },
+  { id: 'surveillance', icon: Video,            label: 'CCTV Vision Wall',   section: 'TACTICAL INTELLIGENCE', badge: () => 2, badgeClass: 'bg-siren text-white' },
   { id: 'hazards',      icon: ShieldAlert,      label: 'Hazard Geofences',   section: 'TACTICAL INTELLIGENCE' },
+
 
   // Operations
   { id: 'incidents',    icon: ClipboardList,    label: 'Incidents & Triage', section: 'MUNICIPAL OPERATIONS', badge: p => p.pendingCount || null, badgeClass: 'bg-siren-orange text-void' },

@@ -1,0 +1,18 @@
+{
+  "name": "nagarsetu-v2-root",
+  "version": "2.0.0",
+  "description": "NagarSetu V2.0 — Enterprise Municipal Command & Civic Intelligence Platform",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:ai": "python ai_engine/unified_civic_ai.py serve 8000",
+    "build": "npm run build --workspace=frontend",
+    "start": "npm run start --workspace=backend",
+    "test:ai": "python ai_engine/unified_civic_ai.py risk \"{\\\"lat\\\":23.2599,\\\"lng\\\":77.4126,\\\"hour\\\":22,\\\"day\\\":4}\""
+  }
+}

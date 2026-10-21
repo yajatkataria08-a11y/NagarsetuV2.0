@@ -16,14 +16,14 @@
 ---
 
 > **NagarSetu V2.0** is an enterprise-grade civic governance, public safety, and smart city emergency command platform. 
-> It synthesizes the municipal depth of **NagarSetu** (Bhopal & Indore Municipal Corporations), the peer-to-peer real-time tracking and dynamic hazard geofencing of **Raksha**, and the AI-driven CCTV computer vision grid of **Krisis** into a unified, resilient civic operating system.
+> It synthesizes comprehensive municipal administration, real-time spatial citizen tracking, dynamic hazard geofencing, and an AI-driven CCTV computer vision grid into a unified, resilient civic operating system.
 
 ---
 
 ## 📑 Table of Contents
 1. [Executive Summary & Problem Statement](#1-executive-summary--problem-statement)
 2. [Architectural Overview & Data Flow](#2-architectural-overview--data-flow)
-3. [Reference Benchmark & Superiority Matrix](#3-reference-benchmark--superiority-matrix)
+3. [Industry Benchmark & Comparative Superiority Matrix](#3-industry-benchmark--comparative-superiority-matrix)
 4. [Complete 11-View Command Center Walkthrough](#4-complete-11-view-command-center-walkthrough)
 5. [Multi-Tier Machine Learning & AI Pipeline](#5-multi-tier-machine-learning--ai-pipeline)
 6. [Native Mobile (13 Modules) & Wear OS Ecosystem](#6-native-mobile-13-modules--wear-os-ecosystem)
@@ -44,10 +44,10 @@ Civic complaint mechanisms in urban India (such as Bhopal and Indore) suffer fro
 3. **Static, Blind Navigation**: Conventional routing algorithms optimize solely for travel distance, funneling pedestrians through unlit, high-crime alleyways at late hours.
 
 ### The NagarSetu V2.0 Solution
-NagarSetu V2.0 merges three high-impact repositories to eliminate these bottlenecks:
-* **From NagarSetu (0309)**: Preserved all 218 Kotlin native files across 13 modules, administrative ward budget tracking, municipal officer dispatch rosters, and bilingual civic operations.
-* **From Raksha**: Integrated continuous spatial-temporal machine learning risk regression, dynamic hazard geofences with automated TTL expiration, browser-based live tracking links, and realistic Fake Call deterrent screens.
-* **From Krisis**: Integrated the 6-camera zero-scroll CCTV vision wall, simulated RTSP/HLS feeds, real-time YOLOv8 hazard bounding boxes, and instant snapshot export.
+NagarSetu V2.0 re-engineers municipal emergency operations through three foundational pillars:
+* **Deep Municipal Administration**: Native Android client (13 modules · 218 Kotlin files), administrative ward budget tracking, municipal officer dispatch rosters, and bilingual civic operations.
+* **Intelligent Safety & Geofencing**: Continuous spatial-temporal machine learning risk regression, dynamic hazard geofences with automated TTL expiration, browser-based live tracking links, and realistic Fake Call deterrent screens.
+* **Tactical Computer Vision**: 6-camera zero-scroll CCTV vision wall, simulated RTSP/HLS feeds, real-time YOLOv8 hazard bounding boxes, and instant snapshot export.
 
 ---
 
@@ -129,23 +129,23 @@ sequenceDiagram
 
 ---
 
-## 3. Reference Benchmark & Superiority Matrix
+## 3. Industry Benchmark & Architectural Superiority
 
-Every single module was evaluated against the 3 reference repositories and engineered to be strictly superior:
+NagarSetu V2.0 was engineered to resolve the critical shortcomings of traditional municipal systems, standalone emergency apps, and conventional surveillance networks:
 
-| Architectural Dimension | Original NagarSetu (0309) | Raksha (SafePath) | Krisis (Emergency Vision) | **NagarSetu V2.0 (Our Unified System)** |
+| Architectural Dimension | Legacy Municipal Portals (e.g. CPGRAMS) | Standalone Emergency SOS Apps | Traditional Traffic CCTV Systems | **NagarSetu V2.0 (Unified Intelligent Platform)** |
 |---|---|---|---|---|
-| **Frontend Architecture** | 100KB monolithic HTML (`index.html`), inline DOM mutation | Basic Android-first UI, minimal web interface | Static mockup web templates | **Next.js 15 App Router + Tailwind CSS**, 11 dedicated municipal views, persistent Light/Dark themes, responsive glassmorphism. |
-| **Database & Persistence** | Volatile in-memory array (`dataStore.js`), data wiped on restart | Standalone local SQLite (`safepath.db`), no spatial indexing | Mock in-memory data structures | **Enterprise Hybrid Engine**: Supabase PostGIS spatial cluster + atomic local disk persistence (`backend/data/store.json`). Zero data loss. |
-| **Spatio-Temporal AI Risk** | Broken C++ (`risk_calculator.cpp`) with hardcoded Bhopal coordinates | Standalone offline Python script for Indore only | None | **Scikit-Learn GradientBoosting Regressor** covering both Bhopal & Indore footprints, continuous Gaussian decay ($e^{-d^2/2\sigma^2}$), night multipliers, `< 1ms` inference. |
-| **Incident NLP & Anti-Spam** | 140-line heuristic script, spawned blocking child process per request | None | None | **Scikit-Learn TF-IDF + Logistic Classifier + Anti-Spam Regex + Temporal Normalization**, asynchronous non-blocking triage. |
+| **Frontend Architecture** | 100KB monolithic HTML or dated server-rendered views with inline DOM mutation | Basic mobile-first UI with minimal or no municipal web command dashboard | Isolated vendor NVR software with proprietary desktop clients | **Next.js 15 App Router + Tailwind CSS**, 11 dedicated municipal views, persistent Light/Dark themes, responsive glassmorphism. |
+| **Database & Persistence** | Volatile in-memory stores or standard relational DBs lacking spatial indexing | Standalone local SQLite with no multi-agency synchronization | Mock or disconnected video archives without spatial correlation | **Enterprise Hybrid Engine**: Supabase PostGIS spatial cluster + atomic local disk persistence (`backend/data/store.json`). Zero data loss. |
+| **Spatio-Temporal AI Risk** | Static rule-based prioritization without predictive spatial intelligence | Standalone offline script limited to single isolated areas | None; relies solely on passive human monitoring | **Scikit-Learn GradientBoosting Regressor** covering dual-city footprints (Bhopal & Indore), continuous Gaussian decay ($e^{-d^2/2\sigma^2}$), night multipliers, `< 1ms` inference. |
+| **Incident NLP & Anti-Spam** | 140-line heuristic scripts or manual triage; high backlog accumulation | None; reliance on plain text or operator dispatching | None | **Scikit-Learn TF-IDF + Logistic Classifier + Anti-Spam Regex + Temporal Normalization**, asynchronous non-blocking triage. |
 | **Multimodal Civic Reasoning** | None | None | None | **Google Gemini 1.5 Flash Core** for multilingual (Hindi, Hinglish, English) reasoning, photo verification, and empathetic citizen advice. |
-| **CCTV Vision Grid** | None | None | Basic camera simulation without active threat metadata | **Krisis 6-Camera Vision Wall** with real-time YOLOv8 threat detections (`pothole`, `waterlogging`, `crowd_surge`), FPS/telemetry, and snapshot capture. |
-| **Hazard Geofencing** | Static incident points only | Dynamic hazard circles (local DB only) | None | **Dynamic Hazard Geofences with Automated TTL Expiration**, custom radius (50m–1000m), real-time citizen broadcast alerts. |
-| **Emergency SOS Operations** | Rudimentary alert table, no live vitals | Native SOS with SMS alert | Basic report submission | **High-Contrast SOS Command Operations**, live vitals (`❤️ 112 BPM`, `🔋 Battery %`), one-tap browser tracking token generation (`/track/:token`). |
-| **Navigation & Routing** | Straight-line distance mock | Single SafePath algorithm | None | **Triple-Path Navigation Engine**: Fastest Route, Safest Route (Main-Road Bias + street lighting), and Green Eco Route (BRTS bus & cycle lanes) with ML waypoint safety evaluator. |
-| **Municipal Governance** | Unstyled table | None | None | **Ward & Officer Leaderboard** (INR budget tracking, SLA breach counter), **Citizen Trust Registry** (anti-fraud scoring), and **Notifications Hub**. |
-| **Native Mobile & Wearable** | 218 Kotlin files across 13 modules | Mobile Compose with Fake Call deterrent | Web only | **All 218 Kotlin files preserved**, upgraded RakshaScreen with Fake Call deterrent, and **Wear OS smartwatch waveform haptic siren with heart rate streaming**. |
+| **CCTV Vision Grid** | None | None | Basic camera simulation without active threat metadata | **Tactical 6-Camera Vision Wall** with real-time YOLOv8 threat detections (`pothole`, `waterlogging`, `crowd_surge`), FPS/telemetry, and snapshot capture. |
+| **Hazard Geofencing** | Static municipal notice boards or unmapped incident markers | Static circular hazard geofences without lifecycle expiration | None | **Dynamic Hazard Geofences with Automated TTL Expiration**, custom radius (50m–1000m), real-time citizen broadcast alerts. |
+| **Emergency SOS Operations** | Rudimentary alert table, no live vitals | Native SOS with SMS alert but no live biometric vital feeds | None | **High-Contrast SOS Command Operations**, live vitals (`❤️ 112 BPM`, `🔋 Battery %`), one-tap browser tracking token generation (`/track/:token`). |
+| **Navigation & Routing** | Straight-line distance mock | Single shortest-path algorithm without hazard avoidance | None | **Triple-Path Navigation Engine**: Fastest Route, Safest Route (Main-Road Bias + street lighting), and Green Eco Route (BRTS bus & cycle lanes) with ML waypoint safety evaluator. |
+| **Municipal Governance** | Unstyled table or static spreadsheets | None | None | **Ward & Officer Leaderboard** (INR budget tracking, SLA breach counter), **Citizen Trust Registry** (anti-fraud scoring), and **Notifications Hub**. |
+| **Native Mobile & Wearable** | Generic web wrapper or single-page view | Basic mobile UI | None | **Full Android Native Architecture (218 Kotlin files across 13 modules)** with Fake Call deterrent screen, and **Wear OS smartwatch waveform haptic siren with heart rate streaming**. |
 
 ---
 
@@ -158,8 +158,8 @@ frontend/src/components/pages/
 ├── DashboardOverviewPage.tsx   ← 6-card KPI grid + Area Broadcast modal
 ├── SosPage.tsx                 ← High-contrast SOS operations & vitals triage
 ├── LiveGisMapPage.tsx          ← Dual-city GIS map (Bhopal/Indore) with layers
-├── SurveillancePage.tsx        ← Krisis 6-Camera Vision Wall & YOLOv8 grid
-├── HazardsPage.tsx             ← Raksha Dynamic Geofenced Hazard Zones (TTL)
+├── SurveillancePage.tsx        ← Tactical 6-Camera Vision Wall & YOLOv8 grid
+├── HazardsPage.tsx             ← Dynamic Geofenced Hazard Zones (TTL)
 ├── IncidentsPage.tsx           ← Bulk-action data table with multi-attribute filters
 ├── AnalyticsPage.tsx           ← Macro city KPIs, SLA breaches & response trends
 ├── WardsLeaderboardPage.tsx    ← Ward ranking & officer dispatch roster
@@ -186,12 +186,12 @@ frontend/src/components/pages/
    - **Quick Ward Jump**: Clickable sidebar flying the tactical camera directly to Wards 3, 5, 7, 9, 12, 18, 24, 31.
    - **Floating Live Stat Overlay**: Persistent pills showing live count of SOS, incidents, and resolved tickets.
 4. **CCTV Vision Wall (`SurveillancePage`)**:
-   - Krisis 6-feed zero-scroll AI camera grid.
+   - Zero-scroll 6-feed AI camera grid.
    - Real-time YOLOv8 threat detections with visual bounding boxes (`pothole`, `waterlogging`, `crowd_surge`, `unlit_segment`).
    - Stream telemetry badges: resolution (`1080p`/`4K`), FPS (`28-30 FPS`), and active alert status.
    - One-click snapshot inspection and camera locator.
 5. **Hazard Geofences (`HazardsPage`)**:
-   - Raksha-inspired dynamic danger zones with automated TTL countdown clocks.
+   - Dynamic danger zones with automated TTL countdown clocks.
    - Interactive radius sliders ($50\text{m} - 1000\text{m}$) and risk boost multipliers ($+10\% - +50\%$).
    - Quick creation shortcuts for flash flooding, active protests, gas leaks, and road cave-ins.
 6. **Incidents Management (`IncidentsPage`)**:
@@ -255,7 +255,7 @@ Where:
 * **Role**: Multimodal validation of uploaded photos and multilingual understanding in **Hindi**, **Hinglish**, and **English**.
 * **System Prompt**: Generates structured JSON summaries, extracts municipal category, assigns 1–5 urgency rating, and generates respectful citizen advice in Hinglish.
 
-### E. Krisis CCTV Vision Detection Engine
+### E. Tactical CCTV Vision Detection Engine
 * Simulates or executes YOLOv8 object detection on CCTV camera video streams.
 * Detects and classifies: `pothole`, `waterlogging`, `crowd_surge`, `unlit_segment`, `stalled_vehicle`, and `fire`.
 
@@ -284,7 +284,7 @@ android/
 │   ├── auth/             ← Citizen login & OTP verification
 │   ├── dashboard/        ← Municipal citizen dashboard & report status
 │   ├── reporting/        ← Camera capture, GPS geo-tagging, complaint submission
-│   ├── tracking/         ← Raksha live location service, Fake Call deterrent screen
+│   ├── tracking/         ← SafePath live location service, Fake Call deterrent screen
 │   ├── sos/              ← 1-Tap SOS siren trigger, emergency contacts dialer
 │   ├── navigation/       ← MapLibre / Google Maps triple-path routing
 │   └── admin/            ← Field officer dispatch & ticket resolution
@@ -293,7 +293,7 @@ android/
 
 ### Key Native Upgrades:
 1. **Fake Call Deterrent (`FakeCallScreen.kt`)**:
-   - Integrated into `feature:tracking` and `RakshaScreen.kt`.
+   - Integrated into `feature:tracking` and `TrackingScreen.kt`.
    - Full-screen incoming call UI with ringtone simulation, caller name customization ("Mom", "Inspector Sharma"), and realistic conversation timer to deter potential harassers.
 2. **Wear OS Smartwatch Siren (`WatchMainActivity.kt`)**:
    - High-contrast panic button requiring a single tap.
@@ -318,11 +318,11 @@ The routing engine in `backend/src/routes/routing.js` evaluates three distinct p
          ├──► 1. FASTEST ROUTE (Minimizes travel time via local street grid)
          │       • Distance: 3.4 km · Duration: 8 min · Safety Score: 68/100
          │
-         ├──► 2. SAFEST ROUTE (Raksha Main-Road Bias + 95% Illuminated Streetlights)
+         ├──► 2. SAFEST ROUTE (Main-Road Arterial Bias + 95% Illuminated Streetlights)
          │       • Distance: 3.9 km · Duration: 10 min · Safety Score: 94/100
          │       • Evaluated waypoint-by-waypoint with AI Risk Regressor
          │
-         └──► 3. GREEN ECO ROUTE (NagarSetu BRTS Bus Corridor & Cycle Lanes)
+         └──► 3. GREEN ECO ROUTE (Municipal BRTS Bus Corridor & Cycle Lanes)
                  • Distance: 3.6 km · Carbon Footprint: 15g CO2 · Safety Score: 82/100
 ```
 
@@ -389,7 +389,7 @@ CREATE TABLE emergency_events (
     triggered_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 4. Dynamic Hazard Geofences (Raksha Integration with TTL)
+-- 4. Dynamic Hazard Geofences with Automated TTL
 CREATE TABLE hazard_zones (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(128) NOT NULL,
@@ -403,7 +403,7 @@ CREATE TABLE hazard_zones (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 5. Krisis CCTV Cameras & Vision Telemetry
+-- 5. Tactical CCTV Cameras & Vision Telemetry
 CREATE TABLE cctv_cameras (
     id VARCHAR(32) PRIMARY KEY,
     name VARCHAR(128) NOT NULL,
@@ -443,7 +443,7 @@ CREATE INDEX idx_cctv_location ON cctv_cameras USING GIST(location);
 | `/api/tracking/ping` | `POST` | `{ sessionId, lat, lng, batteryLevel, heartRate }` | Appends live GPS breadcrumb to active tracking session. |
 | `/api/tracking/location` | `GET` | `?session_id=TRK001` | Public endpoint for emergency contacts to view real-time location. |
 | `/api/tracking/history` | `GET` | `?session_id=TRK001` | Retrieves the full path breadcrumb array for a session. |
-| `/api/cctv` | `GET` | None | Returns the Krisis 6-Camera Vision Wall telemetry and detections. |
+| `/api/cctv` | `GET` | None | Returns the Tactical 6-Camera Vision Wall telemetry and detections. |
 | `/api/cctv/:id/detect` | `POST` | `{ threat, confidence, detections }` | Simulates/pushes YOLOv8 computer vision detection on a camera. |
 | `/api/hazards` | `GET` | None | Retrieves all active temporary hazard geofences that have not expired. |
 | `/api/hazards` | `POST` | `{ name, lat, lng, radiusMeters, riskBoost, durationMin }` | Creates a new dynamic danger circle with automated TTL. |
@@ -543,14 +543,14 @@ docker-compose up --build
 
 | Phase | Description | Status |
 |---|---|:---:|
-| **Phase 1** | Ingestion & audit of NagarSetu, Raksha, and Krisis source trees | ✅ Complete |
+| **Phase 1** | System requirements harmonization, architectural design & core foundation setup | ✅ Complete |
 | **Phase 2** | Master PostGIS database schema, spatial views & migration DDL | ✅ Complete |
 | **Phase 3** | Express + Socket.IO API Gateway with resilient hybrid disk persistence | ✅ Complete |
 | **Phase 4** | Next.js 15 App Router command center with tactical Dark/Light design system | ✅ Complete |
 | **Phase 5** | High-contrast SOS operations with live wearable vitals (`❤️ 112 BPM`) | ✅ Complete |
 | **Phase 6** | Dual-city GIS map (Bhopal & Indore) with 4 layer modes & quick ward fly-to | ✅ Complete |
-| **Phase 7** | Krisis 6-Camera Vision Wall with simulated YOLOv8 threat detections | ✅ Complete |
-| **Phase 8** | Raksha dynamic danger zones with automated TTL countdown clocks | ✅ Complete |
+| **Phase 7** | Tactical 6-Camera Vision Wall with simulated YOLOv8 threat detections | ✅ Complete |
+| **Phase 8** | Dynamic hazard danger zones with automated TTL countdown clocks | ✅ Complete |
 | **Phase 9** | Mobile app upgrades: 218 Kotlin files preserved, Fake Call deterrent screen | ✅ Complete |
 | **Phase 10** | Wear OS smartwatch siren with waveform haptics & heart rate streaming | ✅ Complete |
 | **Phase 11** | Scikit-Learn GradientBoosting spatial regressor & TF-IDF anti-spam classifier | ✅ Complete |

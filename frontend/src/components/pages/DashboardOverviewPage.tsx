@@ -214,7 +214,7 @@ export default function DashboardOverviewPage({ store, onNavigate }: Props) {
                 onClick={() => onNavigate('surveillance')}
                 className="w-full btn-ghost justify-start text-xs font-semibold py-2"
               >
-                📹 Krisis CCTV Wall (6 Feeds)
+                📹 CCTV Vision Wall (6 Feeds)
               </button>
               <button
                 onClick={() => onNavigate('hazards')}

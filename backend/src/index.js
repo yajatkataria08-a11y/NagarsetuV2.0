@@ -32,6 +32,9 @@ const cctvRoutes          = require('./routes/cctv');
 const usersRoutes         = require('./routes/users');
 const notificationsRoutes = require('./routes/notifications');
 const wardsRoutes         = require('./routes/wards');
+const sensorsRoutes       = require('./routes/sensors');
+// Note: DISABLE_AUTH=true in .env — dashboard works in demo mode without login
+const authRoutes          = require('./middleware/auth');
 
 // ── App bootstrap ─────────────────────────────────────────────────────────────
 const app    = express();
@@ -50,6 +53,9 @@ const io = new Server(server, {
 
 // Make io available to route handlers
 app.set('io', io);
+
+// Inject io into hazards module so the TTL janitor can emit hazard:expired
+hazardRoutes.setIo(io);
 
 // ── Middleware ────────────────────────────────────────────────────────────────
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000' }));
@@ -79,6 +85,8 @@ app.use('/api/cctv',          cctvRoutes);
 app.use('/api/users',         usersRoutes);
 app.use('/api/notifications', notificationsRoutes);
 app.use('/api/wards',         wardsRoutes);
+app.use('/api/ingest',        sensorsRoutes);
+app.use('/api/auth',          authRoutes);
 
 // ── Dashboard Master Stats ───────────────────────────────────────────────────
 app.get('/api/stats', async (req, res) => {

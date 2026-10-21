@@ -1,11 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import {
   MapPin, AlertOctagon, Flame, Shield, Layers,
-  Compass, Crosshair, RefreshCw, Search, Building2, ChevronRight
+  Compass, Crosshair, RefreshCw, Search, Building2, ChevronRight,
+  Wifi, WifiOff
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { riskApi, type RiskHeatmap } from '@/lib/api';
 import type { useStore } from '@/hooks/useStore';
 
 type Store = ReturnType<typeof useStore>;
@@ -39,11 +41,33 @@ export default function LiveGisMapPage({ store }: { store: Store }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [coordsDisplay, setCoordsDisplay] = useState('23.2599° N, 77.4126° E');
   const [selectedWard, setSelectedWard] = useState<string | null>(null);
+  const [heatmapData, setHeatmapData] = useState<RiskHeatmap | null>(null);
+  const [heatmapConnected, setHeatmapConnected] = useState(false);
+  const [heatmapLoading, setHeatmapLoading] = useState(false);
 
   const mapRef = useRef<HTMLDivElement>(null);
   const leafRef = useRef<any>(null);
   const mapInst = useRef<any>(null);
   const markersLayerRef = useRef<any>(null);
+  const heatLayerRef = useRef<any>(null);
+
+  // ── Fetch real risk heatmap from backend ─────────────────────────────────
+  const fetchHeatmap = useCallback(async (city: City) => {
+    setHeatmapLoading(true);
+    try {
+      const data = await riskApi.heatmap(city);
+      setHeatmapData(data);
+      setHeatmapConnected(true);
+    } catch {
+      setHeatmapConnected(false);
+    } finally {
+      setHeatmapLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchHeatmap(currentCity);
+  }, [currentCity, fetchHeatmap]);
 
   // ── Bootstrap Leaflet map ────────────────────────────────────────────────
   useEffect(() => {
@@ -58,6 +82,7 @@ export default function LiveGisMapPage({ store }: { store: Store }) {
         zoom: 13,
         zoomControl: false,
         attributionControl: false,
+
       });
 
       // Dark tactical tiles
@@ -166,18 +191,46 @@ export default function LiveGisMapPage({ store }: { store: Store }) {
         });
     }
 
-    // 3. Risk Heatmap Circles
+    // 3. Risk Heatmap Circles — from real Gaussian spatial risk matrix
     if (showHeat && (mapMode === 'heat' || mapMode === 'all')) {
-      store.incidents.forEach((inc) => {
-        const circle = L.circle([inc.location.lat, inc.location.lng], {
-          radius: inc.severity * 120,
-          color: inc.severity >= 4 ? '#FF2D55' : '#FF6200',
-          fillColor: inc.severity >= 4 ? '#FF2D55' : '#FF6200',
-          fillOpacity: 0.18,
-          weight: 1,
+      const riskZones = heatmapData?.zones ?? [];
+      if (riskZones.length > 0) {
+        // Use real ML-computed risk zones from /api/risk/heatmap
+        riskZones.forEach((zone) => {
+          const col = zone.level === 'CRITICAL'
+            ? '#FF2D55'
+            : zone.level === 'HIGH'
+            ? '#FF6200'
+            : zone.level === 'MODERATE'
+            ? '#FFB800'
+            : '#00D4FF';
+          const radius = 400 + zone.riskScore * 600;
+          const circle = L.circle([zone.lat, zone.lng], {
+            radius,
+            color: col,
+            fillColor: col,
+            fillOpacity: 0.12 + zone.riskScore * 0.18,
+            weight: 0.5,
+          });
+          circle.bindTooltip(
+            `<div style="font-size:11px;font-family:monospace"><b>${zone.level}</b> — Score: ${(zone.riskScore * 100).toFixed(0)}<br>${zone.incidentCount} incident(s) nearby</div>`,
+            { sticky: true }
+          );
+          layer.addLayer(circle);
         });
-        layer.addLayer(circle);
-      });
+      } else {
+        // Fallback: derive from store incidents when API unavailable
+        store.incidents.forEach((inc) => {
+          const circle = L.circle([inc.location.lat, inc.location.lng], {
+            radius: inc.severity * 120,
+            color: inc.severity >= 4 ? '#FF2D55' : '#FF6200',
+            fillColor: inc.severity >= 4 ? '#FF2D55' : '#FF6200',
+            fillOpacity: 0.18,
+            weight: 1,
+          });
+          layer.addLayer(circle);
+        });
+      }
     }
 
     // 4. Ward Boundaries / Markers
@@ -198,7 +251,7 @@ export default function LiveGisMapPage({ store }: { store: Store }) {
 
   useEffect(() => {
     renderMarkers();
-  }, [mapMode, showIncidents, showSos, showHeat, showWards, searchQuery, store.incidents, store.sos, currentCity]);
+  }, [mapMode, showIncidents, showSos, showHeat, showWards, searchQuery, store.incidents, store.sos, currentCity, heatmapData]);
 
   // ── Switch City ──────────────────────────────────────────────────────────
   const handleCitySwitch = (city: City) => {

@@ -434,6 +434,10 @@ def run_http_server(port: int = 8000):
                 cam_id = data.get('camera_id', 'cam001')
                 res = analyze_cctv_frame(cam_id, data)
                 self._send(200, res)
+            elif self.path in ('/vision/detect', '/api/vision/detect-image'):
+                from vision_service import analyze_incident_image
+                res = analyze_incident_image(data)
+                self._send(200, res)
             else:
                 self._send(404, {"error": f"Unknown POST route: {self.path}"})
 
@@ -506,7 +510,7 @@ if __name__ == '__main__':
         res = evaluate_route_safety(waypoints, hour)
         print(json.dumps(res))
 
-    elif cmd == 'cctv':
+    elif cmd in ('cctv', 'vision'):
         payload_str = sys.argv[2] if len(sys.argv) > 2 else '{}'
         try:
             req = json.loads(payload_str)
@@ -516,8 +520,12 @@ if __name__ == '__main__':
                 req = ast.literal_eval(payload_str)
             except Exception:
                 req = {}
-        cam_id = req.get('camera_id', 'cam001')
-        res = analyze_cctv_frame(cam_id, req)
+        if cmd == 'vision':
+            from vision_service import analyze_incident_image
+            res = analyze_incident_image(req)
+        else:
+            cam_id = req.get('camera_id', 'cam001')
+            res = analyze_cctv_frame(cam_id, req)
         print(json.dumps(res))
 
     else:

@@ -223,7 +223,7 @@ export default function SettingsPage() {
 
             <div className="flex items-center justify-between p-3 rounded-lg bg-surface border border-white/5">
               <div>
-                <p className="text-xs font-bold text-ink">Wear OS Watch Siren App (Raksha Deterrent)</p>
+                <p className="text-xs font-bold text-ink">Wear OS Watch Siren & Biometric App</p>
                 <p className="text-[10px] text-faint font-mono">Features: Waveform Haptics · Heart Rate 112 BPM · 1-Tap SOS</p>
               </div>
               <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-safe/10 text-safe border border-safe/20">

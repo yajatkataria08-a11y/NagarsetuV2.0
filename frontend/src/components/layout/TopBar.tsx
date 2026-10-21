@@ -8,8 +8,9 @@ const PAGE_TITLES: Record<Page, { title: string; subtitle: string }> = {
   dashboard:     { title: 'Municipal Command Overview',         subtitle: 'Real-time citywide pulse, critical alerts & incident metrics' },
   sos:           { title: 'SOS Monitoring & Siren Operations',  subtitle: 'Live emergency beacons, vital telemetry & rapid dispatch' },
   map:           { title: 'Tactical GIS Map',                   subtitle: 'Dual Bhopal-Indore GIS layers, risk heatmaps & fly-to-ward' },
-  surveillance:  { title: 'Krisis 6-Camera Vision Wall',        subtitle: 'Zero-scroll municipal CCTV grid with automated YOLOv8 hazard detection' },
-  hazards:       { title: 'Raksha Hazard Geofences',            subtitle: 'Dynamic temporary danger zones with automated TTL expiration' },
+  surveillance:  { title: 'Tactical 6-Camera Vision Wall',      subtitle: 'Zero-scroll municipal CCTV grid with automated YOLOv8 hazard detection' },
+  hazards:       { title: 'Dynamic Hazard Geofences',           subtitle: 'Temporary danger zones with automated TTL expiration & broadcast' },
+
   incidents:     { title: 'Incidents Management & Triage',      subtitle: 'Multi-select bulk verification, officer assignment & AI triage' },
   analytics:     { title: 'Ward Analytics & SLA Metrics',       subtitle: 'Performance benchmarks, complaint volume & resolution rates' },
   wards:         { title: 'Ward & Officer Leaderboard',         subtitle: 'Ward rankings, municipal budget tracking & officer dispatch roster' },
