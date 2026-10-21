@@ -30,9 +30,18 @@
 > **NagarSetu V2.0** is an enterprise-grade civic governance, public safety, and smart city emergency command operating system.
 > It unifies comprehensive municipal ward administration, real-time spatial citizen tracking, dynamic hazard geofencing, IoT environmental telemetry, automated contractor accountability ledgers, cross-border BIMSTEC legal intelligence, and an AI-driven CCTV computer vision grid into a resilient, high-availability municipal command platform.
 
+<div align="center">
+
+[![Complete Project Guide & Engineering Manual](https://img.shields.io/badge/%F0%9F%93%98_READ_THE_COMPLETE_PROJECT_GUIDE-PROJECT__GUIDE.md-00F0FF?style=for-the-badge&logo=gitbook&logoColor=black)](PROJECT_GUIDE.md)
+[![API Reference](https://img.shields.io/badge/%F0%9F%9B%A0%EF%B8%8F_API_CATALOG_%26_CURL-PROJECT__GUIDE.md%2313-F7931E?style=for-the-badge)](PROJECT_GUIDE.md#13-developer-api-reference-with-curl-examples)
+[![Hackathon Demo Script](https://img.shields.io/badge/%F0%9F%8E%A4_5--MIN_DEMO_SCRIPT-PROJECT__GUIDE.md%2317-3DDC84?style=for-the-badge)](PROJECT_GUIDE.md#17-hackathon-5-minute-live-demonstration-script)
+
+</div>
+
 ---
 
 ## 📑 Table of Contents
+* 📘 **[Complete Operational Project Guide & Engineering Manual (Separate Guide)](PROJECT_GUIDE.md)**
 1. [Executive Summary & Municipal Paradigm Shift](#1-executive-summary--municipal-paradigm-shift)
 2. [Architectural Topology & Edge-to-Cloud Data Mesh](#2-architectural-topology--edge-to-cloud-data-mesh)
 3. [Industry Benchmark & Comparative Superiority Matrix](#3-industry-benchmark--comparative-superiority-matrix)
