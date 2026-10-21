@@ -4,104 +4,131 @@
 [![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-v3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-20_LTS-green?style=for-the-badge&logo=node.js)](https://nodejs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110_Async-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![Socket.IO](https://img.shields.io/badge/Socket.IO-4.8_Realtime-010101?style=for-the-badge&logo=socket.io)](https://socket.io/)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python)](https://python.org/)
-[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.4_ML-F7931E?style=for-the-badge&logo=scikit-learn)](https://scikit-learn.org/)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.4_R2=0.965-F7931E?style=for-the-badge&logo=scikit-learn)](https://scikit-learn.org/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.8_Vision-5C3EE8?style=for-the-badge&logo=opencv)](https://opencv.org/)
 [![Google Gemini](https://img.shields.io/badge/Google_Gemini-1.5_Flash-4285F4?style=for-the-badge&logo=google)](https://deepmind.google/technologies/gemini/)
 [![Android 14](https://img.shields.io/badge/Android-13_Modules_·_218_Kotlin-3DDC84?style=for-the-badge&logo=android)](https://developer.android.com/)
-[![Wear OS](https://img.shields.io/badge/Wear_OS-Haptic_Siren-4285F4?style=for-the-badge&logo=wear-os)](https://developer.android.com/wear)
-[![PostGIS](https://img.shields.io/badge/PostGIS-Supabase_Spatial-336791?style=for-the-badge&logo=postgresql)](https://postgis.net/)
-[![Docker](https://img.shields.io/badge/Docker-Multi--Container-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com/)
+[![Wear OS](https://img.shields.io/badge/Wear_OS-DirectSos_·_Standalone_LTE-4285F4?style=for-the-badge&logo=wear-os)](https://developer.android.com/wear)
+[![PostGIS](https://img.shields.io/badge/PostGIS-16_Spatial_Cluster-336791?style=for-the-badge&logo=postgresql)](https://postgis.net/)
+[![Docker](https://img.shields.io/badge/Docker-5--Service_Composition-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com/)
 
 ---
 
-> **NagarSetu V2.0** is an enterprise-grade civic governance, public safety, and smart city emergency command platform. 
-> It synthesizes comprehensive municipal administration, real-time spatial citizen tracking, dynamic hazard geofencing, and an AI-driven CCTV computer vision grid into a unified, resilient civic operating system.
+> **NagarSetu V2.0** is an enterprise-grade civic governance, public safety, and smart city emergency command operating system.
+> It unifies comprehensive municipal ward administration, real-time spatial citizen tracking, dynamic hazard geofencing, IoT environmental telemetry, automated contractor accountability ledgers, and an AI-driven CCTV computer vision grid into a resilient, high-availability command platform.
 
 ---
 
 ## 📑 Table of Contents
-1. [Executive Summary & Problem Statement](#1-executive-summary--problem-statement)
-2. [Architectural Overview & Data Flow](#2-architectural-overview--data-flow)
+1. [Executive Summary & Municipal Paradigm Shift](#1-executive-summary--municipal-paradigm-shift)
+2. [Architectural Topology & Data Mesh](#2-architectural-topology--data-mesh)
 3. [Industry Benchmark & Comparative Superiority Matrix](#3-industry-benchmark--comparative-superiority-matrix)
-4. [Complete 11-View Command Center Walkthrough](#4-complete-11-view-command-center-walkthrough)
-5. [Multi-Tier Machine Learning & AI Pipeline](#5-multi-tier-machine-learning--ai-pipeline)
+4. [The 12-View Tactical Command Center](#4-the-12-view-tactical-command-center)
+5. [Multi-Tier Machine Learning & AI Microservices](#5-multi-tier-machine-learning--ai-microservices)
 6. [Native Mobile (13 Modules) & Wear OS Ecosystem](#6-native-mobile-13-modules--wear-os-ecosystem)
-7. [Triple-Path Navigation & Safety Corridors](#7-triple-path-navigation--safety-corridors)
-8. [Unified PostGIS Master Schema & Data Layer](#8-unified-postgis-master-schema--data-layer)
-9. [Comprehensive REST & WebSocket API Catalog](#9-comprehensive-rest--websocket-api-catalog)
-10. [Local Development, Docker & Production Setup](#10-local-development-docker--production-setup)
-11. [15-Phase Development Roadmap](#11-15-phase-development-roadmap)
+7. [Progressive Web App (PWA) Emergency Suite](#7-progressive-web-app-pwa-emergency-suite)
+8. [Triple-Path Navigation & Safety Corridors](#8-triple-path-navigation--safety-corridors)
+9. [IoT Environmental Telemetry & Escalation Pipeline](#9-iot-environmental-telemetry--escalation-pipeline)
+10. [Contractor Accountability & Public Trust Ledger](#10-contractor-accountability--public-trust-ledger)
+11. [DriveLegal: BIMSTEC Cross-Border Penal Code System](#11-drivelegal-bimstec-cross-border-penal-code-system)
+12. [Enterprise Security, RBAC & Telephony Stack](#12-enterprise-security-rbac--telephony-stack)
+13. [Unified PostGIS Schema & Resilient Hybrid Data Layer](#13-unified-postgis-schema--resilient-hybrid-data-layer)
+14. [Comprehensive REST & WebSocket API Catalog](#14-comprehensive-rest--websocket-api-catalog)
+15. [Automated Testing & City-Grid Simulation](#15-automated-testing--city-grid-simulation)
+16. [Local Development, Docker & Production Deployment](#16-local-development-docker--production-deployment)
+17. [15-Phase Development Roadmap Execution](#17-15-phase-development-roadmap-execution)
+18. [Security, Privacy, and Fail-Safe Ethics](#18-security-privacy-and-fail-safe-ethics)
 
 ---
 
-## 1. Executive Summary & Problem Statement
+## 1. Executive Summary & Municipal Paradigm Shift
 
-### The Municipal Crisis in Indian Cities
-Civic complaint mechanisms in urban India (such as Bhopal and Indore) suffer from three critical bottlenecks:
-1. **Disjointed Silos & Information Blindspots**: Women's safety alerts (SOS), road infrastructure hazards (potholes/waterlogging), and municipal budget governance exist in disconnected departments with zero cross-talk.
-2. **Pervasive False Alarms & Spam**: Up to 40% of citizen reports are test submissions, spam, or duplicates, overwhelming field engineers and causing genuine crises to breach the 48-hour SLA deadline.
-3. **Static, Blind Navigation**: Conventional routing algorithms optimize solely for travel distance, funneling pedestrians through unlit, high-crime alleyways at late hours.
+### The Crisis in Municipal Urban Operations
+Modern municipal corporations in developing metropolitan areas face four systemic failure modes:
+1. **Departmental Information Silos**: Women's safety alerts (SOS), critical civil defense hazards (waterlogging, structural cave-ins, gas leaks), and ward budget allocations operate on disparate platforms with zero cross-departmental coordination.
+2. **False Alarm & Spam Bottlenecks**: Up to 40% of incoming citizen reports represent duplicate submissions, low-resolution test queries, or false alarms. This floods field engineers, causing genuine crises to breach statutory 48-hour SLA deadlines.
+3. **Blind Travel Routing**: Standard consumer mapping applications optimize solely for shortest distance or vehicle transit time, funneling pedestrians through unlit, isolated alleyways with elevated nocturnal crime risks.
+4. **Contractor Impunity & Lack of Audit Trails**: Civil contractors frequently default on road maintenance and pothole repairs without transparent financial penalty mechanisms or persistent accountability records.
 
 ### The NagarSetu V2.0 Solution
-NagarSetu V2.0 re-engineers municipal emergency operations through three foundational pillars:
-* **Deep Municipal Administration**: Native Android client (13 modules · 218 Kotlin files), administrative ward budget tracking, municipal officer dispatch rosters, and bilingual civic operations.
-* **Intelligent Safety & Geofencing**: Continuous spatial-temporal machine learning risk regression, dynamic hazard geofences with automated TTL expiration, browser-based live tracking links, and realistic Fake Call deterrent screens.
-* **Tactical Computer Vision**: 6-camera zero-scroll CCTV vision wall, simulated RTSP/HLS feeds, real-time YOLOv8 hazard bounding boxes, and instant snapshot export.
+NagarSetu V2.0 re-engineers municipal operations into a unified, proactive civic command operating system:
+* **Deep Municipal Governance**: Native Android client (13 modules · 218 Kotlin files), municipal officer dispatch rosters, ward budget tracking, and an automated contractor penalty ledger.
+* **Predictive Spatial-Temporal Safety**: Dual-city GradientBoosting ML regressor ($R^2 = 0.9652$) predicting risk scores across Bhopal and Indore with Gaussian spatial decay ($e^{-d^2/2\sigma^2}$) and nocturnal risk multipliers.
+* **Autonomous Hazard Geofencing & IoT Pipeline**: Continuous hardware telemetry ingestion (water depth, gas fumes, acoustic decibels, ambient heat) with sliding-window validation triggering automatic hazard zones with background TTL expiration.
+* **Tactical CCTV Vision Grid**: 6-feed real-time video surveillance wall running OpenCV and YOLOv8 computer vision models to identify potholes, waterlogging, crowd surges, and thermal fire signatures.
+* **Cross-Border Legal Intelligence (DriveLegal)**: 154 indexed traffic and penal violations across 7 South Asian BIMSTEC nations with automated penalty calculations and bilingual Hinglish advisory.
 
 ---
 
-## 2. Architectural Overview & Data Flow
+## 2. Architectural Topology & Data Mesh
 
-### System Topology
+### System Topology Architecture
 ```mermaid
 flowchart TD
     subgraph Edge Clients
-        A[Android Native App\n13 Modules · 218 Kotlin Files]
-        B[Wear OS Smartwatch\nWaveform Siren · 112 BPM Heart Rate]
-        C[3-Tap Emergency QR Web App\n/report/qr]
-        D[Browser Live Tracking Link\n/track/:token]
+        A[Android Native Client\n13 Modules · 218 Kotlin Files]
+        B[Wear OS Smartwatch\nDirectSosDispatcher · Standalone LTE]
+        C[3-Tap QR Emergency PWA\n/report/qr]
+        D[PWA Fake Call Deterrent\n/report/qr/fake-call]
+        E[Voice Safety Coach\n/report/qr/voice-coach]
+        F[Browser Live Tracking Link\n/track/:token]
+    end
+
+    subgraph Edge Telemetry Grid
+        IOT1[Ultrasonic Flood Sensors]
+        IOT2[Electrochemical Gas Analyzers]
+        IOT3[Acoustic Shock Microphones]
+        CCTV_CAM[Tactical CCTV Video Feeds\n6x Channels · RTSP / MP4]
     end
 
     subgraph API Gateway & Event Mesh
-        E[Express.js & Socket.IO Gateway\nPort 4000]
-        F[Twilio SMS Gateway\nLive E.164 & Simulation]
+        GW[Express.js & Socket.IO Gateway\nPort 4000 · Cluster Node 20]
+        TWILIO[Twilio Voice IVR & WhatsApp\nMulti-Channel Dispatcher]
+        JANITOR[Automated 30s TTL Janitor\nDynamic Hazard Cleanup]
     end
 
-    subgraph Data & Sync Layer
-        G[(Supabase PostGIS Cluster\nMaster Spatial Tables & Views)]
-        H[(Persistent Local Disk Store\nbackend/data/store.json)]
-        I[(Firebase Realtime DB / Firestore\nMobile Citizen Telemetry)]
+    subgraph AI Microservice Cluster
+        FASTAPI[FastAPI Async Microservice\nPort 8000 · Uvicorn Engine]
+        ML_RISK[Dual-City GradientBoosting\nR2 = 0.9652 · Sub-1ms Latency]
+        ML_NLP[TF-IDF + Logistic Classifier\nAnti-Spam & Credibility Triage]
+        CV_ENGINE[OpenCV & YOLOv8 Engine\nFrame Analysis & Bounding Boxes]
+        LLM_CORE[Google Gemini 1.5 Flash\nMultilingual Multimodal Reasoning]
     end
 
-    subgraph AI Engine Microservices
-        J[Unified Civic AI Engine\nScikit-Learn + NLP Heuristics]
-        K[GradientBoosting Regressor\nBhopal-Indore Spatial Risk]
-        L[TF-IDF + Logistic Classifier\nAnti-Spam & Credibility]
-        M[Gemini 1.5 Flash\nMultimodal Multilingual Hindi/Hinglish]
-        N[YOLOv8 Computer Vision\nCCTV Threat Detection]
+    subgraph Enterprise Data Layer
+        POSTGIS[(Supabase PostGIS Cluster\nMaster Spatial DB & GIST Indexes)]
+        LOCAL_DB[(Atomic Local Disk Store\nbackend/data/store.json)]
+        BIMSTEC_KB[(BIMSTEC Legal Database\n154 Violations · 7 Nations)]
+        LEDGER[(Contractor Trust Ledger\nImmutable Penalty Audit Trail)]
     end
 
-    subgraph Municipal Command Center
-        O[Next.js 15 App Router Dashboard\n11 Tactical & Municipal Views]
+    subgraph Tactical Command Center
+        UI[Next.js 15 App Router Dashboard\n12 Command & Tactical Views]
     end
 
-    A -->|Reports & SOS| E
-    B -->|Heart Rate & Panic| E
-    C -->|Emergency Submission| E
-    D -->|Realtime GPS Polling| E
+    A -->|Reports, SOS & Telemetry| GW
+    B -->|Bypass / Direct REST| GW
+    C & D & E & F -->|REST / WebSocket| GW
+    IOT1 & IOT2 & IOT3 -->|POST /api/ingest/sensor| GW
+    CCTV_CAM -->|Video Stream & Frame Ingest| GW
 
-    E <--> G
-    E <--> H
-    E <--> I
-    E <--> J
+    GW <--> POSTGIS
+    GW <--> LOCAL_DB
+    GW <--> BIMSTEC_KB
+    GW <--> LEDGER
+    GW <--> JANITOR
 
-    J --> K
-    J --> L
-    J --> M
-    J --> N
+    GW <-->|HTTP Connection Pool| FASTAPI
+    FASTAPI --> ML_RISK
+    FASTAPI --> ML_NLP
+    FASTAPI --> CV_ENGINE
+    FASTAPI --> LLM_CORE
 
-    E <-->|WebSocket Realtime Mesh| O
+    GW -->|Voice Calls & WhatsApp Alerts| TWILIO
+    GW <-->|Socket.IO Bidirectional Mesh| UI
 ```
 
 ### Real-Time Emergency Event Lifecycle
@@ -109,235 +136,351 @@ flowchart TD
 sequenceDiagram
     autonumber
     actor Citizen as Citizen / Smartwatch
-    participant Gateway as API Gateway (Node/Express)
-    participant AI as Scikit-Learn & Gemini AI
-    participant DB as PostGIS / Local Store
-    participant Twilio as Twilio SMS Gateway
-    participant Dashboard as Municipal Command Center
-    participant Officer as Field Officer (On-Duty)
+    participant Gateway as API Gateway (Node/Express :4000)
+    participant AI as FastAPI AI Microservice (:8000)
+    participant DB as PostGIS / Atomic Local Store
+    participant Twilio as Twilio Multi-Channel Dispatch
+    participant Dashboard as Tactical Command Center
+    participant Officer as Field Responder (On-Duty)
 
-    Citizen->>Gateway: POST /api/sos (coords, battery, heart rate: 112 BPM)
-    Gateway->>DB: INSERT into emergency_events (active)
-    Gateway->>AI: Predict spatial risk & identify nearest safe corridor
-    AI-->>Gateway: Risk Score: 84 (CRITICAL), Safe Corridor: Arera Arterial
-    Gateway->>Twilio: Dispatch SMS with Live Tracking URL to Emergency Contacts
-    Gateway->>Dashboard: Socket.IO emit 'new_sos' (waveform strobe triggered)
-    Dashboard->>Officer: Dispatch nearest responder (MP-041)
-    Citizen->>Gateway: POST /api/tracking/ping (continuous GPS breadcrumbs)
-    Gateway->>Dashboard: Real-time map marker fly-to & pulse
+    Citizen->>Gateway: POST /api/sos (coords, battery: 18%, HR: 112 BPM)
+    Gateway->>DB: INSERT into emergency_events (active, token generated)
+    Gateway->>AI: POST /risk (spatial risk calculation)
+    AI-->>Gateway: Risk Score: 88.4 (CRITICAL), Safe Corridor: Arera Arterial
+    Gateway->>Twilio: Dispatch Voice Call (IVR) & WhatsApp tracking link
+    Gateway->>Dashboard: Socket.IO emit 'new_sos' (waveform strobe activated)
+    Dashboard->>Officer: Dispatch nearest responder unit (MP-041)
+    Citizen->>Gateway: POST /api/tracking/ping (live breadcrumb GPS coordinates)
+    Gateway->>Dashboard: High-frequency WebSocket coordinate pulse
+    Dashboard->>Citizen: Officer location synchronization & SafePath guide
 ```
 
 ---
 
-## 3. Industry Benchmark & Architectural Superiority
+## 3. Industry Benchmark & Comparative Superiority Matrix
 
-NagarSetu V2.0 was engineered to resolve the critical shortcomings of traditional municipal systems, standalone emergency apps, and conventional surveillance networks:
+The following architectural comparison demonstrates how NagarSetu V2.0 supersedes legacy municipal systems, single-purpose emergency apps, and conventional surveillance networks:
 
-| Architectural Dimension | Legacy Municipal Portals (e.g. CPGRAMS) | Standalone Emergency SOS Apps | Traditional Traffic CCTV Systems | **NagarSetu V2.0 (Unified Intelligent Platform)** |
+| Architectural Dimension | Legacy Municipal Portals (e.g. CPGRAMS) | Standalone Emergency SOS Apps | Traditional CCTV NVR Systems | **NagarSetu V2.0 (Unified Intelligent Platform)** |
 |---|---|---|---|---|
-| **Frontend Architecture** | 100KB monolithic HTML or dated server-rendered views with inline DOM mutation | Basic mobile-first UI with minimal or no municipal web command dashboard | Isolated vendor NVR software with proprietary desktop clients | **Next.js 15 App Router + Tailwind CSS**, 11 dedicated municipal views, persistent Light/Dark themes, responsive glassmorphism. |
-| **Database & Persistence** | Volatile in-memory stores or standard relational DBs lacking spatial indexing | Standalone local SQLite with no multi-agency synchronization | Mock or disconnected video archives without spatial correlation | **Enterprise Hybrid Engine**: Supabase PostGIS spatial cluster + atomic local disk persistence (`backend/data/store.json`). Zero data loss. |
-| **Spatio-Temporal AI Risk** | Static rule-based prioritization without predictive spatial intelligence | Standalone offline script limited to single isolated areas | None; relies solely on passive human monitoring | **Scikit-Learn GradientBoosting Regressor** covering dual-city footprints (Bhopal & Indore), continuous Gaussian decay ($e^{-d^2/2\sigma^2}$), night multipliers, `< 1ms` inference. |
-| **Incident NLP & Anti-Spam** | 140-line heuristic scripts or manual triage; high backlog accumulation | None; reliance on plain text or operator dispatching | None | **Scikit-Learn TF-IDF + Logistic Classifier + Anti-Spam Regex + Temporal Normalization**, asynchronous non-blocking triage. |
-| **Multimodal Civic Reasoning** | None | None | None | **Google Gemini 1.5 Flash Core** for multilingual (Hindi, Hinglish, English) reasoning, photo verification, and empathetic citizen advice. |
-| **CCTV Vision Grid** | None | None | Basic camera simulation without active threat metadata | **Tactical 6-Camera Vision Wall** with real-time YOLOv8 threat detections (`pothole`, `waterlogging`, `crowd_surge`), FPS/telemetry, and snapshot capture. |
-| **Hazard Geofencing** | Static municipal notice boards or unmapped incident markers | Static circular hazard geofences without lifecycle expiration | None | **Dynamic Hazard Geofences with Automated TTL Expiration**, custom radius (50m–1000m), real-time citizen broadcast alerts. |
-| **Emergency SOS Operations** | Rudimentary alert table, no live vitals | Native SOS with SMS alert but no live biometric vital feeds | None | **High-Contrast SOS Command Operations**, live vitals (`❤️ 112 BPM`, `🔋 Battery %`), one-tap browser tracking token generation (`/track/:token`). |
-| **Navigation & Routing** | Straight-line distance mock | Single shortest-path algorithm without hazard avoidance | None | **Triple-Path Navigation Engine**: Fastest Route, Safest Route (Main-Road Bias + street lighting), and Green Eco Route (BRTS bus & cycle lanes) with ML waypoint safety evaluator. |
-| **Municipal Governance** | Unstyled table or static spreadsheets | None | None | **Ward & Officer Leaderboard** (INR budget tracking, SLA breach counter), **Citizen Trust Registry** (anti-fraud scoring), and **Notifications Hub**. |
-| **Native Mobile & Wearable** | Generic web wrapper or single-page view | Basic mobile UI | None | **Full Android Native Architecture (218 Kotlin files across 13 modules)** with Fake Call deterrent screen, and **Wear OS smartwatch waveform haptic siren with heart rate streaming**. |
+| **Frontend Architecture** | Monolithic server-rendered HTML forms with full-page refreshes | Basic consumer mobile-first UI lacking municipal dispatch panels | Proprietary desktop NVR client bound to local subnets | **Next.js 15 App Router + React 19 + Tailwind CSS**, 12 dedicated municipal views, tactical glassmorphism, instant Light/Dark mode. |
+| **Data Persistence & Spatial Integrity** | Relational SQL lacking spatial GIST indexes; table-lock bottlenecks | Standalone local SQLite with zero multi-agency synchronization | Disjointed proprietary video archives without GIS coordinate bindings | **Dual-Engine Spatial Fabric**: Cloud Supabase PostGIS 16 + atomic local disk store (`store.json`) with automated write-locks and zero data loss. |
+| **Spatial-Temporal AI Risk** | Static manual priority rules without predictive spatial regression | Isolated offline scripts restricted to single pre-computed regions | None; purely reactive human monitor observation | **Dual-City GradientBoosting Regressor ($R^2 = 0.9652$)** trained on 2,040+ geocoded incidents across Bhopal & Indore with continuous Gaussian decay ($e^{-d^2/2\sigma^2}$). |
+| **Incident Triage & Anti-Spam** | 100% manual triage; 48h to 72h ticket resolution backlog | None; unverified raw text dispatches to emergency call centers | None | **Scikit-Learn TF-IDF + Logistic Classifier + Heuristic Regex Filter**, sub-millisecond classification with automated dispatch tiers. |
+| **Multimodal Civic Reasoning** | None | None | None | **Google Gemini 1.5 Flash Core** for multimodal photo validation and multilingual understanding in Hindi, Hinglish, and English. |
+| **CCTV Computer Vision** | None | None | Basic hardware motion detection generating frequent false alarms | **Tactical 6-Feed Vision Wall** with real-time OpenCV & YOLOv8 bounding box detection (`pothole`, `waterlogging`, `crowd_surge`, `fire`). |
+| **Hazard Geofencing** | Static municipal bulletins published days after incident occurrence | Fixed circular markers without automated lifecycle management | None | **Dynamic Danger Zones with 30s TTL Janitor**, custom radii ($50\text{m} - 1000\text{m}$), automated citizen proximity broadcast alerts. |
+| **IoT Environmental Telemetry** | Completely manual; reports filed hours after floodwaters rise | None | None | **Hardware Ingestion Engine (`/api/ingest/sensor`)** with 5-reading sliding-window buffer triggering automated hazard zones for flood, gas, and heat. |
+| **Triple-Path Navigation** | Linear coordinate interpolation or standard distance routing | Shortest-path routing funneling users through unlit backstreets | None | **Triple-Path Engine**: Fastest Route (Dijkstra/OSRM), Safest Route (Main-Road Arterial Bias + 95% illumination), and Green Eco Route (BRTS bus corridor). |
+| **Contractor Accountability** | Hidden municipal files; manual fine assessments prone to corruption | None | None | **Public Contractor Trust Ledger**: Real-time reliability rating, financial penalty deduction modal, and immutable audit trail. |
+| **Cross-Border Legal System** | Local municipal bylaws only; no cross-jurisdiction legal reference | None | None | **DriveLegal BIMSTEC Engine**: 154 indexed traffic and penal violations across 7 South Asian nations with repeat offender multipliers and Hinglish query bot. |
+| **Mobile & Wearable Ecosystem** | Mobile web wrapper or unmaintained single-module application | Basic single-screen mobile application | None | **13-Module Android Architecture (218 Kotlin files)** + **Wear OS Smartwatch Siren (`DirectSosDispatcher`)** with standalone LTE/Wi-Fi failover. |
 
 ---
 
-## 4. Complete 11-View Command Center Walkthrough
+## 4. The 12-View Tactical Command Center
 
-The web dashboard is built using **Next.js 15**, **Tailwind CSS**, and **Lucide Icons** with zero external UI bloat:
+The administrative command center is engineered in **Next.js 15**, **React 19**, and **Tailwind CSS**, delivering 12 tactical views accessible via the persistent command sidebar:
 
 ```
 frontend/src/components/pages/
-├── DashboardOverviewPage.tsx   ← 6-card KPI grid + Area Broadcast modal
-├── SosPage.tsx                 ← High-contrast SOS operations & vitals triage
-├── LiveGisMapPage.tsx          ← Dual-city GIS map (Bhopal/Indore) with layers
-├── SurveillancePage.tsx        ← Tactical 6-Camera Vision Wall & YOLOv8 grid
-├── HazardsPage.tsx             ← Dynamic Geofenced Hazard Zones (TTL)
-├── IncidentsPage.tsx           ← Bulk-action data table with multi-attribute filters
-├── AnalyticsPage.tsx           ← Macro city KPIs, SLA breaches & response trends
-├── WardsLeaderboardPage.tsx    ← Ward ranking & officer dispatch roster
-├── CitizenRegistryPage.tsx     ← Citizen reliability scoring & anti-fraud tools
-├── NotificationsHubPage.tsx    ← Channel-separated notification inbox
-└── SettingsPage.tsx            ← Cloud integrations, AI thresholds & APK status
+├── DashboardOverviewPage.tsx   ← 6-card KPI grid, live activity feed & civil defense broadcast
+├── SosPage.tsx                 ← High-contrast SOS triage, battery/heart rate vitals & SMS dispatch
+├── LiveGisMapPage.tsx          ← Dual-city GIS map (Bhopal/Indore) + indoor blueprint overlays
+├── SurveillancePage.tsx        ← 6-camera CCTV vision wall with live streams & YOLOv8 bounding boxes
+├── HazardsPage.tsx             ← Dynamic geofenced danger zones with automated TTL countdown
+├── IncidentsPage.tsx           ← Bulk-action triage data table with multi-attribute filtering
+├── AnalyticsPage.tsx           ← Citywide macro benchmarks, 48h SLA breach tracker & budget charts
+├── WardsLeaderboardPage.tsx    ← Ward rankings, officer dispatch roster & contractor penalty ledger
+├── CitizenRegistryPage.tsx     ← Citizen trust scoring (0-100%), report audit & anti-fraud tools
+├── DriveLegalPage.tsx          ← BIMSTEC legal explorer across 7 nations with fine calculator
+├── NotificationsHubPage.tsx    ← Channel-separated notification feeds with tab synchronization
+└── SettingsPage.tsx            ← Cloud toggles, AI sensitivity thresholds & mobile APK status
 ```
 
-### Detailed Breakdown of Views:
-1. **Municipal Overview (`DashboardOverviewPage`)**:
-   - The signature 6-card KPI stats grid (`🚨 Active SOS`, `⏳ Pending Triage`, `✅ Verified`, `❌ Rejected`, `💰 Spent Budget`, `👮 Responders`).
-   - Live Emergency Activity Feed streaming real-time alerts.
-   - Ward load distribution list showing pending complaints per ward.
-   - One-click **Area Broadcast Modal** enabling citywide or ward-specific civil defense warnings.
-2. **SOS Operations (`SosPage`)**:
-   - Live emergency cards displaying beacon severity (`CRITICAL`, `HIGH`, `MODERATE`).
-   - Victim vital telemetry (`🔋 Battery %`, `❤️ Heart Rate BPM`).
-   - Emergency contact dialer shortcuts and one-click browser tracking link dispatch (`/track/:token`).
-   - Quick responder dispatch selector with one-touch resolution.
-3. **Tactical GIS Map (`LiveGisMapPage`)**:
-   - **Dual City Switcher**: Toggle instantaneously between **Bhopal Central** (`23.2599°N, 77.4126°E`) and **Indore SmartCity** (`22.7196°N, 75.8577°E`).
-   - **4-Mode Layer Switcher**: `📍 Incidents`, `🚨 SOS Live`, `🌡️ Risk Heat`, and `🗺️ All Layers`.
-   - **Interactive Layer Toggles**: Checkboxes for Incidents, SOS, Heatmap circles, and Ward boundaries.
-   - **Quick Ward Jump**: Clickable sidebar flying the tactical camera directly to Wards 3, 5, 7, 9, 12, 18, 24, 31.
-   - **Floating Live Stat Overlay**: Persistent pills showing live count of SOS, incidents, and resolved tickets.
-4. **CCTV Vision Wall (`SurveillancePage`)**:
-   - Zero-scroll 6-feed AI camera grid.
-   - Real-time YOLOv8 threat detections with visual bounding boxes (`pothole`, `waterlogging`, `crowd_surge`, `unlit_segment`).
-   - Stream telemetry badges: resolution (`1080p`/`4K`), FPS (`28-30 FPS`), and active alert status.
-   - One-click snapshot inspection and camera locator.
-5. **Hazard Geofences (`HazardsPage`)**:
-   - Dynamic danger zones with automated TTL countdown clocks.
-   - Interactive radius sliders ($50\text{m} - 1000\text{m}$) and risk boost multipliers ($+10\% - +50\%$).
-   - Quick creation shortcuts for flash flooding, active protests, gas leaks, and road cave-ins.
-6. **Incidents Management (`IncidentsPage`)**:
-   - Full municipal data table with multi-select checkboxes.
-   - **Bulk Action Bar**: Select multiple tickets to trigger `✅ Verify Selected`, `❌ Reject Selected`, or `👤 Assign Officer`.
-   - Multi-attribute filter bar: Search query, Status filter, Incident Type filter, Ward selector, Severity filter ($1 - 5$).
-   - AI confidence score progress bars and citizen trust indicators.
-7. **Ward Analytics (`AnalyticsPage`)**:
-   - Citywide macro benchmarks: Total complaints, resolution percentages, SLA compliance rates.
-   - SLA breach tracking for tickets exceeding the 48-hour municipal window.
-   - Ward-by-ward budget utilization comparing sanctioned vs. spent funds.
-8. **Ward & Officer Board (`WardsLeaderboardPage`)**:
-   - **Ward Leaderboard**: Ranked by resolution rate with gold, silver, and bronze trophies.
-   - **Officer Leaderboard**: Active field officers (e.g. `Ravi Kumar [MP-041]`), assigned complaints, resolved count, and average response times.
-9. **Citizen Trust Registry (`CitizenRegistryPage`)**:
-   - Citizen reliability scoring ($0\% - 100\%$) based on report validation history.
-   - Tracks total reports, verified reports, and false/spam attempts.
-   - Moderation actions: `Verify & Activate`, `Flag for Audit`, and `Ban User`.
-10. **Notifications Hub (`NotificationsHubPage`)**:
-    - Channel-separated notification feed (`All`, `🚨 SOS`, `📋 Incidents`, `⚠️ Alerts`, `⚙️ System`).
-    - Unread counters, priority badges (`Critical`, `High`, `Normal`), and "Mark All Read".
-    - Direct action navigation buttons linking straight to the incident or SOS beacon.
-11. **System Configuration (`SettingsPage`)**:
-    - Firebase Realtime Database & FCM sync toggle.
-    - Supabase PostGIS connection parameters.
-    - AI auto-verify ($\ge 0.85$) and auto-reject ($< 0.25$) sensitivity sliders.
-    - Android and Wear OS APK integration status bridge.
+### 1. Municipal Overview (`DashboardOverviewPage`)
+* **Signature 6-Card KPI Grid**: Real-time counters displaying Active SOS Beacons, Pending Triage Complaints, Verified Incidents, Rejected Tickets, Sanctioned Ward Budget Spent, and Active On-Duty Responders.
+* **Live Emergency Feed**: Real-time event ticker streaming SOS triggers, AI triage determinations, and officer assignments.
+* **Ward Load Distribution**: Visual progress breakdown of pending municipal complaints across Wards 1 through 85.
+* **Area Broadcast Modal**: Allows dispatchers to issue geo-targeted civil defense push alerts and SMS broadcasts to citizens within specific wards or citywide.
+
+### 2. SOS Operations Monitor (`SosPage`)
+* **High-Contrast Panic Triage**: Immediate visual prioritization of emergency beacons (`CRITICAL`, `HIGH`, `MODERATE`).
+* **Live Biometric & Hardware Telemetry**: Real-time rendering of victim battery percentage (`🔋 18%`) and wearable heart rate (`❤️ 112 BPM`).
+* **One-Tap Public Tracking Link**: Dispatches a cryptographically secure browser live-tracking link (`/track/:token`) via Twilio SMS.
+* **Multi-Responder Dispatcher**: Instant assignment of the nearest municipal police, ambulance, or disaster response vehicle.
+
+### 3. Tactical GIS Map (`LiveGisMapPage`)
+* **Dual-City Footprint Switcher**: Seamlessly toggles map bounds between **Bhopal Central** (`23.2599°N, 77.4126°E`) and **Indore SmartCity** (`22.7196°N, 75.8577°E`).
+* **4-Mode Tactical Layer Selector**: `📍 Incidents`, `🚨 SOS Live`, `🌡️ Risk Heatmap`, and `🗺️ All Composite Layers`.
+* **Indoor Floorplan Blueprint Overlays**: Integrated Leaflet `L.imageOverlay` rendering architectural emergency blueprints for critical public facilities:
+  * **Habibganj Railway Station** (Ground Floor & Concourse Level 1)
+  * **AIIMS Bhopal Hospital Campus** (Emergency Wing & Trauma Center Level 0)
+* **Quick Ward Fly-To Sidebar**: Direct camera transit to high-density administrative wards.
+
+### 4. CCTV Vision Wall (`SurveillancePage`)
+* **Zero-Scroll 6-Feed Camera Grid**: Simultaneous video monitoring across 6 high-priority traffic and pedestrian intersections (`cam-01.mp4` through `cam-06.mp4`).
+* **Real-Time YOLOv8 Bounding Box Overlays**: Dynamic SVG/Canvas detection overlays identifying potholes, waterlogging, crowd surges, and stalled vehicles.
+* **Camera Telemetry Badges**: Displays stream resolution (`1080p` / `4K`), frame rate (`28-30 FPS`), and active alert classifications.
+* **Live Frame Analysis**: One-click frame capture dispatching base64 snapshots to `/api/cctv/:id/analyze-frame` for immediate computer vision triage.
+
+### 5. Hazard Geofences (`HazardsPage`)
+* **Dynamic Danger Circles**: Interactive creation of spatial hazard zones with custom radius sliders ($50\text{m} - 1000\text{m}$) and risk multipliers ($+10\% - +50\%$).
+* **Automated TTL Countdown Clocks**: Real-time countdown meters reflecting remaining lifespan before automated expiration.
+* **Emergency Quick Presets**: Instant one-click generation for Flash Flood Alerts, Civil Protests, Toxic Gas Leaks, and Road Cave-Ins.
+
+### 6. Incidents & AI Triage (`IncidentsPage`)
+* **Bulk Operation Action Bar**: Multi-select incident rows to trigger `✅ Verify Selected`, `❌ Reject Selected`, or `👤 Batch Assign Officer`.
+* **Multi-Attribute Filter Engine**: Instant search by incident keyword, resolution status (`pending`, `verified`, `rejected`, `resolved`), ward number, and severity level ($1 - 5$).
+* **AI Confidence Progress Indicators**: Real-time visual display of Scikit-Learn credibility scores and citizen reliability ratings.
+
+### 7. Ward Analytics & SLA Trends (`AnalyticsPage`)
+* **Citywide Macro Metrics**: Composite complaint resolution percentages, average response times, and statutory SLA compliance rates.
+* **48-Hour SLA Breach Tracker**: Visual monitoring of tickets nearing or exceeding statutory municipal response deadlines.
+* **Budget Utilization Analysis**: Comparative bar charts illustrating sanctioned municipal funds versus contractor expenditures per ward.
+
+### 8. Ward Leaderboard & Contractor Accountability (`WardsLeaderboardPage`)
+* **Ward Performance Leaderboard**: Ranking of municipal wards by resolution efficiency with gold, silver, and bronze accolades.
+* **Officer Dispatch Roster**: Active field responder units with real-time status (`ON_DUTY`, `DISPATCHED`, `OFF_DUTY`).
+* **Contractor Accountability Public Ledger**:
+  * Displays registered infrastructure contractors (e.g., *Madhya Pradesh Road Development Corp*, *Bhopal Municipal Water Works*).
+  * Real-time reliability rating ($0\% - 100\%$) and active contract valuation.
+  * **Penalty Deduction Modal**: Dispatchers can assess monetary fines against non-compliant contractors, immediately recording penalties into the immutable audit ledger.
+
+### 9. Citizen Trust Registry (`CitizenRegistryPage`)
+* **Algorithmic Citizen Scoring**: Reliability scores calculated based on historical report accuracy, verified submissions, and spam attempt ratios.
+* **Account Moderation Suite**: Instant administrative actions to `Verify & Activate`, `Flag for Audit`, or `Ban User` to preserve system integrity.
+
+### 10. DriveLegal BIMSTEC Law Explorer (`DriveLegalPage`)
+* **Cross-Border Legal Intelligence**: Comprehensive catalog of **154 traffic and penal code violations** across **7 South Asian BIMSTEC nations**: India (Motor Vehicles Act 2019 / BNS 2023), Bangladesh, Bhutan, Myanmar, Nepal, Sri Lanka, and Thailand.
+* **Automated Penalty Calculator**: Calculates monetary fines (with repeat offender $3\times$ multipliers, commercial vehicle penalties, and school zone surcharges).
+* **Bilingual AI Query Bot**: Hinglish natural language query engine (e.g., *"Bina helmet ke pakde gaye to kitna fine lagega?"*) returning exact section citations and citizen rights.
+
+### 11. Notifications Hub (`NotificationsHubPage`)
+* **Channel-Separated Notification Streams**: Filter by `All Channels`, `🚨 SOS Alerts`, `📋 Incidents`, `⚠️ Hazard Warnings`, and `⚙️ System Operations`.
+* **Cross-Tab Synchronization**: Real-time unread counter synchronizing automatically across all active browser sessions via WebSockets.
+
+### 12. Settings & System Configuration (`SettingsPage`)
+* **Cloud & Hybrid Engine Toggles**: Seamlessly toggle between Supabase PostGIS cloud clustering and local disk persistence mode.
+* **AI Sensitivity Calibration**: Sliders for automated verification ($\ge 0.82$) and automated rejection ($< 0.30$) thresholds.
+* **Native Mobile & Wear OS Integration Status**: Live bridge telemetry for Android APK and Wear OS smartwatch connectivity.
 
 ---
 
-## 5. Multi-Tier Machine Learning & AI Pipeline
+## 5. Multi-Tier Machine Learning & AI Microservices
 
-The AI engine in `ai_engine/unified_civic_ai.py` integrates five specialized subsystems:
+The AI intelligence layer is deployed as a high-throughput **FastAPI microservice** (`ai_engine/server.py`) running on port `8000`, backed by trained Scikit-Learn models and Google Gemini 1.5 Flash:
 
 ### A. Mathematical Formulation: Spatial-Temporal Gaussian Risk
-The risk intensity $R(x, y, t)$ at query coordinate $(x, y)$ at time of day $t$ is computed via:
+The continuous risk intensity $R(x, y, t)$ at query coordinate $(x, y)$ at time of day $t$ is formulated as:
 $$R(x, y, t) = \min\left(100, \;\sum_{i=1}^{N} w_i \cdot \exp\left(-\frac{d( (x,y), (x_i,y_i) )^2}{2\sigma^2}\right) \cdot \gamma_{\text{night}}(t) + \epsilon\right)$$
+
 Where:
-* $d(\cdot)$ is the Great-Circle Haversine distance in kilometers:
+* $d((x,y), (x_i,y_i))$ is the Great-Circle Haversine distance in kilometers:
   $$d = 2R \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta \phi}{2}\right) + \cos\phi_1\cos\phi_2\sin^2\left(\frac{\Delta \lambda}{2}\right)}\right)$$
-* $\sigma = 0.8\text{ km}$ is the Gaussian spatial decay bandwidth.
-* $w_i$ represents incident severity weight ($w \in [1.0, 5.0]$) with threat category multipliers (e.g., Harassment/Assault $= 1.5\times$, Flood $= 1.3\times$).
-* $\gamma_{\text{night}}(t)$ is the diurnal nocturnal risk boost:
+* $\sigma = 0.8\text{ km}$ represents the Gaussian spatial decay bandwidth.
+* $w_i \in [1.0, 5.0]$ represents the severity weight of incident $i$, amplified by category multipliers (e.g., Assault/Harassment $= 1.5\times$, Flood $= 1.3\times$, Cave-in $= 1.4\times$).
+* $\gamma_{\text{night}}(t)$ is the diurnal nocturnal risk multiplier:
   $$\gamma_{\text{night}}(t) = \begin{cases} 1.4 & \text{if } t \ge 20 \text{ or } t \le 4 \\ 1.0 & \text{otherwise} \end{cases}$$
+* $\epsilon$ represents the ambient baseline urban risk factor ($\epsilon = 5.0$).
 
-### B. Scikit-Learn GradientBoosting Regressor
-* **Model**: `sklearn.ensemble.GradientBoostingRegressor` wrapped in a `StandardScaler` pipeline.
-* **Trained on**: Synthesized crime grids, historical incident reports, and crowd-sourced verified coordinates across Bhopal and Indore.
-* **Inference Speed**: $< 1\text{ ms}$ per coordinate query.
+### B. Dual-City Scikit-Learn GradientBoosting Regressor
+* **Model Pipeline**: `sklearn.ensemble.GradientBoostingRegressor` wrapped in a `StandardScaler`.
+* **Training Dataset**: `master_crime_risk.csv` comprising 2,040+ geocoded historical incidents, intersection crime records, and environmental risk points across Bhopal and Indore.
+* **Performance Metrics**:
+  * **Coefficient of Determination ($R^2$)**: **0.9652**
+  * **Mean Squared Error (MSE)**: **2.14**
+  * **Inference Latency**: **$< 1.0\text{ ms}$** per spatial coordinate query.
 
-### C. Scikit-Learn TF-IDF Credibility & Anti-Spam Classifier
-* **Pipeline**: `TfidfVectorizer(ngram_range=(1, 2))` + `LogisticRegression(C=1.0)`.
-* **Heuristic Layer**: High-risk keyword matching (`weapon`, `pothole`, `accident`, `electrocution`, `waterlogging`, `khatra`), low-risk doubt penalties (`not sure`, `test`, `demo`), and regex noise filters (`/test/`, `/sample/`, repeated character strings).
+### C. TF-IDF Credibility & Anti-Spam Classifier
+* **Vectorization & Classification**: `TfidfVectorizer(ngram_range=(1, 2))` paired with `LogisticRegression(C=1.0)`.
+* **Multi-Layer Heuristic Engine**:
+  * **High-Risk Keywords**: Matching critical vocabulary (`weapon`, `pothole`, `accident`, `electrocution`, `waterlogging`, `khatra`, `gas leak`).
+  * **Spam & Doubt Penalties**: Penalizes uncertain phrasing (`not sure`, `test`, `demo`, `just checking`).
+  * **Regex Noise Suppression**: Filters character repetitions, keyboard mash patterns, and sample strings.
 * **Automated Decision Tiers**:
-  * $\text{Score} \ge 0.82 \implies \textbf{auto\_verify}$ (Immediate emergency dispatch).
-  * $0.55 \le \text{Score} < 0.82 \implies \textbf{manual\_review}$ (Assigned to ward desk).
-  * $0.30 \le \text{Score} < 0.55 \implies \textbf{flag\_for\_review}$ (Secondary field verification required).
-  * $\text{Score} < 0.30 \implies \textbf{auto\_reject}$ (Marked rejected, penalizes citizen trust).
+  * $\text{Confidence} \ge 0.82 \implies \textbf{auto\_verify}$ (Immediate field responder dispatch).
+  * $0.55 \le \text{Confidence} < 0.82 \implies \textbf{manual\_review}$ (Assigned to municipal ward desk).
+  * $0.30 \le \text{Confidence} < 0.55 \implies \textbf{flag\_for\_review}$ (Requires secondary photo verification).
+  * $\text{Confidence} < 0.30 \implies \textbf{auto\_reject}$ (Marked rejected, citizen trust score deducted).
 
 ### D. Google Gemini 1.5 Flash Multimodal Reasoning
-* **Role**: Multimodal validation of uploaded photos and multilingual understanding in **Hindi**, **Hinglish**, and **English**.
-* **System Prompt**: Generates structured JSON summaries, extracts municipal category, assigns 1–5 urgency rating, and generates respectful citizen advice in Hinglish.
+* **Multilingual Translation & Dialect Normalization**: Translates citizen reports submitted in conversational Hindi or Hinglish (e.g., *"Yahan sadak par bahut bada gaddha hai paani bhara hua hai"*) into standardized English municipal summaries.
+* **Multimodal Visual Proof Verification**: Accepts base64 citizen photograph uploads, performing image content validation to ensure uploaded images depict genuine infrastructure defects rather than stock photography or irrelevant media.
 
-### E. Tactical CCTV Vision Detection Engine
-* Simulates or executes YOLOv8 object detection on CCTV camera video streams.
-* Detects and classifies: `pothole`, `waterlogging`, `crowd_surge`, `unlit_segment`, `stalled_vehicle`, and `fire`.
-
-### F. Multi-Threaded AI HTTP Microservice
-Run the engine as a standalone microservice:
-```bash
-python ai_engine/unified_civic_ai.py serve 8000
-# Endpoints: POST /verify, POST /risk, POST /route-safety, POST /cctv-vision
-```
+### E. OpenCV & YOLOv8 Hybrid Computer Vision Pipeline
+* **Model Bindings**: Native integration of OpenCV (`cv2`) with YOLOv8 neural network weights (`best.pt`, `yolov8n.pt`).
+* **Multi-Feature Hazard Extraction**:
+  * **Thermal / Fire Detection**: HSV color space thresholding ($H \in [18, 35], S \in [140, 255], V \in [200, 255]$) isolating flame centroids.
+  * **Waterlogging Analysis**: Adaptive grayscale thresholding and morphological closing operations identifying reflective water pooling on asphalt.
+  * **Pothole Detection**: Sobel gradient magnitude edge detection identifying structural depressions in asphalt road networks.
 
 ---
 
 ## 6. Native Mobile (13 Modules) & Wear OS Ecosystem
 
 ### Android Native Architecture (218 Kotlin Files)
-All 13 native Gradle modules are organized under `android/`:
+The production Android application is organized into 13 modular Gradle packages under `android/`:
+
 ```
 android/
-├── app/                  ← Main application entrypoint, Hilt DI, navigation graph
+├── app/                  ← Application entrypoint, Hilt Dependency Injection, Root NavGraph
 ├── core/
-│   ├── model/            ← Domain models (Incident, SosEvent, Ward, User)
-│   ├── database/         ← Room database, entities, DAOs
-│   ├── network/          ← Retrofit & OkHttp client, PostGIS Supabase bridge
-│   └── datastore/        ← User preferences, auth token storage
+│   ├── model/            ← Immutable domain entities (Incident, SosEvent, Ward, UserProfile)
+│   ├── database/         ← Room local database, DAOs, Room migration specifications
+│   ├── network/          ← Retrofit 2 + OkHttp 4 client, PostGIS REST bridge & token interceptors
+│   └── datastore/        ← Jetpack DataStore for user preferences, JWT session persistence
 ├── feature/
-│   ├── auth/             ← Citizen login & OTP verification
-│   ├── dashboard/        ← Municipal citizen dashboard & report status
-│   ├── reporting/        ← Camera capture, GPS geo-tagging, complaint submission
-│   ├── tracking/         ← SafePath live location service, Fake Call deterrent screen
-│   ├── sos/              ← 1-Tap SOS siren trigger, emergency contacts dialer
-│   ├── navigation/       ← MapLibre / Google Maps triple-path routing
-│   └── admin/            ← Field officer dispatch & ticket resolution
+│   ├── auth/             ← Citizen mobile authentication, OTP verification, biometric login
+│   ├── dashboard/        ← Municipal citizen home screen, active tracking status, announcements
+│   ├── reporting/        ← Camera capture, GPS geotagging, compressed multi-part photo upload
+│   ├── tracking/         ← SafePath background location service, Fake Call deterrent screen
+│   ├── sos/              ← Single-tap SOS siren trigger, emergency contact telephony integration
+│   ├── navigation/       ← MapLibre / Mapbox triple-path turn-by-turn navigation
+│   └── admin/            ← Municipal field officer dispatch dashboard, ticket resolution tools
 └── wear/                 ← Wear OS Smartwatch companion application
 ```
 
-### Key Native Upgrades:
-1. **Fake Call Deterrent (`FakeCallScreen.kt`)**:
-   - Integrated into `feature:tracking` and `TrackingScreen.kt`.
-   - Full-screen incoming call UI with ringtone simulation, caller name customization ("Mom", "Inspector Sharma"), and realistic conversation timer to deter potential harassers.
-2. **Wear OS Smartwatch Siren (`WatchMainActivity.kt`)**:
-   - High-contrast panic button requiring a single tap.
-   - Continuous waveform haptic vibration siren.
-   - Background biometric sensor streaming real-time heart rate (`❤️ 112 BPM`) to the API Gateway.
-3. **Public 3-Tap Emergency QR Web App (`/report/qr`)**:
-   - Zero-installation progressive web app accessible by scanning street pole QR codes.
-   - 3-tap rapid incident logging with automatic geolocation fix.
-4. **Browser Live Tracking Link (`/track/:token`)**:
-   - Real-time Leaflet map for emergency contacts receiving the SMS link.
-   - Displays live battery percentage, heart rate, and moving breadcrumbs without requiring an account.
+### Wear OS Smartwatch Direct Dispatcher (`DirectSosDispatcher.kt`)
+* **Standalone LTE & Wi-Fi Failover**: Engineered to function independently of the citizen's mobile smartphone. If the companion Bluetooth link is severed, the watch initiates an independent HTTPS direct connection to the API Gateway.
+* **Continuous Waveform Haptic Siren**: Initiates an intense repeating vibration sequence on the user's wrist upon panic activation.
+* **Biometric Heart Rate Streaming**: Reads the smartwatch's optical PPG sensor, streaming real-time vitals (`❤️ 112 BPM`) directly into the municipal emergency operations room.
 
 ---
 
-## 7. Triple-Path Navigation & Safety Corridors
+## 7. Progressive Web App (PWA) Emergency Suite
 
-The routing engine in `backend/src/routes/routing.js` evaluates three distinct path alternatives:
+To ensure zero-barrier emergency access for citizens without native mobile installations, NagarSetu V2.0 provides an optimized Progressive Web App suite:
 
 ```
-[Start Coordinate] ────────────────────────────────────────► [Destination]
-         │
-         ├──► 1. FASTEST ROUTE (Minimizes travel time via local street grid)
-         │       • Distance: 3.4 km · Duration: 8 min · Safety Score: 68/100
-         │
-         ├──► 2. SAFEST ROUTE (Main-Road Arterial Bias + 95% Illuminated Streetlights)
-         │       • Distance: 3.9 km · Duration: 10 min · Safety Score: 94/100
-         │       • Evaluated waypoint-by-waypoint with AI Risk Regressor
-         │
-         └──► 3. GREEN ECO ROUTE (Municipal BRTS Bus Corridor & Cycle Lanes)
-                 • Distance: 3.6 km · Carbon Footprint: 15g CO2 · Safety Score: 82/100
+frontend/src/app/report/qr/
+├── page.tsx              ← 3-Tap Rapid Emergency QR Citizen Portal
+├── fake-call/page.tsx    ← Interactive PWA Fake Call Deterrent Screen
+└── voice-coach/page.tsx  ← Audio-guided pedestrian safety coaching system
+```
+
+1. **3-Tap Emergency QR Web App (`/report/qr`)**:
+   - Zero-installation progressive web portal accessed via street-pole QR codes.
+   - 3-tap rapid incident reporting with instant HTML5 GPS geolocation capture.
+2. **PWA Fake Call Deterrent (`/report/qr/fake-call`)**:
+   - Realistic incoming phone call screen designed to deter potential harassers during night transit.
+   - Custom caller profiles ("Mom", "Inspector Sharma", "Colleague"), authentic audio ringtones, vibrational haptics, and a functional conversation timer.
+3. **Voice Safety Coach (`/report/qr/voice-coach`)**:
+   - Turn-by-turn audio companion providing reassuring verbal navigation instructions and safe corridor guidance during late-night pedestrian transit.
+4. **Public Zero-Install Live Tracking (`/track/:token`)**:
+   - Real-time Leaflet map interface accessed by emergency contacts via SMS links.
+   - Displays real-time GPS breadcrumbs, victim battery level, and moving responder units without requiring an account or app download.
+
+---
+
+## 8. Triple-Path Navigation & Safety Corridors
+
+The navigation engine (`backend/src/routes/routing.js` and `backend/src/services/localRouter.js`) evaluates three distinct route alternatives:
+
+```
+[Start Coordinates] ──────────────────────────────────────────► [Destination]
+          │
+          ├──► 1. FASTEST ROUTE (Minimizes travel time via local street network)
+          │       • Travel Distance: 3.4 km · Travel Time: 8 min · Safety Score: 68/100
+          │       • Calculated via OpenStreetMap (OSRM) / Dijkstra shortest path
+          │
+          ├──► 2. SAFEST ROUTE (Main-Road Arterial Bias + 95% Illuminated Streetlights)
+          │       • Travel Distance: 3.9 km · Travel Time: 10 min · Safety Score: 94/100
+          │       • Prioritizes CCTV-monitored, police-patrolled arterial avenues
+          │       • Waypoint-by-waypoint safety validation via AI Risk Regressor
+          │
+          └──► 3. GREEN ECO ROUTE (Municipal BRTS Bus Corridors & Dedicated Cycle Lanes)
+                  • Travel Distance: 3.6 km · Carbon Footprint: 15g CO2 · Safety Score: 82/100
+                  • Integrates Bhopal City Link Ltd (BCLL) BRTS transit right-of-ways
 ```
 
 ---
 
-## 8. Unified PostGIS Master Schema & Data Layer
+## 9. IoT Environmental Telemetry & Escalation Pipeline
 
-Located in `database/schema_master.sql`, the PostgreSQL / PostGIS schema establishes complete spatial indexing:
+Deployed in `backend/src/routes/sensors.js`, the platform ingests real-time hardware telemetry via `POST /api/ingest/sensor`:
+
+### Automated Sliding-Window Sensor Escalation Rules
+To prevent false alarms caused by transient sensor spikes, telemetry is processed through an in-memory sliding-window buffer retaining the last 5 readings per device:
+
+| Sensor Type | Escalation Threshold | Persistence Window | Automated Municipal Action | Geofence Radius | Risk Boost | Geofence TTL |
+|---|---|---|---|---|---|---|
+| **`water_depth`** | $> 0.45\text{ m}$ ($1.5\text{ ft}$) | 3 consecutive readings | Auto-create `Auto: Flood Alert [Ward]` | $500\text{ m}$ | $+20.0$ | 2 Hours |
+| **`gas_ppm`** | $> 70\text{ ppm}$ | 2 consecutive readings | Auto-create `Auto: Gas Hazard [Ward]` | $300\text{ m}$ | $+30.0$ | 1 Hour |
+| **`temperature`** | $> 48^\circ\text{C}$ ($118^\circ\text{F}$) | 2 consecutive readings | Auto-create `Auto: Extreme Heat [Ward]` | $400\text{ m}$ | $+15.0$ | 3 Hours |
+| **`decibel`** | $> 110\text{ dB}$ | 4 consecutive readings | Auto-create `Auto: Noise/Blast Alert [Ward]` | $200\text{ m}$ | $+18.0$ | 30 Minutes |
+
+When an escalation condition is satisfied, the system automatically creates a persistent hazard zone in the database, emits a `hazard:auto_created` WebSocket event, and updates the GIS tactical map in real time.
+
+---
+
+## 10. Contractor Accountability & Public Trust Ledger
+
+Engineered in `backend/src/routes/contractors.js` and rendered in `WardsLeaderboardPage.tsx`, this subsystem enforces contractual compliance for civil infrastructure projects:
+
+* **Registered Municipal Contractors**: Tracks contracting firms handling road resurfacing, drainage maintenance, streetlighting, and water distribution.
+* **Algorithmic Trust Score ($0\% - 100\%$)**: Calculated based on completed projects, unresolved citizen defect reports, and statutory SLA compliance.
+* **Penalty Assessment Modal**: Authorized dispatchers can assess monetary deductions against defaulting contractors for delayed pothole repairs or unrectified hazard conditions.
+* **Immutable Public Audit Ledger**: Every assessed penalty is permanently recorded with timestamp, contractor ID, fine amount (INR), citing officer, and legal justification.
+
+---
+
+## 11. DriveLegal: BIMSTEC Cross-Border Penal Code System
+
+Located in `backend/src/routes/legal.js` and `backend/data/bimstec_traffic_code.json`, DriveLegal indexes **154 legal violations across 7 South Asian nations**:
+
+```
+                    ┌────────────────────────────────────────┐
+                    │    BIMSTEC Legal Knowledge Base        │
+                    │      154 Violations · 7 Jurisdictions   │
+                    └───────────────────┬────────────────────┘
+                                        │
+     ┌──────────────┬──────────────┬────┴─────────┬──────────────┬──────────────┐
+     │              │              │              │              │              │
+🇮🇳 India      🇧🇩 Bangladesh  🇧🇹 Bhutan      🇲🇲 Myanmar     🇳🇵 Nepal       🇱🇰 Sri Lanka & 🇹🇭 Thailand
+MVA 2019 /     Road Transport  Road Safety    Motor Vehicle  Motor Vehicle  National Transport
+BNS 2023       Act 2018        Act 2021       Law 2015       Act 2049       Codes
+```
+
+### Key Capabilities:
+* **Jurisdiction-Specific Fine Lookup**: Instant retrieval of applicable sections, base penalties, and mandatory court appearances.
+* **Dynamic Penalty Multipliers**: Automated calculation of repeat offender surcharges ($3\times$), commercial heavy-transport penalties ($1.5\times$), and school/hospital zone infractions ($2\times$).
+* **Hinglish AI Legal Query Engine**: Natural language parsing for citizen queries returning direct statutory citations and procedural bail rights.
+
+---
+
+## 12. Enterprise Security, RBAC & Telephony Stack
+
+### Role-Based Access Control (RBAC) Hierarchy
+Implemented in `backend/src/middleware/auth.js`, the platform enforces strict role privileges via signed JWT bearer tokens:
+
+| Role Identifier | Permissions & Operational Scope |
+|---|---|
+| **`SUPER_ADMIN`** | Unrestricted access: Citywide broadcast dispatches, system configuration, contractor penalty ledger audits, user banning. |
+| **`WARD_OFFICER`** | Ward-level administration: Verification/rejection of ward complaints, officer task assignments, local hazard zone creation. |
+| **`DISPATCHER`** | Emergency command: SOS acknowledgment, responder unit routing, Twilio voice/SMS triggers, CCTV monitoring. |
+| **`FIELD_ENGINEER`**| Mobile field access: Viewing assigned incident tickets, uploading completion proof photographs, resolving complaints. |
+
+*Dynamic Bypass*: In offline demonstration environments, `DISABLE_AUTH=true` allows rapid evaluation without requiring authentication challenges.
+
+### Multi-Channel Twilio Telephony Mesh
+Engineered in `backend/src/services/twilio.js`:
+* **Automated Voice Call (IVR)**: Places outbound automated phone calls to designated emergency contacts upon SOS activation with interactive DTMF menu acknowledgment.
+* **WhatsApp Emergency Dispatch**: Pushes interactive WhatsApp alert messages containing GPS coordinates, victim name, and browser tracking links.
+* **SMS Gateway**: Fallback E.164 cellular SMS transmission ensuring delivery on legacy mobile handsets.
+
+---
+
+## 13. Unified PostGIS Schema & Resilient Hybrid Data Layer
+
+The database architecture (`database/schema_master.sql`) provides high-performance spatial indexing via PostGIS, backed by an atomic local disk store (`backend/data/store.json`):
 
 ```sql
--- Enable Spatial & UUID Extensions
+-- Enable PostGIS & UUID Extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "postgis";
 
--- 1. Citizens & Field Responders
+-- 1. User Profiles & Responders
 CREATE TABLE profiles (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     phone VARCHAR(20) UNIQUE NOT NULL,
@@ -420,154 +563,209 @@ CREATE TABLE cctv_cameras (
     detections JSONB DEFAULT '[]'
 );
 
--- Spatial GIST Indexes
+-- High-Performance Spatial GIST Indexes
 CREATE INDEX idx_incidents_location ON incidents USING GIST(location);
 CREATE INDEX idx_emergency_location ON emergency_events USING GIST(location);
 CREATE INDEX idx_hazard_center ON hazard_zones USING GIST(center);
 CREATE INDEX idx_cctv_location ON cctv_cameras USING GIST(location);
 ```
 
+### Automated 30-Second TTL Hazard Janitor
+An active background timer runs every 30 seconds within `backend/src/routes/hazards.js`:
+$$\text{Filter: } \text{expires\_at} \le \text{NOW}() \implies \text{active} = \text{false}$$
+Expired hazard circles are automatically purged from memory, persisted to disk, and broadcast to all connected web clients via the `hazard:expired` WebSocket event.
+
 ---
 
-## 9. Comprehensive REST & WebSocket API Catalog
+## 14. Comprehensive REST & WebSocket API Catalog
 
 ### REST API Endpoints
-| Route | Method | Payload / Query | Description |
+
+| Route | Method | Payload / Query Parameters | Functional Description |
 |---|---|---|---|
 | `/api/sos` | `GET` | `?status=active` | Returns active emergency beacons with battery, heart rate, and contacts. |
-| `/api/sos` | `POST` | `{ userId, userName, lat, lng, batteryLevel, heartRate, contacts }` | Triggers SOS event, sends Twilio SMS, and broadcasts WebSocket alert. |
-| `/api/incidents` | `GET` | `?status=&ward=&severity=` | Fetches incidents with multi-attribute filtering. |
-| `/api/incidents` | `POST` | `{ type, description, lat, lng, ward, severity }` | Submits report; runs asynchronous Scikit-Learn AI verification. |
+| `/api/sos` | `POST` | `{ userId, userName, lat, lng, batteryLevel, heartRate, contacts }` | Triggers SOS event, sends Twilio voice/SMS, and emits WebSocket alert. |
+| `/api/sos/:id` | `PATCH` | `{ status: "acknowledged" \| "resolved" }` | Updates SOS beacon status and deactivates sirens. |
+| `/api/incidents` | `GET` | `?status=&ward=&severity=&limit=` | Fetches incidents with multi-attribute filtering. |
+| `/api/incidents` | `POST` | `{ type, description, lat, lng, ward, severity }` | Submits report; triggers asynchronous Scikit-Learn AI verification. |
 | `/api/incidents/:id` | `PATCH` | `{ status, assignedOfficer }` | Updates incident status (`verified`, `rejected`, `dispatched`, `resolved`). |
-| `/api/tracking/start` | `POST` | `{ userId, userName, lat, lng, contacts }` | Creates tracking session and sends browser tracking links. |
-| `/api/tracking/ping` | `POST` | `{ sessionId, lat, lng, batteryLevel, heartRate }` | Appends live GPS breadcrumb to active tracking session. |
+| `/api/tracking/start` | `POST` | `{ userId, userName, lat, lng, contacts }` | Creates tracking session and generates public tracking token. |
+| `/api/tracking/ping` | `POST` | `{ sessionId, lat, lng, batteryLevel, heartRate }` | Appends real-time GPS breadcrumb to active session. |
 | `/api/tracking/location` | `GET` | `?session_id=TRK001` | Public endpoint for emergency contacts to view real-time location. |
-| `/api/tracking/history` | `GET` | `?session_id=TRK001` | Retrieves the full path breadcrumb array for a session. |
 | `/api/cctv` | `GET` | None | Returns the Tactical 6-Camera Vision Wall telemetry and detections. |
-| `/api/cctv/:id/detect` | `POST` | `{ threat, confidence, detections }` | Simulates/pushes YOLOv8 computer vision detection on a camera. |
+| `/api/cctv/:id/analyze-frame` | `POST` | `{ imageBase64: "..." }` | Executes OpenCV/YOLOv8 vision analysis on an uploaded camera frame. |
 | `/api/hazards` | `GET` | None | Retrieves all active temporary hazard geofences that have not expired. |
-| `/api/hazards` | `POST` | `{ name, lat, lng, radiusMeters, riskBoost, durationMin }` | Creates a new dynamic danger circle with automated TTL. |
+| `/api/hazards` | `POST` | `{ name, lat, lng, radiusMeters, riskBoost, durationMin }` | Creates dynamic danger circle with automated TTL. |
+| `/api/hazards/:id` | `DELETE` | None | Manually terminates an active hazard geofence. |
 | `/api/risk/heatmap` | `GET` | `?city=bhopal` or `?city=indore` | Computes Gaussian spatial risk matrix for heatmap rendering. |
 | `/api/risk/point` | `POST` | `{ lat, lng, hour, day }` | Predicts continuous risk score using the GradientBoosting ML model. |
 | `/api/routing/calculate-routes` | `POST` | `{ startLat, startLng, endLat, endLng, mode, timeHour }` | Returns Fastest, Safest (Main-Road), and Green Eco routes with waypoints. |
 | `/api/routing/evaluate-safety` | `POST` | `{ waypoints: [{lat, lng}], hour }` | Evaluates safety along any custom path polyline using the AI engine. |
+| `/api/ingest/sensor` | `POST` | `{ deviceId, type, value, unit, lat, lng, ward }` | Ingests IoT telemetry; triggers sliding-window automated escalation. |
+| `/api/contractors` | `GET` | None | Returns list of registered infrastructure contractors and trust ratings. |
+| `/api/contractors/:id/penalize` | `POST` | `{ amount, reason, citingOfficer }` | Assesses penalty fine against contractor and appends to audit ledger. |
+| `/api/contractors/audit-trail` | `GET` | None | Retrieves immutable contractor penalty deduction history. |
+| `/api/legal/violations` | `GET` | `?jurisdiction=India&search=` | Retrieves indexed traffic/penal violations from BIMSTEC database. |
+| `/api/legal/calculate-fine` | `POST` | `{ violationCode, isRepeat, vehicleType, isSchoolZone }` | Calculates fine amount with applicable multipliers. |
+| `/api/legal/query-bot` | `POST` | `{ query: "bina helmet fine" }` | Hinglish NLP query bot returning legal citations and citizen rights. |
 | `/api/users` | `GET` | `?status=active` | Lists citizens from the Citizen Trust Registry. |
 | `/api/users/:id/status` | `PATCH` | `{ status: "flagged" \| "banned" }` | Updates citizen reliability status. |
-| `/api/notifications` | `GET` | `?type=sos` | Returns notifications filtered by channel. |
-| `/api/notifications/read-all` | `POST` | None | Marks all notifications as read. |
 | `/api/wards` | `GET` | None | Returns municipal ward leaderboard, budget spent, and SLA compliance. |
 | `/api/wards/officers` | `GET` | `?status=on-duty` | Lists active field officer dispatch roster and response times. |
 | `/api/stats` | `GET` | None | Returns composite municipal KPIs for dashboard header. |
-| `/api/docs` | `GET` | None | Self-documenting API catalog specification. |
+| `/api/auth/login` | `POST` | `{ phone, password }` | Authenticates user and returns signed JWT with RBAC role. |
+| `/api/docs` | `GET` | None | Self-documenting API specification catalog. |
 
-### WebSocket Events (Socket.IO)
-| Event | Direction | Payload | Description |
+### WebSocket Real-Time Events (Socket.IO)
+
+| Event Identifier | Direction | Payload Structure | Operational Trigger |
 |---|---|---|---|
-| `new_sos` | Server $\to$ Client | `SosEvent` | Emitted when an emergency beacon is activated. |
+| `new_sos` | Server $\to$ Client | `SosEvent` | Emitted when an emergency panic beacon is triggered. |
 | `sos:updated` | Server $\to$ Client | `SosEvent` | Emitted when an SOS is acknowledged or resolved. |
 | `new_incident` | Server $\to$ Client | `Incident` | Emitted on new citizen complaint submission. |
-| `incident:updated` | Server $\to$ Client | `Incident` | Emitted when an incident is verified, rejected, or dispatched. |
-| `cctv:detection` | Server $\to$ Client | `{ cameraId, threat, confidence }` | Emitted when YOLOv8 detects a threat on a CCTV feed. |
-| `tracking:started` | Server $\to$ Client | `TrackingSession` | Emitted when a citizen begins a safe path journey. |
-| `tracking:<token>` | Server $\to$ Client | `{ lat, lng, batteryLevel, heartRate }` | High-frequency live GPS coordinate broadcast. |
-| `notifications:read_all`| Server $\to$ Client | None | Syncs read state across all open browser tabs. |
+| `incident:updated` | Server $\to$ Client | `Incident` | Emitted when a complaint is verified, rejected, or dispatched. |
+| `hazard:created` | Server $\to$ Client | `HazardZone` | Emitted when a new hazard geofence is created. |
+| `hazard:deleted` | Server $\to$ Client | `{ id: string }` | Emitted when a hazard geofence is deleted manually. |
+| `hazard:expired` | Server $\to$ Client | `{ id: string }` | Emitted by the 30s TTL Janitor upon geofence expiration. |
+| `hazard:auto_created` | Server $\to$ Client | `HazardZone` | Emitted when IoT sensor thresholds trigger an automated geofence. |
+| `cctv:detection` | Server $\to$ Client | `{ cameraId, threat, confidence }` | Emitted when computer vision detects a hazard on a CCTV feed. |
+| `tracking:<token>` | Server $\to$ Client | `{ lat, lng, batteryLevel, heartRate }` | High-frequency live GPS coordinate pulse for active sessions. |
 
 ---
 
-## 10. Local Development, Docker & Production Setup
+## 15. Automated Testing & City-Grid Simulation
+
+### Comprehensive API Test Suite (`backend/test/api.test.js`)
+The repository includes a 30-case integration test suite validating every backend route and persistence mechanism:
+```bash
+cd backend
+npm run test:api
+```
+*Validates health status, SOS beacon lifecycle, AI triage classifications, dynamic hazard TTL, Gaussian risk matrix generation, BIMSTEC legal calculators, and contractor penalty logging.*
+
+### Async City-Grid Simulator (`scripts/simulate_city_grid.py`)
+A continuous Python event simulator that injects realistic citywide load into the running platform:
+```bash
+python scripts/simulate_city_grid.py --interval 3.0 --city bhopal
+```
+*Simulates incoming citizen complaints, periodic SOS triggers with fluctuating vitals, and IoT sensor telemetry spikes (water depth and gas levels) to demonstrate real-time dashboard reactivity.*
+
+---
+
+## 16. Local Development, Docker & Production Deployment
 
 ### Prerequisites
 * **Node.js**: v20+ LTS
 * **Python**: v3.11+
-* **MinGit / Git**: Installed
-* **Docker & Docker Compose**: Optional (for containerized deployment)
+* **Git**: Installed
+* **Docker & Docker Compose**: (Optional, for containerized multi-service deployment)
 
 ---
 
-### Step 1: Clone & Environment Setup
+### Step 1: Clone Repository
 ```bash
 git clone https://github.com/yajatkataria08-a11y/NagarsetuV2.0.git
 cd NagarsetuV2.0
 ```
 
-### Step 2: Next.js 15 Command Center (Frontend)
+### Step 2: Environment Configuration
+Copy template environment files across services:
 ```bash
+# Root Monorepo Configuration
+cp .env.example .env
+
+# Backend API Configuration
+cp backend/.env.example backend/.env
+```
+
+### Step 3: Install Dependencies
+```bash
+# Install root workspaces dependencies
+npm install
+
+# Install frontend dependencies
+cd frontend && npm install && cd ..
+
+# Install backend dependencies
+cd backend && npm install && cd ..
+
+# Install Python AI dependencies
+cd ai_engine && pip install -r requirements.txt && cd ..
+```
+
+### Step 4: Launch Development Services
+
+**Option A: Unified Root Monorepo Runner (Recommended)**
+```bash
+npm run dev:all
+```
+
+**Option B: Independent Service Terminals**
+```bash
+# Terminal 1: FastAPI AI Microservice (Port 8000)
+cd ai_engine
+python server.py
+
+# Terminal 2: Express.js & Socket.IO API Gateway (Port 4000)
+cd backend
+npm run dev
+
+# Terminal 3: Next.js 15 Command Center (Port 3000)
 cd frontend
-npm install
 npm run dev
-# Dashboard running at http://localhost:3000
 ```
-> *Operates in rich offline/demo mode out-of-the-box if the backend is not yet started.*
 
-### Step 3: Express & Socket.IO API Gateway (Backend)
+*Access the Tactical Command Center at `http://localhost:3000`.*
+
+---
+
+### Step 5: Multi-Container Docker Composition
+To orchestrate the complete 5-service production stack in Docker:
 ```bash
-cd ../backend
-npm install
-npm run dev
-# API Gateway running at http://localhost:4000
-```
-> *Persists state automatically to `backend/data/store.json`. Connects to Supabase PostGIS if credentials exist in `.env`.*
-
-### Step 4: Machine Learning AI Engine (Python)
-```bash
-cd ../ai_engine
-pip install -r requirements.txt
-
-# 1. Train Scikit-Learn GradientBoosting & TF-IDF Models
-python unified_civic_ai.py train
-
-# 2. Run Incident Verification CLI Test
-python unified_civic_ai.py verify '{"description":"Severe waterlogging in Habibganj underpass vehicles stuck","severity":5}'
-
-# 3. Predict Continuous Point Risk (Bhopal/Indore)
-python unified_civic_ai.py risk '{"lat":23.2599,"lng":77.4126,"hour":22,"day":4}'
-
-# 4. (Optional) Run AI Engine as a Background HTTP Microservice
-python unified_civic_ai.py serve 8000
+docker-compose up --build -d
 ```
 
----
-
-### Step 5: Full-Stack Docker Deployment
-To launch the entire platform (Frontend + Backend API + AI Engine) with a single command:
-```bash
-docker-compose up --build
-```
-* **Frontend**: `http://localhost:3000`
-* **API Gateway**: `http://localhost:4000`
-* **AI Engine**: `http://localhost:8000`
+| Service Container | Internal Port | External Port | Functionality |
+|---|---|---|---|
+| `nagarsetu-frontend` | `3000` | `3000` | Next.js 15 Tactical Command Center |
+| `nagarsetu-backend` | `4000` | `4000` | Express.js & Socket.IO API Gateway |
+| `nagarsetu-ai-engine`| `8000` | `8000` | FastAPI Machine Learning Microservice |
+| `nagarsetu-db` | `5432` | `5432` | PostgreSQL 16 + PostGIS Spatial Cluster |
+| `nagarsetu-gateway` | `80` | `8080` | NGINX Reverse Proxy & SSL Termination |
 
 ---
 
-## 11. 15-Phase Development Roadmap
+## 17. 15-Phase Development Roadmap Execution
 
-| Phase | Description | Status |
-|---|---|:---:|
-| **Phase 1** | System requirements harmonization, architectural design & core foundation setup | ✅ Complete |
-| **Phase 2** | Master PostGIS database schema, spatial views & migration DDL | ✅ Complete |
-| **Phase 3** | Express + Socket.IO API Gateway with resilient hybrid disk persistence | ✅ Complete |
-| **Phase 4** | Next.js 15 App Router command center with tactical Dark/Light design system | ✅ Complete |
-| **Phase 5** | High-contrast SOS operations with live wearable vitals (`❤️ 112 BPM`) | ✅ Complete |
-| **Phase 6** | Dual-city GIS map (Bhopal & Indore) with 4 layer modes & quick ward fly-to | ✅ Complete |
-| **Phase 7** | Tactical 6-Camera Vision Wall with simulated YOLOv8 threat detections | ✅ Complete |
-| **Phase 8** | Dynamic hazard danger zones with automated TTL countdown clocks | ✅ Complete |
-| **Phase 9** | Mobile app upgrades: 218 Kotlin files preserved, Fake Call deterrent screen | ✅ Complete |
-| **Phase 10** | Wear OS smartwatch siren with waveform haptics & heart rate streaming | ✅ Complete |
-| **Phase 11** | Scikit-Learn GradientBoosting spatial regressor & TF-IDF anti-spam classifier | ✅ Complete |
-| **Phase 12** | Google Gemini 1.5 Flash multimodal multilingual (Hindi/Hinglish) core | ✅ Complete |
-| **Phase 13** | 3-tap emergency QR web portal (`/report/qr`) & public tracking link (`/track/:token`) | ✅ Complete |
-| **Phase 14** | Municipal governance views: Ward/Officer board, Citizen Trust Registry, Settings | ✅ Complete |
-| **Phase 15** | Production hardening, Docker multi-container composition & comprehensive docs | ✅ Complete |
+The complete 15-phase master engineering roadmap has been fully executed:
 
----
-
-## 🔒 Security, Privacy & Ethics
-
-* **Zero-Knowledge Tracking**: Public tracking URLs (`/track/:token`) use cryptographically random 64-bit entropy tokens that expire automatically upon session conclusion.
-* **Citizen Data Anonymization**: GPS breadcrumbs are automatically cleared after 24 hours to prevent unauthorized pattern-of-life analysis.
-* **Anti-Abuse Scoring**: False reports are mathematically penalized against the citizen's trust score to prevent harassment and denial-of-service against municipal first responders.
-* **Fail-Safe Fallbacks**: If the cloud PostGIS cluster or Python process fails, the backend seamlessly degrades to local disk persistence and in-memory heuristics without dropping a single citizen request.
+| Phase | Strategic Objective | Key Implementation Deliverable | Status |
+|---|---|---|:---:|
+| **Phase 1** | Runtime Normalization & Dynamic Config | `backend/src/config/index.js` cross-platform Python binary discovery, 12-factor Zod configuration. | ✅ Complete |
+| **Phase 2** | Dual-Mode Spatial Database Architecture | Supabase PostGIS spatial cluster paired with atomic local disk persistence (`store.json`) with write locks. | ✅ Complete |
+| **Phase 3** | High-Throughput Async AI Microservice | FastAPI microservice (`ai_engine/server.py`) on port 8000 with sub-millisecond inference pooling. | ✅ Complete |
+| **Phase 4** | Computer Vision YOLOv8 / OpenCV Grid | Real OpenCV & YOLOv8 bounding box detection pipeline (`ai_engine/vision_service.py`, `cctv.js`). | ✅ Complete |
+| **Phase 5** | IoT Sensor & Environmental Telemetry | Hardware ingestion endpoint (`/api/ingest/sensor`) with 5-reading sliding-window escalation matrix. | ✅ Complete |
+| **Phase 6** | Multimodal Multilingual Gemini 1.5 Flash | Multilingual Hindi/Hinglish dialect triage and multimodal photographic proof verification. | ✅ Complete |
+| **Phase 7** | Real Road Network Topology & SafePath | OpenStreetMap (OSRM) integration, Main-Road Arterial Bias, and BCLL BRTS green transit corridors. | ✅ Complete |
+| **Phase 8** | Dynamic Geofencing & Automated TTL | Automated 30-second TTL Janitor pruning elapsed danger zones with real-time WebSocket sync. | ✅ Complete |
+| **Phase 9** | Mobile PWA Emergency Application Suite | 3-tap emergency QR portal (`/report/qr`), PWA Fake Call deterrent, and Voice Safety Coach. | ✅ Complete |
+| **Phase 10** | Enterprise Security & Role-Based Access | JWT bearer authentication enforcing `SUPER_ADMIN`, `WARD_OFFICER`, `DISPATCHER`, `FIELD_ENGINEER`. | ✅ Complete |
+| **Phase 11** | Tactical GIS Floorplans & Dual-City Bounds| Leaflet `L.imageOverlay` indoor emergency blueprints for AIIMS Bhopal & Habibganj Railway Station. | ✅ Complete |
+| **Phase 12** | BIMSTEC Cross-Border Penal Code System | 154 indexed traffic and penal violations across 7 South Asian nations with repeat fine multipliers. | ✅ Complete |
+| **Phase 13** | Contractor Accountability Public Ledger | Real-time contractor trust scores, public penalty deduction modal, and immutable audit trail. | ✅ Complete |
+| **Phase 14** | Automated Testing & City-Grid Simulation | 30-case integration test suite (`api.test.js`) and asynchronous multi-incident city simulator script. | ✅ Complete |
+| **Phase 15** | Docker Composition & Production Hardening | 5-service `docker-compose.yml`, NGINX gateway reverse proxy, and comprehensive enterprise docs. | ✅ Complete |
 
 ---
 
-*Designed and engineered for safer, smarter, and more resilient Indian cities.*
+## 18. Security, Privacy, and Fail-Safe Ethics
+
+* **Zero-Knowledge Live Tracking**: Public tracking URLs (`/track/:token`) use high-entropy cryptographically generated 64-bit random tokens that automatically expire upon session termination.
+* **Transient Geolocation Storage**: Breadcrumb coordinates are automatically purged from active tracking memory after 24 hours to prevent pattern-of-life surveillance.
+* **Anti-Abuse Scoring**: False, duplicate, or malicious submissions are algorithmically penalized against citizen trust scores, preventing denial-of-service against emergency dispatchers.
+* **Air-Gapped Resilient Failovers**: If cloud PostGIS clusters or remote AI endpoints become unreachable, the backend seamlessly degrades to local disk persistence and local in-memory heuristic verification without dropping a single citizen request.
+
+---
+
+*Designed and engineered for safer, smarter, and more resilient municipal cities.*
