@@ -47,6 +47,36 @@ export default function ReportQrPage() {
   const [location, setLocation] = useState<string>('');
   const [description, setDesc]  = useState('');
   const [loading, setLoading]   = useState(false);
+  const [coords, setCoords]     = useState<{ lat: number; lng: number } | null>(null);
+  const [photoBase64, setPhoto] = useState<string | null>(null);
+  const [geoNotice, setGeoNotice] = useState<string>('Detecting GPS…');
+
+  // Attempt HTML5 Geolocation capture
+  const requestGeo = () => {
+    if (typeof window !== 'undefined' && 'geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          setGeoNotice(`GPS: ${pos.coords.latitude.toFixed(4)}° N, ${pos.coords.longitude.toFixed(4)}° E`);
+        },
+        () => {
+          setGeoNotice('GPS disabled (using landmark locator)');
+        },
+        { enableHighAccuracy: true, timeout: 5000 }
+      );
+    }
+  };
+
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhoto(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const submit = async () => {
     setLoading(true);
@@ -59,6 +89,9 @@ export default function ReportQrPage() {
           description: description || `${category?.label} reported at ${location}`,
           ward: 'QR-Report',
           severity: category?.id === 'FIRE' || category?.id === 'CRIME' ? 5 : 3,
+          lat: coords?.lat || 23.2599,
+          lng: coords?.lng || 77.4126,
+          photo: photoBase64,
           source: 'qr-portal',
         }),
       });
@@ -142,25 +175,55 @@ export default function ReportQrPage() {
         {step === 'details' && (
           <div className="animate-fade-up">
             <StepDots current={step} />
-            <button onClick={() => setStep('location')} className="flex items-center gap-1 text-xs text-mink mb-4 hover:text-ink">
-              ← Back
-            </button>
-            <h2 className="text-base font-bold text-ink mb-1">Add details (optional)</h2>
+            <div className="flex items-center justify-between mb-4">
+              <button onClick={() => setStep('location')} className="flex items-center gap-1 text-xs text-mink hover:text-ink">
+                ← Back
+              </button>
+              <button
+                onClick={requestGeo}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyber/10 border border-cyber/30 text-[11px] text-cyber hover:bg-cyber/20 transition-colors"
+              >
+                <MapPin size={11} /> {geoNotice}
+              </button>
+            </div>
+
+            <h2 className="text-base font-bold text-ink mb-1">Add details & Evidence</h2>
             <p className="text-xs text-mink mb-4">
               {category?.emoji} {category?.label} · 📍 {location}
             </p>
 
             <textarea
-              className="input-dark resize-none h-28 mb-4 text-sm"
-              placeholder="Describe what you see… (optional)"
+              className="input-dark resize-none h-24 mb-4 text-sm w-full"
+              placeholder="Describe what you see… (e.g., 2 feet deep water, smoke spreading)"
               value={description}
               onChange={e => setDesc(e.target.value)}
             />
 
-            {/* Photo hint */}
-            <div className="flex items-center gap-2 p-3 rounded-xl border border-dashed border-white/10 bg-raised/20 mb-6 text-xs text-mink">
-              <Camera size={14} className="text-faint flex-shrink-0" />
-              <span>Photo upload coming soon — text report sufficient for now</span>
+            {/* Live Camera Photo Attachment */}
+            <div className="mb-6 space-y-2">
+              <label className="flex items-center justify-center gap-2 p-3.5 rounded-xl border border-dashed border-cyber/40 bg-cyber/5 text-xs text-cyber cursor-pointer hover:bg-cyber/10 transition-colors">
+                <Camera size={16} />
+                <span className="font-semibold">{photoBase64 ? 'Change Attached Photo' : '📷 Take / Attach Photo for AI Verification'}</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handlePhotoSelect}
+                  className="hidden"
+                />
+              </label>
+
+              {photoBase64 && (
+                <div className="relative inline-block border border-white/10 rounded-lg overflow-hidden">
+                  <img src={photoBase64} alt="Incident preview" className="w-full max-h-36 object-cover rounded-lg" />
+                  <button
+                    onClick={() => setPhoto(null)}
+                    className="absolute top-1 right-1 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded"
+                  >
+                    ✕ Remove
+                  </button>
+                </div>
+              )}
             </div>
 
             <button
@@ -171,7 +234,7 @@ export default function ReportQrPage() {
                 loading && 'opacity-70 cursor-not-allowed'
               )}
             >
-              {loading ? 'Submitting…' : '🚨 Submit Emergency Report'}
+              {loading ? 'Submitting & Running AI Triage…' : '🚨 Submit Emergency Report'}
             </button>
           </div>
         )}

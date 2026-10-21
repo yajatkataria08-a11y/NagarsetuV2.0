@@ -195,9 +195,12 @@ function loadDiskStore() {
 
 function saveDiskStore() {
   try {
-    fs.writeFileSync(STORE_FILE, JSON.stringify(memoryStore, null, 2), 'utf-8');
+    const tempFile = `${STORE_FILE}.tmp.${Date.now()}`;
+    const payload = JSON.stringify(memoryStore, null, 2);
+    fs.writeFileSync(tempFile, payload, 'utf-8');
+    fs.renameSync(tempFile, STORE_FILE);
   } catch (e) {
-    logger.error('[DB] Failed saving local store', { error: e.message });
+    logger.error('[DB] Failed saving local store atomically', { error: e.message });
   }
 }
 

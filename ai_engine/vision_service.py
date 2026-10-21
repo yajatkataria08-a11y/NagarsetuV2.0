@@ -54,34 +54,104 @@ if YOLO and os.path.exists(YOLO_MODEL_PATH) and os.path.getsize(YOLO_MODEL_PATH)
 
 def decode_image(image_input: str | bytes) -> Optional[np.ndarray]:
     """
-    Decodes an image from file path, base64 data URI, or raw bytes into a BGR NumPy array.
+    Decodes an image from file path, base64 data URI, or raw bytes into a NumPy array.
+    Supports OpenCV (cv2) with automated graceful fallback to Pillow (PIL).
     """
-    if cv2 is None:
-        return None
-
     try:
         if isinstance(image_input, bytes):
-            nparr = np.frombuffer(image_input, np.uint8)
-            return cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            if cv2 is not None:
+                nparr = np.frombuffer(image_input, np.uint8)
+                return cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            elif Image is not None:
+                img = Image.open(io.BytesIO(image_input)).convert("RGB")
+                return np.array(img)
 
         if isinstance(image_input, str):
-            # Check if it's a file path
             if os.path.exists(image_input) and os.path.isfile(image_input):
-                return cv2.imread(image_input)
+                if cv2 is not None:
+                    return cv2.imread(image_input)
+                elif Image is not None:
+                    return np.array(Image.open(image_input).convert("RGB"))
 
-            # Strip data:image/...;base64, prefix if present
-            if "base64," in image_input:
-                image_input = image_input.split("base64,")[1]
-
-            # Decode base64
-            img_bytes = base64.b64decode(image_input)
-            nparr = np.frombuffer(img_bytes, np.uint8)
-            return cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            # Base64 string
+            raw_b64 = image_input
+            if "base64," in raw_b64:
+                raw_b64 = raw_b64.split("base64,")[1]
+            img_bytes = base64.b64decode(raw_b64)
+            if cv2 is not None:
+                nparr = np.frombuffer(img_bytes, np.uint8)
+                return cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            elif Image is not None:
+                img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+                return np.array(img)
     except Exception as e:
-        print(f"[Vision] Image decode error: {e}", file=sys.stderr)
+        print(f"[Vision] Image decode note: {e}", file=sys.stderr)
         return None
 
     return None
+
+
+def run_numpy_visual_analysis(img: np.ndarray, hint_type: str = "") -> List[Dict[str, Any]]:
+    """
+    Pure NumPy deterministic computer vision analysis when OpenCV is not present.
+    Analyzes RGB channel ratios, brightness gradients, and localized variance.
+    """
+    detections: List[Dict[str, Any]] = []
+    h, w = img.shape[:2]
+    total_pixels = h * w
+    if total_pixels == 0:
+        return detections
+
+    # Determine channel order (assume RGB if 3 channels)
+    if len(img.shape) == 3 and img.shape[2] >= 3:
+        r, g, b = img[:, :, 0], img[:, :, 1], img[:, :, 2]
+    else:
+        r = g = b = img
+
+    # 1. Fire / Thermal detection (High Red, moderate Green, low Blue)
+    fire_mask = (r > 160) & (g > 70) & (b < 100) & (r > g + 30)
+    fire_ratio = float(np.count_nonzero(fire_mask)) / total_pixels
+
+    if fire_ratio > 0.012 or hint_type in ("FIRE", "SMOKE"):
+        conf = min(0.96, 0.72 + fire_ratio * 4.0)
+        detections.append({
+            "label": "fire",
+            "confidence": round(float(conf), 2),
+            "bbox": [int(w * 0.25), int(h * 0.2), int(w * 0.5), int(h * 0.6)],
+            "priority": "CRITICAL",
+            "department": "FIRE_DEPARTMENT"
+        })
+
+    # 2. Waterlogging / Submerged surface detection (Reflective blue or murky pool)
+    water_mask = ((b > r + 15) & (b > g - 15) & (b > 60)) | ((r < 50) & (g < 60) & (b < 70))
+    water_ratio = float(np.count_nonzero(water_mask)) / total_pixels
+
+    if water_ratio > 0.025 or hint_type in ("FLOOD_RISK", "WATER_LOGGING"):
+        conf = min(0.94, 0.70 + water_ratio * 3.0)
+        detections.append({
+            "label": "waterlogging",
+            "confidence": round(float(conf), 2),
+            "bbox": [int(w * 0.15), int(h * 0.4), int(w * 0.7), int(h * 0.5)],
+            "priority": "HIGH",
+            "department": "MUNICIPAL_DRAINAGE"
+        })
+
+    # 3. Potholes / Road depression (Depressed luminance cluster in lower half)
+    lower_half = (r[int(h*0.4):, :] * 0.299 + g[int(h*0.4):, :] * 0.587 + b[int(h*0.4):, :] * 0.114)
+    dark_mask = lower_half < 45
+    dark_ratio = float(np.count_nonzero(dark_mask)) / (lower_half.size if lower_half.size > 0 else 1)
+
+    if dark_ratio > 0.02 or hint_type in ("POTHOLE", "ROAD_HAZARD"):
+        conf = min(0.92, 0.68 + dark_ratio * 2.5)
+        detections.append({
+            "label": "pothole",
+            "confidence": round(float(conf), 2),
+            "bbox": [int(w * 0.3), int(h * 0.55), int(w * 0.4), int(h * 0.3)],
+            "priority": "MODERATE",
+            "department": "PWD_ROAD_MAINTENANCE"
+        })
+
+    return detections
 
 
 def run_opencv_visual_analysis(img: np.ndarray, hint_type: str = "") -> List[Dict[str, Any]]:
@@ -245,9 +315,12 @@ def analyze_incident_image(image_input: Any, hint_type: str = "", description: s
         except Exception as e:
             print(f"[Vision] YOLO inference fallback: {e}", file=sys.stderr)
 
-    # 2. Run OpenCV visual analysis
+    # 2. Run OpenCV / NumPy visual analysis
     if img is not None and not detections:
-        detections = run_opencv_visual_analysis(img, hint_type=hint_type)
+        if cv2 is not None:
+            detections = run_opencv_visual_analysis(img, hint_type=hint_type)
+        else:
+            detections = run_numpy_visual_analysis(img, hint_type=hint_type)
 
     # 3. If no image provided, calibrate from text description
     if img is None:

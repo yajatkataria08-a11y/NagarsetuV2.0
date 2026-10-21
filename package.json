@@ -13,6 +13,7 @@
     "dev:ai": "python ai_engine/unified_civic_ai.py serve 8000",
     "build": "npm run build --workspace=frontend",
     "start": "npm run start --workspace=backend",
+    "seed:demo": "node scripts/seed_demo.js",
     "test:ai": "python ai_engine/unified_civic_ai.py risk \"{\\\"lat\\\":23.2599,\\\"lng\\\":77.4126,\\\"hour\\\":22,\\\"day\\\":4}\""
   }
 }

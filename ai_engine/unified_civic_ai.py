@@ -127,17 +127,41 @@ def train_scikit_learn_models():
     joblib.dump(nlp_pipeline, NLP_MODEL_FILE)
 
     # 2. Train GradientBoosting Spatial-Temporal Risk Regressor
-    # Generate synthetic training grid around Bhopal and Indore
+    # Ingest real empirical Indore crime records if available + Bhopal anchors
     np.random.seed(42)
     rows = []
+    
+    indore_csv_path = os.path.join(HERE, "data", "indore_crime_data.csv")
+    if os.path.exists(indore_csv_path):
+        try:
+            cdf = pd.read_csv(indore_csv_path)
+            cdf["ts"] = pd.to_datetime(cdf["timestamp"], errors="coerce", dayfirst=True)
+            cdf = cdf.dropna(subset=["ts"]).reset_index(drop=True)
+            cdf["hour"] = cdf["ts"].dt.hour.astype(int)
+            cdf["day"] = cdf["ts"].dt.dayofweek.astype(int)
+            
+            act_weights = {"act302": 5.0, "act363": 4.0, "act323": 3.0, "act379": 2.0}
+            raw_sev = sum(cdf[col] * w for col, w in act_weights.items() if col in cdf.columns)
+            cdf["raw_severity"] = raw_sev.astype(float)
+            
+            for _, r in cdf.head(1200).iterrows():
+                base_risk = min(95.0, max(15.0, float(r["raw_severity"]) * 18.0))
+                night_factor = 1.35 if (r["hour"] >= 20 or r["hour"] <= 4) else 1.0
+                final_r = min(100.0, base_risk * night_factor)
+                rows.append([float(r["latitude"]), float(r["longitude"]), int(r["hour"]), int(r["day"]), final_r])
+            print(f"[ai_engine] Ingested {len(rows)} empirical crime points from Indore dataset")
+        except Exception as ex:
+            print(f"[ai_engine] Crime CSV parsing fallback: {ex}")
+
+    # Generate spatial coverage around Bhopal municipal anchors
     for city, base_lat, base_lng in [('bhopal', 23.25, 77.41), ('indore', 22.72, 75.86)]:
-        for _ in range(400):
+        sample_count = 600 if city == 'bhopal' else 200
+        for _ in range(sample_count):
             lat = base_lat + np.random.uniform(-0.08, 0.08)
             lng = base_lng + np.random.uniform(-0.08, 0.08)
             hour = np.random.randint(0, 24)
             day = np.random.randint(0, 7)
 
-            # True risk computation with Gaussian distance to nearest anchor
             min_dist = min([haversine_km(lat, lng, a["lat"], a["lng"]) for a in DEFAULT_CITY_HOTSPOTS])
             proximity_risk = math.exp(-(min_dist ** 2) / (2 * (0.8 ** 2))) * 75.0
             night_factor = 1.4 if (hour >= 20 or hour <= 4) else 1.0
