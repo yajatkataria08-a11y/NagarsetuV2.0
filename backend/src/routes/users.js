@@ -1,19 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../services/db');
+const { requireAuth } = require('../middleware/auth');
+const { sendError } = require('../utils/errors');
 
-// GET /api/users — list citizens with optional status filter
-router.get('/', async (req, res) => {
+// GET /api/users — list citizens with optional status filter (Restricted to officers)
+router.get('/', requireAuth(['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER']), async (req, res) => {
   try {
     const list = await db.getUsers(req.query.status);
     res.json(list);
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    sendError(res, e, 500, 'Failed to fetch user list');
   }
 });
 
-// PATCH /api/users/:id/status — moderate user status (active, flagged, banned)
-router.patch('/:id/status', async (req, res) => {
+// PATCH /api/users/:id/status — moderate user status (active, flagged, banned) (Super admin / ward officer only)
+router.patch('/:id/status', requireAuth(['SUPER_ADMIN', 'WARD_OFFICER']), async (req, res) => {
   try {
     const { status } = req.body;
     if (!['active', 'flagged', 'banned'].includes(status)) {
@@ -26,7 +28,7 @@ router.patch('/:id/status', async (req, res) => {
     req.app.get('io')?.emit('user:updated', updated);
     res.json({ success: true, user: updated });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    sendError(res, e, 500, 'Failed to update user status');
   }
 });
 

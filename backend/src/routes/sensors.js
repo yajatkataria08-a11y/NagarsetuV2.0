@@ -1,21 +1,18 @@
 /**
- * NagarSetu V2 — Sensor Telemetry Ingest (Phase 5)
- * ──────────────────────────────────────────────────
+ * NagarSetu V2 — Authenticated IoT Sensor Telemetry Ingest (Phase 5)
+ * ─────────────────────────────────────────────────────────────────
  * POST /api/ingest/sensor
- *   Accepts IoT sensor readings, maintains a per-device sliding-window buffer,
- *   and auto-escalates to hazard zones when thresholds are breached.
- *
- * Escalation rules (consecutive readings):
- *   water_depth > 0.45 m  × 3  → flood alert    (500 m, 2.0 boost, 2 h TTL)
- *   gas_ppm     > 70      × 2  → gas hazard      (300 m, 3.0 boost, 1 h TTL)
- *   temperature > 48 °C   × 2  → extreme heat    (400 m, 1.5 boost, 3 h TTL)
- *   decibel     > 110 dB  × 4  → noise/blast     (200 m, 1.8 boost, 30 min TTL)
+ *   Accepts verified IoT sensor readings with API key authentication,
+ *   maintains a bounded sliding-window memory buffer (preventing memory leaks/DOS),
+ *   and auto-escalates to hazard zones when persistent thresholds are breached.
  */
 
 const express = require('express');
 const router  = express.Router();
 const db      = require('../services/db');
 const logger  = require('../utils/logger');
+const config  = require('../config');
+const { sendError } = require('../utils/errors');
 
 // Allowed sensor types
 const VALID_TYPES = new Set(['temperature', 'water_depth', 'gas_ppm', 'decibel', 'flood_level']);
@@ -23,14 +20,68 @@ const VALID_TYPES = new Set(['temperature', 'water_depth', 'gas_ppm', 'decibel',
 // Sliding-window buffer: Map<"deviceId:type", Array<reading>>
 const sensorBuffer = new Map();
 const BUFFER_SIZE  = 5;
+const MAX_BUFFER_KEYS = 100; // Hard cap on stored sensor keys to prevent unbounded memory growth
+
+const SENSOR_API_KEY = process.env.SENSOR_API_KEY || config.SENSOR_API_KEY || 'nagarsetu_iot_sensor_key_2026';
+
+/**
+ * Validates sensor API key in header (x-sensor-api-key or Bearer token)
+ */
+function requireSensorAuth(req, res, next) {
+  if (process.env.DISABLE_AUTH === 'true' || config.DISABLE_AUTH === 'true') {
+    return next();
+  }
+
+  const authHeader = req.headers['authorization'] || '';
+  const bearerKey = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  const headerKey = req.headers['x-sensor-api-key'] || bearerKey;
+
+  if (!headerKey || headerKey !== SENSOR_API_KEY) {
+    logger.warn('[Sensors] Unauthorized telemetry ingest attempt', {
+      ip: req.ip,
+      providedKey: headerKey ? 'invalid' : 'missing'
+    });
+    return res.status(401).json({ error: 'Unauthorized: Invalid or missing x-sensor-api-key header' });
+  }
+
+  next();
+}
+
+/**
+ * Prunes inactive keys and caps total buffer size
+ */
+function pruneSensorBuffer() {
+  const now = Date.now();
+  // Evict entries with no activity for 30 minutes
+  for (const [key, window] of sensorBuffer.entries()) {
+    const newest = window[window.length - 1];
+    if (newest && (now - new Date(newest.timestamp).getTime() > 30 * 60 * 1000)) {
+      sensorBuffer.delete(key);
+    }
+  }
+
+  // If still above maximum capacity, remove oldest keys
+  if (sensorBuffer.size > MAX_BUFFER_KEYS) {
+    const excess = sensorBuffer.size - MAX_BUFFER_KEYS;
+    const keysToEvict = Array.from(sensorBuffer.keys()).slice(0, excess);
+    for (const k of keysToEvict) {
+      sensorBuffer.delete(k);
+    }
+    logger.info(`[Sensors] Evicted ${excess} stale device buffers to enforce memory cap`);
+  }
+}
 
 /**
  * Append a reading to the device+type sliding window.
  * @returns {Array} updated window (newest last)
  */
 function pushReading(deviceId, type, reading) {
+  pruneSensorBuffer();
+
   const key = `${deviceId}:${type}`;
-  if (!sensorBuffer.has(key)) sensorBuffer.set(key, []);
+  if (!sensorBuffer.has(key)) {
+    sensorBuffer.set(key, []);
+  }
   const window = sensorBuffer.get(key);
   window.push(reading);
   if (window.length > BUFFER_SIZE) window.shift();
@@ -39,7 +90,6 @@ function pushReading(deviceId, type, reading) {
 
 /**
  * Count how many of the last `n` readings in `window` satisfy `predicate`.
- * The check starts from the most recent reading.
  */
 function countConsecutiveTrailing(window, n, predicate) {
   const slice = window.slice(-n);
@@ -87,35 +137,43 @@ const ESCALATION_RULES = [
 ];
 
 // ── POST /api/ingest/sensor ───────────────────────────────────────────────────
-router.post('/sensor', async (req, res) => {
+router.post('/sensor', requireSensorAuth, async (req, res) => {
   try {
     const { deviceId, type, value, unit, lat, lng, ward, timestamp } = req.body;
 
     // ── Validation ─────────────────────────────────────────────────────────
-    if (!deviceId || !type || value == null) {
-      return res.status(400).json({ error: 'deviceId, type, and value are required' });
+    if (!deviceId || typeof deviceId !== 'string' || deviceId.trim().length === 0) {
+      return res.status(400).json({ error: 'Valid non-empty deviceId string is required' });
     }
-    if (!VALID_TYPES.has(type)) {
+    if (!type || !VALID_TYPES.has(type)) {
       return res.status(400).json({
         error: `Invalid sensor type. Must be one of: ${[...VALID_TYPES].join(', ')}`,
       });
     }
+
     const numericValue = parseFloat(value);
-    if (isNaN(numericValue)) {
-      return res.status(400).json({ error: 'value must be numeric' });
+    if (isNaN(numericValue) || !isFinite(numericValue)) {
+      return res.status(400).json({ error: 'value must be a valid finite number' });
+    }
+
+    const parsedLat = parseFloat(lat);
+    const parsedLng = parseFloat(lng);
+    if (isNaN(parsedLat) || isNaN(parsedLng) || parsedLat < -90 || parsedLat > 90 || parsedLng < -180 || parsedLng > 180) {
+      return res.status(400).json({ error: 'Valid numerical lat (-90 to 90) and lng (-180 to 180) are required' });
     }
 
     // ── Insert into sliding-window buffer ───────────────────────────────────
     const reading = {
       value:     numericValue,
       unit:      unit || '',
-      lat:       parseFloat(lat)  || 0,
-      lng:       parseFloat(lng)  || 0,
-      ward:      ward || 'Unknown',
+      lat:       parsedLat,
+      lng:       parsedLng,
+      ward:      ward ? String(ward).trim() : 'Unknown Ward',
       timestamp: timestamp || new Date().toISOString(),
     };
 
-    const window = pushReading(deviceId, type, reading);
+    const cleanDeviceId = String(deviceId).slice(0, 64);
+    const window = pushReading(cleanDeviceId, type, reading);
 
     // ── Check escalation rules ───────────────────────────────────────────────
     let escalated      = false;
@@ -125,15 +183,15 @@ router.post('/sensor', async (req, res) => {
       if (rule.type !== type) continue;
 
       if (countConsecutiveTrailing(window, rule.count, r => rule.predicate(r.value))) {
-        const wardLabel = ward ? `[${ward}]` : '';
+        const wardLabel = reading.ward ? `[${reading.ward}]` : '';
         const hazardData = {
           name:          rule.label(wardLabel),
-          center_lat:    parseFloat(lat)  || 0,
-          center_lng:    parseFloat(lng)  || 0,
+          center_lat:    parsedLat,
+          center_lng:    parsedLng,
           radius_meters: rule.radius,
           risk_boost:    rule.boost,
           expires_at:    new Date(Date.now() + rule.ttlMin * 60000).toISOString(),
-          note:          `Auto-created by sensor ${deviceId} (${type}=${numericValue}${unit || ''})`,
+          note:          `Auto-created by authenticated sensor ${cleanDeviceId} (${type}=${numericValue}${unit || ''})`,
           active:        true,
         };
 
@@ -144,7 +202,10 @@ router.post('/sensor', async (req, res) => {
         req.app.get('io')?.emit('hazard:auto_created', hazardCreated);
 
         logger.warn('[Sensors] Escalation triggered', {
-          deviceId, type, value: numericValue, rule: rule.label(wardLabel),
+          deviceId: cleanDeviceId,
+          type,
+          value: numericValue,
+          rule: rule.label(wardLabel),
         });
         break; // Only the first matching rule fires per reading
       }
@@ -157,8 +218,7 @@ router.post('/sensor', async (req, res) => {
       buffer_size:     window.length,
     });
   } catch (e) {
-    logger.error('[Sensors] Ingest error', { error: e.message });
-    res.status(500).json({ error: e.message });
+    sendError(res, e, 500, 'Sensor telemetry ingestion error');
   }
 });
 

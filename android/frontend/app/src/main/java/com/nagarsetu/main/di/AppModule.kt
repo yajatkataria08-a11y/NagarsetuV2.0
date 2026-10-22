@@ -33,10 +33,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideTwilioConfig(): TwilioConfig = TwilioConfig(
-        accountSid = BuildConfig.TWILIO_ACCOUNT_SID,
-        authToken  = BuildConfig.TWILIO_AUTH_TOKEN,
-        verifySid  = BuildConfig.TWILIO_VERIFY_SID,
-        fromNumber = BuildConfig.TWILIO_PHONE_NUMBER
+        gatewayBaseUrl = BuildConfig.GATEWAY_BASE_URL,
+        fromNumber     = BuildConfig.TWILIO_PHONE_NUMBER
     )
 
     @Provides

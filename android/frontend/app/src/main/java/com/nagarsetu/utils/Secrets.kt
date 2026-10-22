@@ -27,9 +27,8 @@ package com.nagarsetu.utils
 import com.nagarsetu.BuildConfig
 
 object Secrets {
-    // ── Twilio (SOS SMS) ───────────────────────────────────────────────────────
-    val twilioAccountSid:  String = BuildConfig.TWILIO_ACCOUNT_SID
-    val twilioAuthToken:   String = BuildConfig.TWILIO_AUTH_TOKEN
+    // ── Gateway & Telephony (Managed server-side for security) ────────────────
+    val gatewayBaseUrl:    String = BuildConfig.GATEWAY_BASE_URL
     val twilioPhoneNumber: String = BuildConfig.TWILIO_PHONE_NUMBER
 
     // ── SendGrid (report e-mail) ───────────────────────────────────────────────
@@ -43,7 +42,7 @@ object Secrets {
     val waqiToken:         String = BuildConfig.WAQI_TOKEN
 
     // ── Guard helpers ─────────────────────────────────────────────────────────
-    val hasTwilio:   Boolean get() = twilioAccountSid.isNotBlank() && !twilioAccountSid.startsWith("YOUR_")
+    val hasTwilio:   Boolean get() = gatewayBaseUrl.isNotBlank()
     val hasSendGrid: Boolean get() = sendGridApiKey.isNotBlank()   && !sendGridApiKey.startsWith("YOUR_")
     val hasGroq:     Boolean get() = groqApiKey.isNotBlank()       && !groqApiKey.startsWith("YOUR_")
     val hasGemini:   Boolean get() = geminiApiKey.isNotBlank()     && !geminiApiKey.startsWith("YOUR_")

@@ -479,6 +479,33 @@ if __name__ == '__main__':
         print(json.dumps({"error": "Subcommand required: 'verify', 'risk', 'route', 'cctv', 'serve', or 'train'"}))
         sys.exit(1)
 
+    def parse_json_payload(raw_str):
+        if not raw_str or not str(raw_str).strip():
+            return {}
+        s = str(raw_str).strip()
+        try:
+            return json.loads(s)
+        except Exception:
+            pass
+        try:
+            import re
+            normalized = s.replace("'", '"')
+            normalized = re.sub(r'\bTrue\b', 'true', normalized)
+            normalized = re.sub(r'\bFalse\b', 'false', normalized)
+            normalized = re.sub(r'\bNone\b', 'null', normalized)
+            return json.loads(normalized)
+        except Exception:
+            pass
+        try:
+            import ast
+            py_str = s.replace("true", "True").replace("false", "False").replace("null", "None")
+            val = ast.literal_eval(py_str)
+            if isinstance(val, dict):
+                return val
+        except Exception:
+            pass
+        return {"description": s, "severity": 3}
+
     cmd = sys.argv[1].lower()
 
     if cmd == 'train':
@@ -491,27 +518,13 @@ if __name__ == '__main__':
 
     elif cmd == 'verify':
         payload_str = sys.argv[2] if len(sys.argv) > 2 else '{}'
-        try:
-            incident_data = json.loads(payload_str)
-        except Exception:
-            try:
-                import ast
-                incident_data = ast.literal_eval(payload_str)
-            except Exception as e:
-                incident_data = {"description": payload_str, "severity": 3}
+        incident_data = parse_json_payload(payload_str)
         res = verify_incident_report(incident_data)
         print(json.dumps(res))
 
     elif cmd == 'risk':
         payload_str = sys.argv[2] if len(sys.argv) > 2 else '{}'
-        try:
-            req = json.loads(payload_str)
-        except Exception:
-            try:
-                import ast
-                req = ast.literal_eval(payload_str)
-            except Exception:
-                req = {}
+        req = parse_json_payload(payload_str)
         lat = float(req.get('lat', 23.2599))
         lng = float(req.get('lng', 77.4126))
         hour = int(req.get('hour', 21))
@@ -521,14 +534,7 @@ if __name__ == '__main__':
 
     elif cmd == 'route':
         payload_str = sys.argv[2] if len(sys.argv) > 2 else '{}'
-        try:
-            req = json.loads(payload_str)
-        except Exception:
-            try:
-                import ast
-                req = ast.literal_eval(payload_str)
-            except Exception:
-                req = {}
+        req = parse_json_payload(payload_str)
         waypoints = req.get('waypoints', [])
         hour = int(req.get('hour', 22))
         res = evaluate_route_safety(waypoints, hour)
@@ -536,14 +542,7 @@ if __name__ == '__main__':
 
     elif cmd in ('cctv', 'vision'):
         payload_str = sys.argv[2] if len(sys.argv) > 2 else '{}'
-        try:
-            req = json.loads(payload_str)
-        except Exception:
-            try:
-                import ast
-                req = ast.literal_eval(payload_str)
-            except Exception:
-                req = {}
+        req = parse_json_payload(payload_str)
         if cmd == 'vision':
             from vision_service import analyze_incident_image
             res = analyze_incident_image(req)

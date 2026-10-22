@@ -38,9 +38,10 @@ function resolvePythonBin() {
         process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, 'Programs', 'Python', 'Python311', 'python.exe') : null,
         process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, 'Programs', 'Python', 'Python312', 'python.exe') : null,
         process.env.LOCALAPPDATA ? path.join(process.env.LOCALAPPDATA, 'Programs', 'Python', 'Python310', 'python.exe') : null,
-        'C:\\Users\\yajat\\AppData\\Local\\Programs\\Python\\Python311\\python.exe',
         'C:\\Program Files\\Python311\\python.exe',
+        'C:\\Program Files\\Python312\\python.exe',
         'C:\\Python311\\python.exe',
+        'C:\\Python312\\python.exe',
         'python',
         'py'
       ].filter(Boolean)
@@ -79,6 +80,9 @@ const EnvSchema = z.object({
   FRONTEND_URL: z.string().default('http://localhost:3000'),
   AI_SERVICE_URL: z.string().default('http://127.0.0.1:8000'),
   PYTHON_BIN: z.string().default(() => resolvePythonBin()),
+  DISABLE_AUTH: z.enum(['true', 'false']).default('false'),
+  JWT_SECRET: z.string().default('nagarsetu_dev_secret_change_in_production'),
+  SENSOR_API_KEY: z.string().default('nagarsetu_iot_sensor_key_2026'),
   SUPABASE_URL: z.string().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   TWILIO_ACCOUNT_SID: z.string().optional(),
@@ -90,10 +94,18 @@ const EnvSchema = z.object({
 
 const parsedEnv = EnvSchema.safeParse(process.env);
 if (!parsedEnv.success) {
-  console.error('[Config] ❌ Invalid environment configuration:', parsedEnv.error.format());
+  const errorDetails = JSON.stringify(parsedEnv.error.format(), null, 2);
+  console.error('[Config] ❌ Invalid environment configuration:\n', errorDetails);
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(`[Config Fatal] Invalid environment configuration in production:\n${errorDetails}`);
+  }
 }
 
 const env = parsedEnv.success ? parsedEnv.data : EnvSchema.parse({});
+
+if (env.NODE_ENV === 'production' && env.JWT_SECRET === 'nagarsetu_dev_secret_change_in_production') {
+  throw new Error('[Config Fatal] JWT_SECRET must be set to a secure custom secret in production environment!');
+}
 
 // Derived and normalized paths
 const config = {

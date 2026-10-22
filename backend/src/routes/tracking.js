@@ -3,16 +3,28 @@ const router = express.Router();
 const db = require('../services/db');
 const twilio = require('../services/twilio');
 const logger = require('../utils/logger');
+const { sendError } = require('../utils/errors');
 
-// POST /api/tracking/start — initiates a new live tracking session (e.g. from RakshaScreen or QR)
+function isValidGeoCoord(lat, lng) {
+  const pLat = parseFloat(lat);
+  const pLng = parseFloat(lng);
+  return !isNaN(pLat) && !isNaN(pLng) && pLat >= -90 && pLat <= 90 && pLng >= -180 && pLng <= 180;
+}
+
+// POST /api/tracking/start — initiates a new live tracking session
 router.post('/start', async (req, res) => {
   try {
     const { userId, userName, lat, lng, contacts = [] } = req.body;
+
+    if (!isValidGeoCoord(lat, lng)) {
+      return res.status(400).json({ error: 'Valid numerical lat (-90 to 90) and lng (-180 to 180) are required' });
+    }
+
     const session = await db.createTrackingSession({
       user_id: userId,
-      user_name: userName,
-      lat: parseFloat(lat) || 23.2599,
-      lng: parseFloat(lng) || 77.4126,
+      user_name: userName || 'Citizen',
+      lat: parseFloat(lat),
+      lng: parseFloat(lng),
     });
 
     // Send SMS tracking link to emergency contacts
@@ -26,7 +38,7 @@ router.post('/start', async (req, res) => {
     req.app.get('io')?.emit('tracking:started', session);
     res.status(201).json({ success: true, session, trackingUrl });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    sendError(res, e, 500, 'Failed to start tracking session');
   }
 });
 
@@ -34,33 +46,25 @@ router.post('/start', async (req, res) => {
 router.get('/location', async (req, res) => {
   try {
     const sid = req.query.session_id;
-    if (!sid) return res.status(400).json({ error: 'session_id required' });
+    if (!sid) return res.status(400).json({ error: 'session_id query parameter is required' });
 
     const session = await db.getTrackingSession(sid);
     if (!session) {
-      return res.json({
-        sessionId: sid,
-        lat: 23.2599 + (Math.random() - 0.5) * 0.002,
-        lng: 77.4126 + (Math.random() - 0.5) * 0.002,
-        batteryLevel: 42,
-        heartRate: 104,
-        updatedAt: Date.now(),
-        userName: 'Priya Sharma (Simulated)',
-        ward: 'Ward 7 — Arera Colony'
-      });
+      // In a real safety product, never return invented simulated coordinates for unknown/expired sessions
+      return res.status(404).json({ error: 'Tracking session not found or expired' });
     }
 
     res.json({
       sessionId: session.session_id,
       lat: session.lat,
       lng: session.lng,
-      batteryLevel: session.battery_level || 50,
+      batteryLevel: session.battery_level || null,
       heartRate: session.heart_rate || null,
       userName: session.user_name,
-      updatedAt: new Date(session.created_at).getTime()
+      updatedAt: new Date(session.created_at || Date.now()).getTime()
     });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    sendError(res, e, 500, 'Failed to fetch tracking location');
   }
 });
 
@@ -68,11 +72,11 @@ router.get('/location', async (req, res) => {
 router.get('/history', async (req, res) => {
   try {
     const sid = req.query.session_id;
-    if (!sid) return res.status(400).json({ error: 'session_id required' });
+    if (!sid) return res.status(400).json({ error: 'session_id query parameter is required' });
 
     const session = await db.getTrackingSession(sid);
     if (!session) {
-      return res.json({ sessionId: sid, breadcrumbs: [] });
+      return res.status(404).json({ error: 'Tracking session not found or expired' });
     }
 
     res.json({
@@ -80,7 +84,7 @@ router.get('/history', async (req, res) => {
       breadcrumbs: session.history || []
     });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    sendError(res, e, 500, 'Failed to fetch tracking history');
   }
 });
 
@@ -88,8 +92,11 @@ router.get('/history', async (req, res) => {
 router.post('/ping', async (req, res) => {
   try {
     const { sessionId, lat, lng, batteryLevel, heartRate } = req.body;
-    if (!sessionId || !lat || !lng) {
-      return res.status(400).json({ error: 'sessionId, lat, and lng are required' });
+    if (!sessionId) {
+      return res.status(400).json({ error: 'sessionId is required' });
+    }
+    if (!isValidGeoCoord(lat, lng)) {
+      return res.status(400).json({ error: 'Valid numerical lat (-90 to 90) and lng (-180 to 180) are required' });
     }
 
     const updated = await db.updateTrackingLocation(
@@ -100,17 +107,21 @@ router.post('/ping', async (req, res) => {
       heartRate ? parseInt(heartRate) : null
     );
 
+    if (!updated) {
+      return res.status(404).json({ error: 'Tracking session not found or expired' });
+    }
+
     req.app.get('io')?.emit(`tracking:${sessionId}`, {
-      lat,
-      lng,
-      batteryLevel,
-      heartRate,
+      lat: parseFloat(lat),
+      lng: parseFloat(lng),
+      batteryLevel: batteryLevel || null,
+      heartRate: heartRate || null,
       updatedAt: Date.now()
     });
 
     res.json({ success: true, timestamp: Date.now() });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    sendError(res, e, 500, 'Failed to record tracking ping');
   }
 });
 

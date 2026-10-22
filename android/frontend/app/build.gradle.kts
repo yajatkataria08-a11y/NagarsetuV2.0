@@ -36,17 +36,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
 
-        // ── Twilio Verify secrets ──
-        buildConfigField("String", "TWILIO_ACCOUNT_SID",
-            "\"${localProperties["TWILIO_ACCOUNT_SID"] ?: ""}\"")
-        buildConfigField("String", "TWILIO_AUTH_TOKEN",
-            "\"${localProperties["TWILIO_AUTH_TOKEN"] ?: ""}\"")
-        buildConfigField("String", "TWILIO_API_KEY_SID",
-            "\"${localProperties["TWILIO_API_KEY_SID"] ?: ""}\"")
-        buildConfigField("String", "TWILIO_VERIFY_SID",
-            "\"${localProperties["TWILIO_VERIFY_SID"] ?: ""}\"")
-        buildConfigField("String", "SENDGRID_API_KEY",
-            "\"${localProperties["SENDGRID_API_KEY"] ?: ""}\"")
+        // ── Authentication & Gateway Configuration ──
+        // Twilio secrets are managed server-side by the backend API Gateway to prevent token exposure in client APKs.
+        buildConfigField("String", "GATEWAY_BASE_URL",
+            "\"${localProperties["GATEWAY_BASE_URL"] ?: "http://10.0.2.2:4000"}\"")
         buildConfigField("String", "TWILIO_PHONE_NUMBER",
             "\"${localProperties["TWILIO_PHONE_NUMBER"] ?: ""}\"")
 

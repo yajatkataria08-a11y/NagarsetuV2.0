@@ -8,6 +8,8 @@
 const express = require('express');
 const router = express.Router();
 const logger = require('../utils/logger');
+const { requireAuth } = require('../middleware/auth');
+const { sendError } = require('../utils/errors');
 
 // Seed Contractors Roster
 let contractors = [
@@ -130,7 +132,7 @@ router.get('/audit-trail', (req, res) => {
 });
 
 // ── POST /api/contractors/:id/penalize ────────────────────────────────────────
-router.post('/:id/penalize', (req, res) => {
+router.post('/:id/penalize', requireAuth(['SUPER_ADMIN', 'WARD_OFFICER']), (req, res) => {
   try {
     const { id } = req.params;
     const { penaltyAmount, breachReason, officerBadge } = req.body;
@@ -167,7 +169,7 @@ router.post('/:id/penalize', (req, res) => {
       firm_name: contractor.firm_name,
       penalty_amount_inr: fine,
       breach_reason: breachReason,
-      officer_badge: officerBadge || 'BMC-AUDIT-CHIEF',
+      officer_badge: officerBadge || req.user?.name || 'BMC-AUDIT-CHIEF',
       timestamp: new Date().toISOString(),
       status: 'deducted_from_invoice'
     };
@@ -186,7 +188,7 @@ router.post('/:id/penalize', (req, res) => {
     });
   } catch (e) {
     logger.error('Penalize contractor failed', { error: e.message });
-    res.status(500).json({ error: e.message });
+    sendError(res, e, 500, 'Failed to penalize contractor');
   }
 });
 

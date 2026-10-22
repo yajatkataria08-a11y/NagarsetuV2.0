@@ -68,17 +68,31 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/streams', express.static(path.join(__dirname, '../public/streams')));
 app.use('/public',  express.static(path.join(__dirname, '../public')));
 
-// Rate limiting — 200 req/15min per IP
-app.use('/api/', rateLimit({
+// Rate limiting:
+// 1. Dedicated Emergency Limiter (high capacity to prevent carrier NAT throttling during real crises)
+const emergencyLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5000,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Emergency rate limit exceeded — please retry shortly' },
+});
+
+// 2. Standard API Rate Limiter
+const standardLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 200,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests — please slow down' },
-}));
+  skip: (req) => req.baseUrl === '/api/sos' || req.originalUrl.startsWith('/api/sos') || req.originalUrl.startsWith('/api/tracking/ping')
+});
 
-// ── API Routes ────────────────────────────────────────────────────────────────
-app.use('/api/sos',           sosRoutes);
+// ── API Routes (Mount emergency endpoints with dedicated limiter) ─────────────
+app.use('/api/sos',           emergencyLimiter, sosRoutes);
+app.use('/api/tracking/ping', emergencyLimiter);
+app.use('/api/',              standardLimiter);
+
 app.use('/api/incidents',     incidentRoutes);
 app.use('/api/tracking',      trackingRoutes);
 app.use('/api/analytics',     analyticsRoutes);
@@ -175,52 +189,113 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// ── Socket.IO — Real-time Event Mesh (Phase 3) ────────────────────────────────
+// ── Socket.IO — Real-time Event Mesh with JWT Handshake Auth ──────────────────
 const connectedAdmins = new Map();
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = process.env.JWT_SECRET || config.JWT_SECRET || 'nagarsetu_dev_secret_change_in_production';
 
-io.on('connection', async (socket) => {
-  const adminId = socket.handshake.query.adminId || socket.id;
-  connectedAdmins.set(socket.id, { id: adminId, connectedAt: Date.now() });
-  logger.info('Admin connected', { socketId: socket.id, adminId, total: connectedAdmins.size });
-
-  // Send initial data snapshot from Supabase
-  try {
-    const [sos, incidents, wards, responders, stats] = await Promise.all([
-      db.getSosEvents(),
-      db.getIncidents(),
-      db.getWards(),
-      db.getResponders(),
-      db.getDashboardStats(),
-    ]);
-    socket.emit('init', { sos, incidents, wards, responders, stats });
-  } catch (e) {
-    logger.warn('Failed to send init snapshot', { error: e.message });
+// Socket.IO authentication middleware
+io.use((socket, next) => {
+  if (process.env.DISABLE_AUTH === 'true' || config.DISABLE_AUTH === 'true') {
+    socket.user = { userId: 'admin_dev_bypass', name: 'Demo Admin', role: 'SUPER_ADMIN' };
+    return next();
   }
 
-  // ─── Admin actions ──────────────────────────────────────────────
-  socket.on('sos:acknowledge', async ({ id }) => {
+  const token = socket.handshake.auth?.token ||
+    (socket.handshake.headers?.['authorization']?.startsWith('Bearer ')
+      ? socket.handshake.headers['authorization'].slice(7)
+      : socket.handshake.query?.token);
+
+  if (!token) {
+    // Unauthenticated public connection (e.g. public tracking viewer or anonymous observer)
+    socket.user = null;
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    socket.user = decoded;
+    return next();
+  } catch (err) {
+    logger.warn('Socket connection token verification failed', { socketId: socket.id });
+    socket.user = null;
+    return next();
+  }
+});
+
+io.on('connection', async (socket) => {
+  const isAuthorizedOfficer = socket.user && ['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER', 'FIELD_ENGINEER'].includes(socket.user.role);
+
+  if (isAuthorizedOfficer) {
+    connectedAdmins.set(socket.id, { id: socket.user.userId, role: socket.user.role, connectedAt: Date.now() });
+    socket.join('command_center_officers');
+    logger.info('Authorized municipal officer connected to real-time mesh', {
+      socketId: socket.id,
+      user: socket.user.userId,
+      role: socket.user.role,
+      total: connectedAdmins.size
+    });
+
+    // Send initial confidential municipal data snapshot
+    try {
+      const [sos, incidents, wards, responders, stats] = await Promise.all([
+        db.getSosEvents(),
+        db.getIncidents(),
+        db.getWards(),
+        db.getResponders(),
+        db.getDashboardStats(),
+      ]);
+      socket.emit('init', { sos, incidents, wards, responders, stats });
+    } catch (e) {
+      logger.warn('Failed to send init snapshot to authorized officer', { error: e.message });
+    }
+  } else {
+    logger.info('Public unauthenticated client connected to public event channel', { socketId: socket.id });
+    // Emit only non-confidential macro stats to unauthenticated connections
+    db.getDashboardStats().then(stats => {
+      socket.emit('stats:public', stats);
+    }).catch(() => {});
+  }
+
+  // Helper verifying socket role before executing mutating actions
+  function requireSocketRole(roles, handler) {
+    return async (data) => {
+      if (!socket.user || !roles.includes(socket.user.role)) {
+        logger.warn('Unauthorized socket action attempted', {
+          socketId: socket.id,
+          user: socket.user?.userId,
+          requiredRoles: roles
+        });
+        return socket.emit('error', { error: 'Unauthorized: Insufficient role permissions for this operation' });
+      }
+      return handler(data);
+    };
+  }
+
+  // ─── Guarded Admin actions ────────────────────────────────────────
+  socket.on('sos:acknowledge', requireSocketRole(['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER'], async ({ id }) => {
     const updated = await db.updateSos(id, { status: 'acknowledged', acknowledged_at: new Date().toISOString() });
     io.emit('sos:updated', updated);
-  });
+  }));
 
-  socket.on('sos:resolve', async ({ id }) => {
+  socket.on('sos:resolve', requireSocketRole(['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER'], async ({ id }) => {
     const updated = await db.updateSos(id, { status: 'resolved', resolved_at: new Date().toISOString() });
     io.emit('sos:updated', updated);
-  });
+  }));
 
-  socket.on('incident:verify', async ({ id }) => {
+  socket.on('incident:verify', requireSocketRole(['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER', 'FIELD_ENGINEER'], async ({ id }) => {
     const updated = await db.updateIncident(id, { status: 'verified' });
     io.emit('incident:updated', updated);
-  });
+  }));
 
-  socket.on('incident:reject', async ({ id }) => {
+  socket.on('incident:reject', requireSocketRole(['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER'], async ({ id }) => {
     const updated = await db.updateIncident(id, { status: 'rejected' });
     io.emit('incident:updated', updated);
-  });
+  }));
 
   socket.on('disconnect', () => {
     connectedAdmins.delete(socket.id);
-    logger.info('Admin disconnected', { socketId: socket.id, remaining: connectedAdmins.size });
+    logger.info('Socket disconnected', { socketId: socket.id, remaining: connectedAdmins.size });
   });
 });
 
