@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="200" viewBox="0 0 900 200" role="img" aria-label="SOS event flow">
+  <defs>
+    <style>
+      text{font-family:'Segoe UI',Arial,sans-serif;fill:#e6eef7;font-size:14px;text-anchor:middle}
+      .box{fill:#0c1a33;stroke:#00D4FF;stroke-width:1.5}
+      .sub{fill:#9fb3c8;font-size:11px}
+      .line{stroke:#00D4FF;stroke-opacity:.35;stroke-width:2;stroke-dasharray:6 6;animation:dash 1s linear infinite}
+      @keyframes dash{to{stroke-dashoffset:-12}}
+      .dot{fill:#E53935;animation:travel 5s linear infinite}
+      @keyframes travel{0%{transform:translateX(0)}100%{transform:translateX(660px)}}
+      .glow{animation:glow 5s ease-in-out infinite}
+      .g2{animation-delay:1.25s}.g3{animation-delay:2.5s}.g4{animation-delay:3.75s}
+      @keyframes glow{0%,20%,100%{stroke:#00D4FF}8%{stroke:#E53935;stroke-width:3}}
+    </style>
+  </defs>
+  <rect width="900" height="200" fill="#070714" rx="14"/>
+  <line class="line" x1="120" y1="100" x2="780" y2="100"/>
+  <g>
+    <rect class="box glow" x="30" y="65" width="130" height="70" rx="10"/><text x="95" y="96">⌚ Citizen</text><text class="sub" x="95" y="116">watch / phone / QR</text>
+    <rect class="box glow g2" x="240" y="65" width="130" height="70" rx="10"/><text x="305" y="96">🌐 Gateway</text><text class="sub" x="305" y="116">Node · Socket.IO</text>
+    <rect class="box glow g3" x="450" y="65" width="130" height="70" rx="10"/><text x="515" y="96">🧠 AI risk</text><text class="sub" x="515" y="116">score · safe route</text>
+    <rect class="box glow g4" x="660" y="65" width="210" height="70" rx="10"/><text x="765" y="96">🖥️ Command Center</text><text class="sub" x="765" y="116">+ Twilio call · live tracking link</text>
+  </g>
+  <circle class="dot" cx="100" cy="100" r="6"/>
+</svg>

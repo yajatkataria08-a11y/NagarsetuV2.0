@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="220" viewBox="0 0 900 220" role="img" aria-label="NagarSetu V2.0 banner">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070714"/><stop offset="1" stop-color="#0c1a33"/>
+    </linearGradient>
+    <linearGradient id="ttl" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#00D4FF"/><stop offset="1" stop-color="#10B981"/>
+    </linearGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M30 0H0V30" fill="none" stroke="#00D4FF" stroke-opacity=".08"/>
+    </pattern>
+    <style>
+      .ring{fill:none;stroke:#E53935;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:ping 2.4s ease-out infinite}
+      .r2{animation-delay:.8s}.r3{animation-delay:1.6s}
+      @keyframes ping{0%{transform:scale(.2);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+      .scan{animation:scan 5s linear infinite}
+      @keyframes scan{0%{transform:translateX(-120px)}100%{transform:translateX(1020px)}}
+      .blink{animation:blink 1.2s steps(2,start) infinite}
+      @keyframes blink{50%{opacity:0}}
+      .pulse{animation:pulse 2s ease-in-out infinite}
+      @keyframes pulse{50%{opacity:.35}}
+      text{font-family:'Segoe UI',Arial,sans-serif}
+    </style>
+  </defs>
+  <rect width="900" height="220" fill="url(#bg)" rx="14"/>
+  <rect width="900" height="220" fill="url(#grid)" rx="14"/>
+  <rect class="scan" x="0" y="0" width="120" height="220" fill="#00D4FF" opacity=".07"/>
+  <g transform="translate(790,110)">
+    <circle class="ring" r="60"/><circle class="ring r2" r="60"/><circle class="ring r3" r="60"/>
+    <circle r="9" fill="#E53935" class="pulse"/>
+  </g>
+  <g stroke="#00D4FF" stroke-opacity=".35" fill="none" stroke-width="1.5">
+    <path d="M600 40 L680 90 L740 70 L790 110 L720 160 L650 150 Z"/>
+  </g>
+  <g fill="#00D4FF" class="pulse"><circle cx="600" cy="40" r="3"/><circle cx="680" cy="90" r="3"/><circle cx="740" cy="70" r="3"/><circle cx="720" cy="160" r="3"/><circle cx="650" cy="150" r="3"/></g>
+  <text x="40" y="95" font-size="54" font-weight="800" fill="url(#ttl)">NagarSetu V2.0</text>
+  <text x="42" y="132" font-size="19" fill="#9fb3c8">Civic command center · Predictive safety AI · Android + Wear OS</text>
+  <text x="42" y="170" font-size="15" fill="#E53935" font-family="Consolas,monospace">● LIVE  <tspan fill="#10B981">Bhopal · Indore</tspan><tspan class="blink" fill="#00D4FF"> ▌</tspan></text>
+</svg>
