@@ -15,16 +15,16 @@ NagarSetu V2.0 transforms disconnected municipal signals into an integrated, rea
 
 ---
 
-## 🧬 Inspirations from Peer Ecosystems
+## 🧬 Advanced Tactical Pillars & Design Philosophy
 
-### From **Raksha** (Advanced Tactical Safety):
+### Tactical Safety & Citizen Protection:
 - **Web Live Tracking Sessions (`/track/:token`)**: When an SOS is triggered, emergency contacts receive an interactive web link via SMS, allowing real-time tracking on any mobile browser without installing the native app.
 - **Spatio-Temporal Risk Heatmap (Hour × Day × Geo)**: Real Gaussian distance decay modeling crime and hazard probabilities across Bhopal & Indore.
 - **Dynamic Hazard Geofencing with TTL**: Municipal coordinators can declare temporary hazard zones (flooding, unlit corridors) with auto-expiring radius multipliers.
 - **Triple-Path Navigation**: Fastest vs. Safest (Main Road Bias) vs. Eco GreenRoute.
 - **Fake Call Deterrent**: Realistic incoming call simulator in Compose with system ringtone and audio timer to deter harassers in dark streets.
 
-### From **Krisis** (Command Grid):
+### Tactical Municipal Command Grid:
 - **Zero-Scroll CCTV Wall**: High-density 6-feed surveillance grid optimized for mission-critical monitoring without vertical scrolling.
 - **Dynamic QR Code Emergency Portal (`/report/qr`)**: 3-tap incident reporting (Category ➔ Micro-Location ➔ Evidence) for rapid citizen reporting without app install.
 - **Automated AI Vision Pipeline**: Real-time visual verification of potholes, waterlogging, and fire hazards.

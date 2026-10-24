@@ -44,10 +44,15 @@ TRAINING_SAMPLES = [
     ("Speed breaker unpainted and damaged, causing severe vehicular accidents", "ROAD_HAZARD"),
     ("Deep trench left open by telecom contractor without warning signs", "ROAD_HAZARD"),
     ("Road depression near MP Nagar zone 2 turning", "ROAD_HAZARD"),
+    ("deep pothole on VIP road near lake view", "ROAD_HAZARD"),
+    ("dangerous road sinkhole opening up on bypass", "ROAD_HAZARD"),
+    ("potholes covering the entire street vehicles swerving into oncoming traffic", "ROAD_HAZARD"),
 
     # WATER_SUPPLY
     ("Narmada municipal main water pipeline burst near Arera Colony 10 no market", "WATER_SUPPLY"),
     ("No drinking water supply in Ward 12 for the last 4 days", "WATER_SUPPLY"),
+    ("water pipeline burst flooding the road", "WATER_SUPPLY"),
+    ("drinking water supply line damaged by drainage excavation", "WATER_SUPPLY"),
     ("Muddy and foul smelling contaminated tap water coming in houses", "WATER_SUPPLY"),
     ("Pani ka pipeline leak kar raha hai hazaaron litre peene ka pani barbad ho raha hai", "WATER_SUPPLY"),
     ("Water tanker did not arrive in slum area despite scheduled booking", "WATER_SUPPLY"),
@@ -58,6 +63,7 @@ TRAINING_SAMPLES = [
     ("Contaminated yellow tap water causing cholera and dysentery risk in children", "WATER_SUPPLY"),
 
     # SEWAGE_OVERFLOW
+    ("drainage overflowing at 10 number market", "SEWAGE_OVERFLOW"),
     ("Choked sewer line overflowing into residential street in Chunabhatti", "SEWAGE_OVERFLOW"),
     ("Nali ka ganda pani sadak par beh raha hai bhishan badboo", "SEWAGE_OVERFLOW"),
     ("Underground drainage choked with plastic waste, sewage entering house ground floors", "SEWAGE_OVERFLOW"),
@@ -70,6 +76,7 @@ TRAINING_SAMPLES = [
     ("Untreated toxic drain water flooding park walking track", "SEWAGE_OVERFLOW"),
 
     # GARBAGE_CLEANUP
+    ("garbage dump not cleared for 4 days in MP Nagar", "GARBAGE_CLEANUP"),
     ("Huge pile of untreated municipal solid waste dumped near Hamidia hospital", "GARBAGE_CLEANUP"),
     ("BMC door-to-door garbage collection vehicle has not visited for 5 days", "GARBAGE_CLEANUP"),
     ("Dead stray dog lying on roadside in Ayodhya Bypass decaying in heat", "GARBAGE_CLEANUP"),
@@ -82,6 +89,7 @@ TRAINING_SAMPLES = [
     ("Community dustbin broken and burnt down by antisocial elements", "GARBAGE_CLEANUP"),
 
     # ELECTRICAL_SAFETY
+    ("live electrical wire hanging loose from transformer", "ELECTRICAL_SAFETY"),
     ("Live 440V electrical wire snapped and hanging over school route", "ELECTRICAL_SAFETY"),
     ("Electricity transformer sparking violently with loud bangs near market", "ELECTRICAL_SAFETY"),
     ("Streetlights completely non-functional for 2 km on Bairagarh highway stretch", "ELECTRICAL_SAFETY"),
@@ -94,6 +102,7 @@ TRAINING_SAMPLES = [
     ("Electric post damaged by truck collision, leaning dangerously over road", "ELECTRICAL_SAFETY"),
 
     # WOMEN_SAFETY
+    ("streetlights dark and men harassing commuters", "WOMEN_SAFETY"),
     ("Group of intoxicated men harassing women commuters at dark bus shelter", "WOMEN_SAFETY"),
     ("Eve teasing and catcalling near girls college hostel gate after 7 PM", "WOMEN_SAFETY"),
     ("Completely unlit alleyway with no police patrol where antisocials gather", "WOMEN_SAFETY"),
@@ -130,6 +139,9 @@ def train():
     acc = accuracy_score(y_test, y_pred)
     print(f"[NLP Triage Trainer] Validation Accuracy: {acc * 100:.2f}%")
     print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+    print("[NLP Triage Trainer] Refitting pipeline on 100% of curated corpus for production...")
+    pipeline.fit(df["text"], df["label"])
 
     joblib.dump(pipeline, MODEL_OUT)
     print(f"[NLP Triage Trainer] Model successfully serialized to: {MODEL_OUT}")

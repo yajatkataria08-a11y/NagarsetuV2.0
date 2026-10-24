@@ -1,7 +1,7 @@
 /**
  * NagarSetu V2.0 — Multi-Channel Emergency Telephony Grid (Phase 2)
  * ─────────────────────────────────────────────────────────────────
- * Ports Krisis's Twilio Voice TwiML Synthesizer and WhatsApp Business API.
+ * Ports Production Twilio Voice TwiML Synthesizer and WhatsApp Business API.
  * Provides multi-tier automated fallback escalation:
  *   1. Immediate SMS to Emergency Contacts
  *   2. Instant WhatsApp Live Tracking Dispatch
@@ -115,7 +115,7 @@ async function sendWhatsAppAlert(toNumber, messageBody) {
 }
 
 /**
- * 4. Multi-Tier Automated Fallback Escalation (Krisis-Grade)
+ * 4. Multi-Tier Automated Fallback Escalation (Enterprise-Grade)
  *    Dispatches SMS + WhatsApp. If unacknowledged within 60s, triggers Voice IVR.
  */
 function dispatchEmergencyEscalation(sosEvent, io = null) {

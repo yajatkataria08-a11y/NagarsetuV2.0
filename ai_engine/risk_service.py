@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
 NagarSetu V2 — Spatio-Temporal Risk Engine (Phase 10)
-Inspired by Raksha ML model.
+High-precision spatio-temporal Gaussian decay risk modeling.
 Maps (lat, lng, hour_of_day, day_of_week) -> 0..100 composite risk score.
-Fixes the hardcoded Bhopal coordinates bug in NagarSetu v1 C++ calculator.
+Fixes the hardcoded Bhopal coordinates bug in legacy calculators.
 """
 
 import sys
@@ -19,7 +19,7 @@ DEFAULT_ANCHORS = [
     {"lat": 23.2680, "lng": 77.4300, "severity": 5, "type": "FLOOD_RISK", "hour": 14},
     {"lat": 23.2310, "lng": 77.4350, "severity": 2, "type": "ROAD_HAZARD", "hour": 18},
     {"lat": 23.2550, "lng": 77.4050, "severity": 4, "type": "UNSAFE_SPOT", "hour": 23},
-    # Indore hotspots (Raksha dataset integration)
+    # Indore hotspots (Indore dataset integration)
     {"lat": 22.7196, "lng": 75.8577, "severity": 4, "type": "HARASSMENT", "hour": 22},
     {"lat": 22.7280, "lng": 75.8820, "severity": 3, "type": "UNSAFE_SPOT", "hour": 23},
     {"lat": 22.7533, "lng": 75.8937, "severity": 2, "type": "POOR_LIGHTING", "hour": 20},

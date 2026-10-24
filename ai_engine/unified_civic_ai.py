@@ -335,7 +335,7 @@ def predict_spatial_risk(lat: float, lng: float, hour: int = 21, day: int = 4) -
         "model": "gaussian-spatial-decay-fallback"
     }
 
-# ── 6. Route Safety Evaluator (Raksha + NagarSetu SafePath) ───────────────────
+# ── 6. Route Safety Evaluator (NagarSetu Arterial SafePath) ───────────────────
 def evaluate_route_safety(waypoints: List[Dict[str, float]], hour: int = 22) -> Dict[str, Any]:
     """
     Evaluates safety along a polyline.
@@ -378,7 +378,7 @@ def evaluate_route_safety(waypoints: List[Dict[str, float]], hour: int = 22) -> 
         "recommendation": "Main arterial road recommended for night transit" if safety_score < 75 else "Route is well-illuminated and municipal compliant"
     }
 
-# ── 7. Krisis CCTV Vision Detection Simulator / Parser ────────────────────────
+# ── 7. Municipal CCTV Vision Detection Simulator / Parser ─────────────────────
 def analyze_cctv_frame(camera_id: str, metadata: Dict[str, Any] = None) -> Dict[str, Any]:
     """
     Analyzes or simulates YOLOv8 object & hazard detection on CCTV video feeds.

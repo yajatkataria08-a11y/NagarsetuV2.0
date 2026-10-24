@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Camera, Video, AlertTriangle, RefreshCw, Wifi, WifiOff, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { cctvApi, type CctvCamera } from '@/lib/api';
+import Hls from 'hls.js';
 
 // Fallback seed cameras with hardware-accelerated streaming loops
 const SEED_CAMERAS: CctvCamera[] = [
@@ -15,17 +16,38 @@ const SEED_CAMERAS: CctvCamera[] = [
   { id: 'CAM-06', name: 'Vijay Nagar Square', ward: 'Ward 24', lat: 22.7533, lng: 75.8937, feed_url: '/streams/cam-06.mp4', status: 'online', fps: 28, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [] },
 ];
 
-// Continuous video player with overlaid SVG bounding box layer
+// Continuous video player with HLS (.m3u8) + MP4 support and overlaid SVG bounding box layer
 function CameraFrame({ cam, isAlert, videoRef }: { cam: CctvCamera; isAlert: boolean; videoRef?: React.RefObject<HTMLVideoElement> }) {
   const localRef = useRef<HTMLVideoElement>(null);
   const activeRef = videoRef || localRef;
+
+  useEffect(() => {
+    if (!cam.feed_url) return;
+    const video = activeRef.current;
+    if (!video) return;
+
+    if (cam.feed_url.endsWith('.m3u8')) {
+      if (Hls.isSupported()) {
+        const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+        hls.loadSource(cam.feed_url);
+        hls.attachMedia(video);
+        return () => {
+          hls.destroy();
+        };
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = cam.feed_url;
+      }
+    } else {
+      video.src = cam.feed_url;
+    }
+  }, [cam.feed_url, activeRef]);
 
   if (cam.feed_url) {
     return (
       <div className="relative w-full h-full bg-black overflow-hidden flex items-center justify-center">
         <video
           ref={activeRef}
-          src={cam.feed_url}
+          src={cam.feed_url.endsWith('.m3u8') ? undefined : cam.feed_url}
           className="w-full h-full object-cover"
           autoPlay
           muted

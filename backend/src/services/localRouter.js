@@ -1,7 +1,7 @@
 /**
  * NagarSetu V2.0 — Embedded Road Graph & Deterministic Safe Router (Phase 6)
  * ──────────────────────────────────────────────────────────────────────────
- * Ports Raksha's RoadNetwork.kt Dijkstra/A* routing graph into Node.js.
+ * Ports Municipal RoadNetwork.kt Dijkstra/A* routing graph into Node.js.
  * Provides 100% offline routing capability with path generation under 40ms.
  *
  * Cost Functions:
