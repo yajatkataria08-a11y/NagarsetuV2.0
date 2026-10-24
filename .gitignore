@@ -47,6 +47,16 @@ nodejs.zip
 .vscode/settings.json
 .idea/
 
+# ── Android ────────────────────────────────────────────────────────────
+.gradle/
+build/
+*/build/
+*/*/build/
+*/*/*/build/
+local.properties
+*.apk
+*.aab
+
 # ── Credentials & Secrets ──────────────────────
 *credential*
 .git-credentials

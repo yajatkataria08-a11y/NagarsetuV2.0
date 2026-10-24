@@ -2,6 +2,7 @@ package com.nagarsetu.reportit.data
 
 import com.nagarsetu.backend.core.CivicConstants
 import com.nagarsetu.backend.core.data.CivicDataHub
+import com.nagarsetu.core.data.local.OfflineSyncManager
 import com.nagarsetu.core.data.supabase.SupabaseUserRepository
 import com.nagarsetu.reportit.domain.model.CivicIssueType
 import com.nagarsetu.reportit.domain.model.CivicReport
@@ -31,13 +32,14 @@ class ReportItRepository @Inject constructor(
     private val httpClient: OkHttpClient,
     private val hub: CivicDataHub,
     private val supabase: SupabaseClient,
-    private val userRepository: SupabaseUserRepository
+    private val userRepository: SupabaseUserRepository,
+    private val offlineSyncManager: OfflineSyncManager
 ) {
     private val JSON_MEDIA = "application/json; charset=utf-8".toMediaType()
 
     private fun baseUrl(): String {
         val prefs = context.getSharedPreferences("nagarsetu_prefs", Context.MODE_PRIVATE)
-        val override = prefs.getString("raksha_api_endpoint", BuildConfig.ADMIN_BASE_URL)
+        val override = prefs.getString("nagarsetu_api_endpoint", BuildConfig.ADMIN_BASE_URL)
         return if (!override.isNullOrBlank()) {
             if (override.startsWith("http")) override else "http://$override"
         } else {
@@ -111,10 +113,30 @@ class ReportItRepository @Inject constructor(
                 httpClient.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) {
                         Log.e("ReportItRepo", "Admin Sync Failed: ${response.code}")
+                        offlineSyncManager.enqueueReport(
+                            type = type.name,
+                            description = description,
+                            lat = lat,
+                            lng = lng,
+                            severity = 3,
+                            reportedBy = uid,
+                            ward = ward,
+                            photoUrl = photoUrl
+                        )
                     }
                 }
             } catch (e: Exception) {
-                Log.e("ReportItRepo", "Admin Sync Error: ${e.message}")
+                Log.w("ReportItRepo", "Network outage during report sync, enqueuing offline: ${e.message}")
+                offlineSyncManager.enqueueReport(
+                    type = type.name,
+                    description = description,
+                    lat = lat,
+                    lng = lng,
+                    severity = 3,
+                    reportedBy = uid,
+                    ward = ward,
+                    photoUrl = photoUrl
+                )
             }
 
             userRepository.logActivity(uid, "REPORT_SUBMIT", ticketId, "civic_report")

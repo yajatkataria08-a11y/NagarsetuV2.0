@@ -69,7 +69,7 @@ android {
 
         // ── Admin Dashboard Integration ──
         buildConfigField("String", "ADMIN_BASE_URL",
-            "\"${localProperties["NAGARSETU_ADMIN_URL"] ?: "http://10.0.2.2:3000"}\"")
+            "\"${localProperties["NAGARSETU_ADMIN_URL"] ?: "http://10.0.2.2:4000"}\"")
         
         manifestPlaceholders["GOOGLE_MAPS_API_KEY"] =
             localProperties["GOOGLE_MAPS_API_KEY"] ?: ""

@@ -15,6 +15,7 @@
 
     <!-- Sensors (accelerometer for shake detection; BODY_SENSORS removed — not used) -->
     <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
     <!-- Notifications + Vibration -->
@@ -77,5 +78,29 @@
                     android:pathPrefix="/raksha/sos" />
             </intent-filter>
         </service>
+
+        <!-- Emergency Shake-to-SOS & Background Monitoring Service -->
+        <service
+            android:name="com.nagarsetu.raksha.service.EmergencyTriggerService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+
+        <!-- Quick Settings 1-Tap SOS Tile -->
+        <service
+            android:name="com.nagarsetu.raksha.service.EmergencyTileService"
+            android:icon="@drawable/app_icon_nagarsetu"
+            android:label="NagarSetu SOS"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <!-- Real-Time Geofence Hazard Proximity & Voice Warning Service -->
+        <service
+            android:name="com.nagarsetu.raksha.service.HazardProximityService"
+            android:exported="false"
+            android:foregroundServiceType="location" />
     </application>
 </manifest>

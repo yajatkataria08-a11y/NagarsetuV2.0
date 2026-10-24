@@ -11,9 +11,11 @@ import com.nagarsetu.core.data.local.entity.*
         ParkingBookingEntity::class,
         CivicIssueEntity::class,
         ChatMessageEntity::class,
-        ChallanEntity::class
+        ChallanEntity::class,
+        PendingSosEntity::class,
+        PendingReportEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class NagarSetuDatabase : RoomDatabase() {
@@ -22,4 +24,5 @@ abstract class NagarSetuDatabase : RoomDatabase() {
     abstract fun reportItDao(): ReportItDao
     abstract fun chatDao(): ChatDao
     abstract fun challanDao(): ChallanDao
+    abstract fun pendingQueueDao(): PendingQueueDao
 }

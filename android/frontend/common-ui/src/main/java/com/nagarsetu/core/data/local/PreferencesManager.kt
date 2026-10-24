@@ -65,6 +65,7 @@ class PreferencesManager @Inject constructor(
     }
 
     private val SESSION_KEY = "user_session_v1"
+    private val AUTH_TOKEN_KEY = "jwt_auth_token_v1"
 
     /** Persists the [UserProfile] to secure storage. */
     fun saveUserSession(profile: UserProfile) {
@@ -77,8 +78,21 @@ class PreferencesManager @Inject constructor(
         return try { gson.fromJson(json, UserProfile::class.java) } catch (e: Exception) { null }
     }
 
+    /** Persists the JWT authorization token. */
+    fun saveAuthToken(token: String) {
+        encryptedPrefs?.edit()?.putString(AUTH_TOKEN_KEY, token)?.apply()
+    }
+
+    /** Returns the cached JWT authorization token or null. */
+    fun getAuthToken(): String? {
+        return encryptedPrefs?.getString(AUTH_TOKEN_KEY, null)
+    }
+
     /** Clears all session data (logout). */
     fun clearUserSession() {
-        encryptedPrefs?.edit()?.remove(SESSION_KEY)?.apply()
+        encryptedPrefs?.edit()
+            ?.remove(SESSION_KEY)
+            ?.remove(AUTH_TOKEN_KEY)
+            ?.apply()
     }
 }

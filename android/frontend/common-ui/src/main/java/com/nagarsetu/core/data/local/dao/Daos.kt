@@ -66,3 +66,32 @@ interface ChallanDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: ChallanEntity)
 }
+
+@Dao
+interface PendingQueueDao {
+    // ── Pending SOS ──
+    @Query("SELECT * FROM pending_sos_queue ORDER BY createdAt ASC")
+    suspend fun getPendingSosList(): List<PendingSosEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun enqueueSos(sos: PendingSosEntity)
+
+    @Query("DELETE FROM pending_sos_queue WHERE id = :id")
+    suspend fun deleteSos(id: String)
+
+    @Query("UPDATE pending_sos_queue SET retryCount = retryCount + 1, status = :status WHERE id = :id")
+    suspend fun updateSosStatus(id: String, status: String)
+
+    // ── Pending Reports ──
+    @Query("SELECT * FROM pending_report_queue ORDER BY createdAt ASC")
+    suspend fun getPendingReports(): List<PendingReportEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun enqueueReport(report: PendingReportEntity)
+
+    @Query("DELETE FROM pending_report_queue WHERE id = :id")
+    suspend fun deleteReport(id: String)
+
+    @Query("UPDATE pending_report_queue SET retryCount = retryCount + 1, status = :status WHERE id = :id")
+    suspend fun updateReportStatus(id: String, status: String)
+}

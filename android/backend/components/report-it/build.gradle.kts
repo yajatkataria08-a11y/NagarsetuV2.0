@@ -24,7 +24,7 @@ android {
     
     defaultConfig {
         buildConfigField("String", "ADMIN_BASE_URL",
-            "\"${localProperties["NAGARSETU_ADMIN_URL"] ?: "http://10.0.2.2:3000"}\"")
+            "\"${localProperties["NAGARSETU_ADMIN_URL"] ?: "http://10.0.2.2:4000"}\"")
     }
 
     buildFeatures {

@@ -35,7 +35,7 @@ class NagarSetuApp : Application() {
 
         try {
             val prefs = getSharedPreferences("nagarsetu_prefs", MODE_PRIVATE)
-            val adminUrl = prefs.getString("raksha_api_endpoint", BuildConfig.ADMIN_BASE_URL) 
+            val adminUrl = prefs.getString("nagarsetu_api_endpoint", BuildConfig.ADMIN_BASE_URL) 
                 ?: BuildConfig.ADMIN_BASE_URL
             adminSocketClient.connect(adminUrl)
         } catch (e: Exception) {

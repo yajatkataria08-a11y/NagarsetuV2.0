@@ -24,9 +24,6 @@ data class RiskCell(val location: LatLonPoint, val score: Double)
 /**
  * Pulls grid risk predictions from the backend ML model (`/api/risk-grid`).
  *
- * Ported from Raksha (com.safepath.indore.data.RiskApiRepository) and
- * rewritten as a Hilt-injectable coroutine repository.
- *
  * Endpoint:
  *   GET /api/risk-grid?minLat=&maxLat=&minLng=&maxLng=&steps=&hour=&day=
  *   Response: { "cells": [ { "lat": Double, "lng": Double, "score": Double }, ... ] }
@@ -42,11 +39,11 @@ class RiskApiRepository @Inject constructor(
 
     private fun baseUrl(): String {
         val prefs = context.getSharedPreferences("nagarsetu_prefs", Context.MODE_PRIVATE)
-        val override = prefs.getString("raksha_api_endpoint", null)
+        val override = prefs.getString("nagarsetu_api_endpoint", null)
         return if (!override.isNullOrBlank()) {
             if (override.startsWith("http")) override else "http://$override"
         } else {
-            "http://10.197.165.59:3000"
+            "http://10.0.2.2:4000"
         }.removeSuffix("/")
     }
 

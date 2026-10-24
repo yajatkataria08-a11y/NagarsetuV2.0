@@ -200,9 +200,16 @@ class MainActivity : ComponentActivity() {
                 Manifest.permission.POST_NOTIFICATIONS,
             )
         )
-        LaunchedEffect(Unit) {
+        LaunchedEffect(permissions.allPermissionsGranted) {
             if (!permissions.allPermissionsGranted) {
                 permissions.launchMultiplePermissionRequest()
+            } else {
+                try {
+                    com.nagarsetu.raksha.service.EmergencyTriggerService.startMonitoring(context)
+                    com.nagarsetu.raksha.service.HazardProximityService.start(context)
+                } catch (e: Exception) {
+                    android.util.Log.e("MainActivity", "Failed to start emergency background services: ${e.message}")
+                }
             }
         }
 
