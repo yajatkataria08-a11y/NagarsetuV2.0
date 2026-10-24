@@ -1,0 +1,103 @@
+text,category
+"Deep trench left open by water supply department near MP Nagar",ROAD_HAZARD
+"Foul smelling muddy water running through taps for 2 days",WATER_SUPPLY
+"Open manhole overflow spreading contaminated water on street",SEWAGE_OVERFLOW
+"Garbage bin untouched for 4 days creating unbearable stench",GARBAGE_CLEANUP
+"High voltage live wire hanging loose near children park",ELECTRICAL_SAFETY
+"Street lights broken on back road and men harassing walkers",WOMEN_SAFETY
+"Massive 3ft deep pothole on VIP Road near Raja Bhoj statue causing bike skids",ROAD_HAZARD
+"Crater and loose asphalt stones on Hoshangabad Road flyover approach",ROAD_HAZARD
+"Road caved in after heavy rain near Roshanpura square, traffic completely halted",ROAD_HAZARD
+"Missing manhole cover on 10 Number Market footpath, serious danger to pedestrians",ROAD_HAZARD
+"Divider broken with jagged iron rebar protruding on Kolar main road",ROAD_HAZARD
+"Deep pothole on VIP road near lake view",ROAD_HAZARD
+"Sadak par bada gaddha ho gaya hai do pahiya vahan gir rahe hain",ROAD_HAZARD
+"Manhole ka dhakkan tuta hua hai bache gir sakte hain",ROAD_HAZARD
+"Dangerous sinkhole opening up along BRTS dedicated corridor",ROAD_HAZARD
+"Asphalt washed away near Habibganj station gate 2",ROAD_HAZARD
+"Speed breaker without white paint marks causing severe vehicular accidents",ROAD_HAZARD
+"Open construction trench left without barricades or warning lamps",ROAD_HAZARD
+"Gaddhe hi gaddhe hain poori sadak par chalkar jana mushkil hai",ROAD_HAZARD
+"Sharp crater damaged car suspension and tyre near board office square",ROAD_HAZARD
+"Road depression near MP Nagar zone 2 turning point",ROAD_HAZARD
+"Unpaved shoulder with sharp drop-off causing two wheelers to skid",ROAD_HAZARD
+"Narmada municipal main water pipeline burst near Arera Colony 10 no market",WATER_SUPPLY
+"No drinking water supply in Ward 12 for the last 4 days",WATER_SUPPLY
+"Water pipeline burst flooding the road and submerging ground floor houses",WATER_SUPPLY
+"Drinking water supply line damaged by drainage excavation contractor",WATER_SUPPLY
+"Muddy yellow and contaminated tap water coming into residential tanks",WATER_SUPPLY
+"Severely low water pressure on 2nd and 3rd floor connections in MP Nagar",WATER_SUPPLY
+"Municipal overhead water reservoir valve broken, water overflowing continuously",WATER_SUPPLY
+"Pani bilkul nahi aa raha subah se borewell bhi band hai",WATER_SUPPLY
+"Water tanker did not arrive in slum area despite confirmation receipt",WATER_SUPPLY
+"Contaminated tap water with sewage odor causing dysentery risk in children",WATER_SUPPLY
+"Pani ki main line leak kar rahi hai sadak par talab ban gaya",WATER_SUPPLY
+"Peene ke pani mein mitti aur kachra aa raha hai",WATER_SUPPLY
+"Water supply cut off without any prior notice from municipal corporation",WATER_SUPPLY
+"Heavy chlorinated pungent smelling water burning eyes from kitchen tap",WATER_SUPPLY
+"Pipeline joint ruptured in Arera Hills causing thousand litres wastage",WATER_SUPPLY
+"Water distribution valve jammed in Ward 15 leading to complete water shortage",WATER_SUPPLY
+"Choked sewer line overflowing into residential street in Chunabhatti",SEWAGE_OVERFLOW
+"Drainage overflowing at 10 number market spreading filth in shops",SEWAGE_OVERFLOW
+"Nali ka ganda pani sadak par beh raha hai bhishan badboo",SEWAGE_OVERFLOW
+"Underground drainage blocked with plastic, sewage entering house ground floors",SEWAGE_OVERFLOW
+"Open stormwater drain blocked, black sludge flooding market entry walkway",SEWAGE_OVERFLOW
+"Sewage chamber backflow during rain inundating society driveway",SEWAGE_OVERFLOW
+"Gutter overflow ho gaya hai chalne ki jagah nahi bachi",SEWAGE_OVERFLOW
+"Drainage blockage causing severe foul odor and dengue mosquito breeding",SEWAGE_OVERFLOW
+"Main drain wall collapsed, stinking sewage pooling near primary school",SEWAGE_OVERFLOW
+"Sewage line broken during JCB road digging spreading raw waste",SEWAGE_OVERFLOW
+"Gutter ka dhakkan khula hai aur badboodar ganda pani ubal raha hai",SEWAGE_OVERFLOW
+"Untreated toxic sewer water flowing into public park walking track",SEWAGE_OVERFLOW
+"Toilet waste backing up into bathroom pipes due to main line choke",SEWAGE_OVERFLOW
+"Drain choke near vegetable mandi creating unhygienic slush pool",SEWAGE_OVERFLOW
+"Sewer line overflowing into drinking water sump in residential block",SEWAGE_OVERFLOW
+"Storm drain covered with concrete slab choking sewage outlet completely",SEWAGE_OVERFLOW
+"Huge pile of untreated municipal solid waste dumped near Hamidia hospital",GARBAGE_CLEANUP
+"Garbage dump not cleared for 4 days in MP Nagar causing health hazard",GARBAGE_CLEANUP
+"BMC door-to-door garbage collection vehicle has not visited for 5 days",GARBAGE_CLEANUP
+"Dead stray dog lying on roadside in Ayodhya Bypass decaying in heat",GARBAGE_CLEANUP
+"Kachra peti overflow ho chuka hai kachra sadak par bikhar gaya",GARBAGE_CLEANUP
+"Illegal medical biohazard waste dumping near public lake perimeter",GARBAGE_CLEANUP
+"Rotting vegetable and plastic waste accumulated at Karond subzi mandi",GARBAGE_CLEANUP
+"Garbage truck spilling wet waste along highway route without canvas cover",GARBAGE_CLEANUP
+"Construction debris (malba) dumped on pedestrian footpath blocking walk",GARBAGE_CLEANUP
+"Kachre ka dher laga hua hai makkhiyan aur bimari ka bhishan khatra",GARBAGE_CLEANUP
+"Community dustbin broken and burnt down by miscreants, trash scattered",GARBAGE_CLEANUP
+"Dead animal carcass on bypass road producing unbearable stench",GARBAGE_CLEANUP
+"Safai karamchari nahi aa rahe hain gali mein kachra jama ho gaya",GARBAGE_CLEANUP
+"Open dumping ground adjacent to residential apartment complex",GARBAGE_CLEANUP
+"Plastic bags and food waste choking rainwater inlets on pavement",GARBAGE_CLEANUP
+"Waste burning in open ground causing toxic black smoke and breathing issues",GARBAGE_CLEANUP
+"Live 440V electrical wire snapped and hanging over school route",ELECTRICAL_SAFETY
+"Live electrical wire hanging loose from transformer near bus stop",ELECTRICAL_SAFETY
+"Electricity transformer sparking violently with loud bangs near market",ELECTRICAL_SAFETY
+"Streetlights completely non-functional for 2 km on Bairagarh highway stretch",ELECTRICAL_SAFETY
+"Khamba tedha ho gaya hai taar zameen ko chhu rahe hain",ELECTRICAL_SAFETY
+"Electric junction pole box open with exposed uninsulated copper terminals",ELECTRICAL_SAFETY
+"Streetlight pole short-circuiting during waterlogging, risk of electrocution",ELECTRICAL_SAFETY
+"Low hanging high tension cable touching tree branches during breeze",ELECTRICAL_SAFETY
+"Street light fuse blown entire lane in complete darkness at night",ELECTRICAL_SAFETY
+"Bijli ka transformer jal gaya dhuwa nikal raha hai",ELECTRICAL_SAFETY
+"Electric post damaged by truck collision, leaning dangerously over road",ELECTRICAL_SAFETY
+"Sparking on overhead electric lines near residential balcony",ELECTRICAL_SAFETY
+"Bare electrical wire lying submerged in puddle near metro pillar",ELECTRICAL_SAFETY
+"Transformer oil leaking onto pedestrian sidewalk with high voltage hum",ELECTRICAL_SAFETY
+"Meter box caught fire outside apartment building entrance",ELECTRICAL_SAFETY
+"High tension wire dangling low across village connecting road",ELECTRICAL_SAFETY
+"Group of intoxicated men harassing women commuters at dark bus shelter",WOMEN_SAFETY
+"Streetlights dark and men harassing commuters on deserted stretch",WOMEN_SAFETY
+"Eve teasing and catcalling near girls college hostel gate after 7 PM",WOMEN_SAFETY
+"Completely unlit alleyway with no police patrol where antisocials gather",WOMEN_SAFETY
+"Ladke chedkhani kar rahe hain bus stop par ladkiyon ko pareshan kar rahe hain",WOMEN_SAFETY
+"Man following woman continuously for 500 meters on isolated pathway",WOMEN_SAFETY
+"Unsafe dark corridor near railway station back exit, zero lighting and no CCTV",WOMEN_SAFETY
+"Stalking incident reported near coaching institute hub in MP Nagar",WOMEN_SAFETY
+"Drunk men passing lewd remarks and blocking footpath access for women",WOMEN_SAFETY
+"Desolate subway underpass without functional lights or guards feels extremely unsafe",WOMEN_SAFETY
+"Urgent safety intervention needed, rowdy bikers circling female pedestrians",WOMEN_SAFETY
+"Launday ghoor rahe hain aur badtameezi kar rahe hain coaching ke bahar",WOMEN_SAFETY
+"Suspicious men loitering in unlit park near ladies hostel at night",WOMEN_SAFETY
+"No female police presence and drunk elements harassing commuters at auto stand",WOMEN_SAFETY
+"Dark unlit stretch between metro station and bus terminal causing harassment fear",WOMEN_SAFETY
+"Men following and whistling at female healthcare workers returning from hospital",WOMEN_SAFETY

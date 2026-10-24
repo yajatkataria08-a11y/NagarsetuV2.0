@@ -183,6 +183,15 @@ function loadDiskStore() {
     if (fs.existsSync(STORE_FILE)) {
       const raw = fs.readFileSync(STORE_FILE, 'utf-8');
       memoryStore = { ...DEFAULT_STORE, ...JSON.parse(raw) };
+      // Dynamically apply any CAM environment overrides
+      if (memoryStore.cctv_cameras) {
+        memoryStore.cctv_cameras.forEach((c) => {
+          const envKey = `${c.id.toUpperCase()}_URL`;
+          if (process.env[envKey]) {
+            c.feed_url = process.env[envKey];
+          }
+        });
+      }
       logger.info(`[DB] Hydrated local persistence store from ${STORE_FILE}`);
     } else {
       saveDiskStore();

@@ -1,0 +1,9 @@
+path: d:/COODING/Projects/Hackathon/Nagarsetu/repo_v2/ai_engine/data/hazard_vision
+train: images/train
+val: images/val
+names:
+  0: pothole
+  1: waterlogging
+  2: crowd_surge
+  3: stalled_vehicle
+  4: accident
