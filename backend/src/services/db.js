@@ -158,7 +158,7 @@ const DEFAULT_STORE = {
     { id: 'notif001', type: 'sos', title: 'Critical SOS Activated', message: 'Priya Sharma triggered high-priority SOS near Arera Hills (Ward 7). Responders alerted.', timestamp: Date.now() - 3 * 60000, read: false, priority: 'critical', target_page: 'sos' },
     { id: 'notif002', type: 'incident', title: 'Severe Waterlogging Verified', message: 'AI confirmed 2ft deep waterlogging at Habibganj Underpass. Dispatched to Ward 9 team.', timestamp: Date.now() - 8 * 60000, read: false, priority: 'high', target_page: 'incidents' },
     { id: 'notif003', type: 'alert', title: 'Dynamic Hazard Geofence Active', message: 'Active flood hazard polygon created at Habibganj Underpass with 120m radius.', timestamp: Date.now() - 15 * 60000, read: false, priority: 'high', target_page: 'hazards' },
-    { id: 'notif004', type: 'system', title: 'CCTV Vision Stream Online', message: 'Krisis 6-Camera Vision Wall running with automated YOLOv8 hazard detection.', timestamp: Date.now() - 45 * 60000, read: true, priority: 'normal', target_page: 'surveillance' },
+    { id: 'notif004', type: 'system', title: 'CCTV Vision Stream Online', message: 'City 6-Camera Vision Wall running with automated YOLOv8 hazard detection.', timestamp: Date.now() - 45 * 60000, read: true, priority: 'normal', target_page: 'surveillance' },
   ],
   hazard_zones: [
     { id: 'haz001', name: 'Habibganj Underpass Inundation', lat: 23.2680, lng: 77.4300, radius_meters: 150, risk_boost: 35.0, active: true, expires_at: new Date(Date.now() + 180 * 60000).toISOString(), note: 'Severe flash waterlogging' },

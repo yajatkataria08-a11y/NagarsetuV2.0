@@ -28,6 +28,11 @@ build/
 .pytest_cache/
 *.joblib
 *.pkl
+!ai_engine/models/*.joblib
+!ai_engine/models/*.pt
+!ai_engine/models/*.onnx
+ai_engine/runs/
+*.cache
 
 # ── Misc ──────────────────────────────────────
 .DS_Store
