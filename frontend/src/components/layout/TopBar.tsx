@@ -1,6 +1,7 @@
 'use client';
 
-import { Radio, BellRing, Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Radio, BellRing, Clock, Sun, Moon } from 'lucide-react';
 import type { Page } from '@/components/layout/Sidebar';
 import { cn } from '@/lib/utils';
 
@@ -24,17 +25,55 @@ interface TopBarProps {
   activePage: Page;
   connected: boolean;
   activeSosCount: number;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
 }
 
-export default function TopBar({ activePage, connected, activeSosCount }: TopBarProps) {
+export default function TopBar({
+  activePage,
+  connected,
+  activeSosCount,
+  theme: propTheme,
+  onToggleTheme: propToggleTheme
+}: TopBarProps) {
   const { title, subtitle } = PAGE_TITLES[activePage] || {
     title: 'Command Center',
     subtitle: 'NagarSetu Municipal Command Center',
   };
   const now = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+  const [internalTheme, setInternalTheme] = useState<'dark' | 'light'>('dark');
+
+  const theme = propTheme ?? internalTheme;
+
+  useEffect(() => {
+    if (propTheme !== undefined) return;
+    const saved = localStorage.getItem('nagarsetu_theme') as 'dark' | 'light' | null;
+    const isDark = saved ? saved === 'dark' : document.documentElement.classList.contains('dark');
+    setInternalTheme(isDark ? 'dark' : 'light');
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [propTheme]);
+
+  const toggleTheme = () => {
+    if (propToggleTheme) {
+      propToggleTheme();
+      return;
+    }
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setInternalTheme(nextTheme);
+    localStorage.setItem('nagarsetu_theme', nextTheme);
+    if (nextTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   return (
-    <header className="flex-shrink-0 h-14 flex items-center gap-4 px-5 bg-abyss border-b border-white/5 z-10">
+    <header className="flex-shrink-0 h-14 flex items-center gap-4 px-5 bg-abyss border-b border-black/5 dark:border-white/5 z-10 transition-colors duration-200">
       {/* Title */}
       <div className="flex-1 min-w-0">
         <h1 className="text-sm font-bold text-ink leading-none">{title}</h1>
@@ -56,11 +95,30 @@ export default function TopBar({ activePage, connected, activeSosCount }: TopBar
         'flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium border',
         connected
           ? 'bg-safe/10 border-safe/30 text-safe'
-          : 'bg-muted/40 border-white/10 text-mink'
+          : 'bg-muted/40 border-black/10 dark:border-white/10 text-mink'
       )}>
         <Radio size={11} className={connected ? 'animate-live-dot' : ''} />
         <span>{connected ? 'Live PostGIS' : 'Demo State'}</span>
       </div>
+
+      {/* Theme Toggle Button */}
+      <button
+        onClick={toggleTheme}
+        title={theme === 'dark' ? 'Switch to Civic Light Theme' : 'Switch to Tactical Dark Theme'}
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-black/10 dark:border-white/10 bg-raised/50 hover:bg-raised text-ink text-xs font-medium transition-all"
+      >
+        {theme === 'dark' ? (
+          <>
+            <Sun size={13} className="text-amber-400" />
+            <span className="hidden sm:inline text-[11px]">Light</span>
+          </>
+        ) : (
+          <>
+            <Moon size={13} className="text-civic-light" />
+            <span className="hidden sm:inline text-[11px]">Dark</span>
+          </>
+        )}
+      </button>
 
       {/* Clock */}
       <div className="flex items-center gap-1.5 text-xs font-mono text-faint">

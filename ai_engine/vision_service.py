@@ -37,7 +37,7 @@ except ImportError:
 
 try:
     from ultralytics import YOLO
-except ImportError:
+except Exception as e:
     YOLO = None
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -287,16 +287,28 @@ def analyze_incident_image(image_input: Any, hint_type: str = "", description: s
         hint_type = image_input.get("type", hint_type)
         description = image_input.get("description", description)
         photo_payload = image_input.get("photo") or image_input.get("photo_url") or image_input.get("image")
+        video_payload = image_input.get("video_path") or image_input.get("feed_url")
+
         if photo_payload:
             img = decode_image(photo_payload)
             input_type = "base64_or_path"
+        elif video_payload and cv2 is not None:
+            try:
+                cap = cv2.VideoCapture(video_payload)
+                ret, frame = cap.read()
+                cap.release()
+                if ret and frame is not None:
+                    img = frame
+                    input_type = "video_frame_capture"
+            except Exception as e:
+                print(f"[Vision] Video capture note: {e}", file=sys.stderr)
     elif isinstance(image_input, (str, bytes)):
         img = decode_image(image_input)
         input_type = "direct_payload"
 
     detections: List[Dict[str, Any]] = []
 
-    # 1. Try YOLO if model is available
+    # 1. Try YOLO if model is available and frame/image exists
     if img is not None and _YOLO_MODEL is not None:
         try:
             results = _YOLO_MODEL(img, verbose=False)
@@ -315,15 +327,17 @@ def analyze_incident_image(image_input: Any, hint_type: str = "", description: s
         except Exception as e:
             print(f"[Vision] YOLO inference fallback: {e}", file=sys.stderr)
 
-    # 2. Run OpenCV / NumPy visual analysis
-    if img is not None and not detections:
+    # 2. Run OpenCV / NumPy visual analysis if YOLO found no objects on an actual image
+    if img is not None and not detections and hint_type:
         if cv2 is not None:
             detections = run_opencv_visual_analysis(img, hint_type=hint_type)
         else:
             detections = run_numpy_visual_analysis(img, hint_type=hint_type)
 
-    # 3. If no image provided, calibrate from text description
+    # 3. If no image could be captured or decoded, supply calibrated demo simulation
+    is_simulated = False
     if img is None:
+        is_simulated = True
         desc_lower = description.lower()
         if "pothole" in desc_lower or "road" in desc_lower or hint_type in ("POTHOLE", "ROAD_HAZARD"):
             detections.append({
@@ -363,13 +377,16 @@ def analyze_incident_image(image_input: Any, hint_type: str = "", description: s
 
     return {
         "verified": top_detection.get("confidence", 0) >= 0.75,
-        "primary_threat": top_detection.get("label", "none"),
-        "confidence": top_detection.get("confidence", 0.0),
-        "priority": top_detection.get("priority", "MODERATE"),
-        "department": top_detection.get("department", "PWD_ROAD_MAINTENANCE"),
+        "primary_threat": top_detection.get("label", "none") if detections else "none",
+        "confidence": top_detection.get("confidence", 0.95 if img is not None and not detections else 0.0),
+        "status": "threat_alert" if (detections and top_detection.get("label") != "none") else "nominal",
+        "priority": top_detection.get("priority", "NOMINAL" if not detections else "MODERATE"),
+        "department": top_detection.get("department", "CIVIC_CONTROL" if not detections else "PWD_ROAD_MAINTENANCE"),
         "detections": detections,
         "image_processed": img is not None,
         "input_type": input_type,
+        "is_simulated": is_simulated,
+        "detection_mode": "SIMULATED_DEMO_PRESET" if is_simulated else ("LIVE_YOLO_DETECTION" if detections else "LIVE_YOLO_NOMINAL"),
         "inference_ms": elapsed_ms,
         "engine": "OpenCV-YOLO-Hybrid-v2"
     }

@@ -1,6 +1,25 @@
 {
   "sos_events": [
     {
+      "id": "sos_1793177108740",
+      "triggered_at": "2026-10-28T08:45:08.740Z",
+      "status": "acknowledged",
+      "citizen_id": "test-user-001",
+      "user_name": "Test User Harness",
+      "phone": "+91-9999999001",
+      "ward": "Ward 7 Test",
+      "lat": 23.2599,
+      "lng": 77.4126,
+      "battery_level": 65,
+      "heart_rate": 95,
+      "siren_type": "HIGH",
+      "tracking_token": "83F596B1797C",
+      "contacts": [
+        "+91-9999999002"
+      ],
+      "acknowledged_at": "2026-10-28T08:45:08.753Z"
+    },
+    {
       "id": "sos_001",
       "user_id": "usr001",
       "user_name": "Priya Sharma",
@@ -60,6 +79,25 @@
   ],
   "incidents": [
     {
+      "id": "inc_1793177108763",
+      "reported_at": "2026-10-28T08:45:08.763Z",
+      "status": "resolved",
+      "type": "POTHOLE",
+      "description": "Large pothole near MP Nagar Signal No. 5 causing accidents",
+      "lat": 23.231,
+      "lng": 77.435,
+      "address": "",
+      "ward": "Ward 3 - MP Nagar",
+      "severity": 4,
+      "photos": [],
+      "reported_by": "anonymous",
+      "source": "web-portal",
+      "ai_score": 0.473,
+      "ai_risk_level": "LOW",
+      "ai_feedback": "Uncertain credibility. Field officer secondary check required.",
+      "resolved_at": "2026-10-28T08:45:08.869Z"
+    },
+    {
       "id": "inc_001",
       "type": "ROAD_HAZARD",
       "description": "Severe deep asphalt pothole on TT Nagar overbridge causing vehicle skidding",
@@ -118,140 +156,6 @@
       "ai_risk_level": "MODERATE",
       "reported_by": "usr008",
       "reported_at": "2026-10-21T08:33:51.103Z"
-    }
-  ],
-  "cctv_cameras": [
-    {
-      "id": "CAM-01",
-      "name": "MP Nagar Zone-1 Chowk",
-      "ward": "Ward 3 — MP Nagar",
-      "lat": 23.234,
-      "lng": 77.432,
-      "feed_url": "/streams/cam-01.mp4",
-      "status": "online",
-      "fps": 30,
-      "resolution": "1080p",
-      "active_threat": null,
-      "threat_confidence": 0,
-      "detections": []
-    },
-    {
-      "id": "CAM-02",
-      "name": "TT Nagar Stadium North",
-      "ward": "Ward 5 — TT Nagar",
-      "lat": 23.243,
-      "lng": 77.405,
-      "feed_url": "/streams/cam-02.mp4",
-      "status": "alert",
-      "fps": 28,
-      "resolution": "1080p",
-      "active_threat": "crowd_surge",
-      "threat_confidence": 0.91,
-      "detections": [
-        {
-          "label": "crowd_surge",
-          "confidence": 0.91,
-          "bbox": [
-            120,
-            80,
-            240,
-            160
-          ]
-        }
-      ]
-    },
-    {
-      "id": "CAM-03",
-      "name": "Habibganj Underpass Flood Cam",
-      "ward": "Ward 9 — Habibganj",
-      "lat": 23.268,
-      "lng": 77.43,
-      "feed_url": "/streams/cam-03.mp4",
-      "status": "alert",
-      "fps": 28,
-      "resolution": "4K",
-      "active_threat": "waterlogging",
-      "threat_confidence": 0.96,
-      "detections": [
-        {
-          "label": "waterlogging",
-          "confidence": 0.96,
-          "bbox": [
-            60,
-            140,
-            380,
-            200
-          ]
-        }
-      ]
-    },
-    {
-      "id": "CAM-04",
-      "name": "Arera Hills VIP Spine",
-      "ward": "Ward 7 — Arera Colony",
-      "lat": 23.219,
-      "lng": 77.425,
-      "feed_url": "/streams/cam-04.mp4",
-      "status": "online",
-      "fps": 30,
-      "resolution": "4K",
-      "active_threat": null,
-      "threat_confidence": 0,
-      "detections": []
-    },
-    {
-      "id": "CAM-05",
-      "name": "Rajwada Historical Plaza",
-      "ward": "Ward 18 — Rajwada",
-      "lat": 22.7185,
-      "lng": 75.856,
-      "feed_url": "/streams/cam-05.mp4",
-      "status": "online",
-      "fps": 30,
-      "resolution": "1080p",
-      "active_threat": null,
-      "threat_confidence": 0,
-      "detections": []
-    },
-    {
-      "id": "CAM-06",
-      "name": "Vijay Nagar Square",
-      "ward": "Ward 24 — Vijay Nagar",
-      "lat": 22.7533,
-      "lng": 75.8937,
-      "feed_url": "/streams/cam-06.mp4",
-      "status": "online",
-      "fps": 29,
-      "resolution": "1080p",
-      "active_threat": null,
-      "threat_confidence": 0,
-      "detections": []
-    }
-  ],
-  "hazard_zones": [
-    {
-      "id": "hz_001",
-      "name": "Dynamic Flood Geofence — Habibganj",
-      "center_lat": 23.268,
-      "center_lng": 77.43,
-      "radius_meters": 450,
-      "risk_boost": 2.2,
-      "note": "Automated IoT water depth escalation (>0.45m breach)",
-      "active": true,
-      "expires_at": "2026-10-21T11:08:51.103Z",
-      "created_at": "2026-10-21T09:08:51.103Z"
-    },
-    {
-      "id": "hz_002",
-      "name": "Unlit Alleyway Alert — Kolar Transit",
-      "center_lat": 23.255,
-      "center_lng": 77.405,
-      "radius_meters": 300,
-      "risk_boost": 1.8,
-      "note": "Multiple late-night harassment reports verified by AI",
-      "active": true,
-      "expires_at": "2026-10-21T12:38:51.103Z",
-      "created_at": "2026-10-21T09:23:51.103Z"
     }
   ],
   "wards": [
@@ -516,5 +420,152 @@
       "priority": "high",
       "target_page": "hazards"
     }
-  ]
+  ],
+  "hazard_zones": [],
+  "cctv_cameras": [
+    {
+      "id": "CAM-01",
+      "name": "MP Nagar Zone-1 Chowk",
+      "ward": "Ward 3 — MP Nagar",
+      "lat": 23.234,
+      "lng": 77.432,
+      "feed_url": "/streams/cam-01.mp4",
+      "status": "online",
+      "fps": 30,
+      "resolution": "1080p",
+      "active_threat": null,
+      "threat_confidence": 0,
+      "detections": []
+    },
+    {
+      "id": "CAM-02",
+      "name": "TT Nagar Stadium North",
+      "ward": "Ward 5 — TT Nagar",
+      "lat": 23.243,
+      "lng": 77.405,
+      "feed_url": "/streams/cam-02.mp4",
+      "status": "alert",
+      "fps": 28,
+      "resolution": "1080p",
+      "active_threat": "crowd_surge",
+      "threat_confidence": 0.91,
+      "detections": [
+        {
+          "label": "crowd_surge",
+          "confidence": 0.91,
+          "bbox": [
+            120,
+            80,
+            240,
+            160
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CAM-03",
+      "name": "Habibganj Underpass Flood Cam",
+      "ward": "Ward 9 — Habibganj",
+      "lat": 23.268,
+      "lng": 77.43,
+      "feed_url": "/streams/cam-03.mp4",
+      "status": "alert",
+      "fps": 28,
+      "resolution": "4K",
+      "active_threat": "waterlogging",
+      "threat_confidence": 0.96,
+      "detections": [
+        {
+          "label": "waterlogging",
+          "confidence": 0.96,
+          "bbox": [
+            60,
+            140,
+            380,
+            200
+          ]
+        }
+      ]
+    },
+    {
+      "id": "CAM-04",
+      "name": "Arera Hills VIP Spine",
+      "ward": "Ward 7 — Arera Colony",
+      "lat": 23.219,
+      "lng": 77.425,
+      "feed_url": "/streams/cam-04.mp4",
+      "status": "online",
+      "fps": 30,
+      "resolution": "4K",
+      "active_threat": null,
+      "threat_confidence": 0,
+      "detections": []
+    },
+    {
+      "id": "CAM-05",
+      "name": "Rajwada Historical Plaza",
+      "ward": "Ward 18 — Rajwada",
+      "lat": 22.7185,
+      "lng": 75.856,
+      "feed_url": "/streams/cam-05.mp4",
+      "status": "online",
+      "fps": 30,
+      "resolution": "1080p",
+      "active_threat": null,
+      "threat_confidence": 0,
+      "detections": []
+    },
+    {
+      "id": "CAM-06",
+      "name": "Vijay Nagar Square",
+      "ward": "Ward 24 — Vijay Nagar",
+      "lat": 22.7533,
+      "lng": 75.8937,
+      "feed_url": "/streams/cam-06.mp4",
+      "status": "online",
+      "fps": 29,
+      "resolution": "1080p",
+      "active_threat": null,
+      "threat_confidence": 0,
+      "detections": []
+    }
+  ],
+  "tracking_sessions": {
+    "83F596B1797C": {
+      "session_id": "83F596B1797C",
+      "user_id": "anon",
+      "user_name": "Test User Harness",
+      "lat": 23.2599,
+      "lng": 77.4126,
+      "battery_level": 50,
+      "heart_rate": null,
+      "active": true,
+      "history": [
+        {
+          "lat": 23.2599,
+          "lng": 77.4126,
+          "timestamp": 1793177108742
+        }
+      ],
+      "created_at": "2026-10-28T08:45:08.742Z"
+    },
+    "TRK_IO36NWT": {
+      "session_id": "TRK_IO36NWT",
+      "user_id": "test-citizen-001",
+      "user_name": "Test Real Tracker",
+      "lat": 23.2599,
+      "lng": 77.4126,
+      "battery_level": 50,
+      "heart_rate": null,
+      "active": true,
+      "history": [
+        {
+          "lat": 23.2599,
+          "lng": 77.4126,
+          "timestamp": 1793177108999
+        }
+      ],
+      "created_at": "2026-10-28T08:45:08.999Z"
+    }
+  }
 }

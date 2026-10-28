@@ -8,12 +8,12 @@ import Hls from 'hls.js';
 
 // Fallback seed cameras with hardware-accelerated streaming loops
 const SEED_CAMERAS: CctvCamera[] = [
-  { id: 'CAM-01', name: 'MP Nagar Zone-1 Chowk', ward: 'Ward 3', lat: 23.2340, lng: 77.4320, feed_url: '/streams/cam-01.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [] },
-  { id: 'CAM-02', name: 'TT Nagar Stadium North', ward: 'Ward 5', lat: 23.2430, lng: 77.4050, feed_url: '/streams/cam-02.mp4', status: 'alert', fps: 28, resolution: '1080p', active_threat: 'crowd_surge', threat_confidence: 0.91, detections: [{ label: 'crowd_surge', confidence: 0.91, bbox: [200, 195, 260, 85] }] },
-  { id: 'CAM-03', name: 'Habibganj Underpass Flood Cam', ward: 'Ward 9', lat: 23.2680, lng: 77.4300, feed_url: '/streams/cam-03.mp4', status: 'alert', fps: 28, resolution: '4K', active_threat: 'waterlogging', threat_confidence: 0.96, detections: [{ label: 'waterlogging', confidence: 0.96, bbox: [100, 210, 440, 120] }] },
-  { id: 'CAM-04', name: 'Arera Hills VIP Spine', ward: 'Ward 7', lat: 23.2190, lng: 77.4250, feed_url: '/streams/cam-04.mp4', status: 'online', fps: 30, resolution: '4K', active_threat: undefined, threat_confidence: 0, detections: [] },
-  { id: 'CAM-05', name: 'Rajwada Historical Plaza', ward: 'Ward 18', lat: 22.7185, lng: 75.8560, feed_url: '/streams/cam-05.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [] },
-  { id: 'CAM-06', name: 'Vijay Nagar Square', ward: 'Ward 24', lat: 22.7533, lng: 75.8937, feed_url: '/streams/cam-06.mp4', status: 'online', fps: 28, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [] },
+  { id: 'CAM-01', name: 'MP Nagar Zone-1 Chowk (Live Feed)', ward: 'Ward 3', lat: 23.2340, lng: 77.4320, feed_url: '/streams/cam-01.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [], is_simulated: false },
+  { id: 'CAM-02', name: 'TT Nagar Stadium North (Crowd Benchmark)', ward: 'Ward 5', lat: 23.2430, lng: 77.4050, feed_url: '/streams/cam-02.mp4', status: 'alert', fps: 28, resolution: '1080p', active_threat: 'crowd_surge', threat_confidence: 0.91, detections: [{ label: 'crowd_surge', confidence: 0.91, bbox: [200, 195, 260, 85] }], is_simulated: true },
+  { id: 'CAM-03', name: 'Habibganj Underpass (Flood Scenario)', ward: 'Ward 9', lat: 23.2680, lng: 77.4300, feed_url: '/streams/cam-03.mp4', status: 'alert', fps: 28, resolution: '4K', active_threat: 'waterlogging', threat_confidence: 0.96, detections: [{ label: 'waterlogging', confidence: 0.96, bbox: [100, 210, 440, 120] }], is_simulated: true },
+  { id: 'CAM-04', name: 'Arera Hills VIP Spine', ward: 'Ward 7', lat: 23.2190, lng: 77.4250, feed_url: '/streams/cam-04.mp4', status: 'online', fps: 30, resolution: '4K', active_threat: undefined, threat_confidence: 0, detections: [], is_simulated: false },
+  { id: 'CAM-05', name: 'Rajwada Historical Plaza', ward: 'Ward 18', lat: 22.7185, lng: 75.8560, feed_url: '/streams/cam-05.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [], is_simulated: false },
+  { id: 'CAM-06', name: 'Vijay Nagar Square', ward: 'Ward 24', lat: 22.7533, lng: 75.8937, feed_url: '/streams/cam-06.mp4', status: 'online', fps: 28, resolution: '1080p', active_threat: undefined, threat_confidence: 0, detections: [], is_simulated: false },
 ];
 
 // Continuous video player with HLS (.m3u8) + MP4 support and overlaid SVG bounding box layer
@@ -113,6 +113,55 @@ export default function SurveillancePage() {
   const [connected, setConnected] = useState(false);
   const [selectedCam, setSelectedCam] = useState<CctvCamera | null>(null);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  const [analyzingCamId, setAnalyzingCamId] = useState<string | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<any>(null);
+
+  const handleAnalyzeFrame = async (targetCamId?: string) => {
+    const camId = targetCamId || selectedCam?.id;
+    if (!camId) return;
+    setAnalyzingCamId(camId);
+    setAnalysisResult(null);
+    try {
+      const cam = cameras.find(c => c.id === camId) || selectedCam;
+      const res = await cctvApi.analyzeFrame(camId, {
+        description: cam?.name || camId,
+        type: cam?.active_threat || 'ROAD_HAZARD',
+      });
+      if (res && res.analysis) {
+        setAnalysisResult(res.analysis);
+        const threat = res.analysis.primary_threat;
+        const hasThreat = threat && threat !== 'none' && threat !== 'Nominal (Zero Hazards)';
+        
+        // Update local camera state immediately with new YOLO detections
+        setCameras(prev => prev.map(c => {
+          if (c.id === camId) {
+            return {
+              ...c,
+              status: hasThreat ? 'alert' : 'online',
+              active_threat: hasThreat ? threat : undefined,
+              threat_confidence: res.analysis.confidence || (hasThreat ? 0.91 : 0),
+              detections: res.analysis.detections || c.detections || []
+            };
+          }
+          return c;
+        }));
+
+        if (selectedCam && selectedCam.id === camId) {
+          setSelectedCam(prev => prev ? {
+            ...prev,
+            status: hasThreat ? 'alert' : 'online',
+            active_threat: hasThreat ? threat : undefined,
+            threat_confidence: res.analysis.confidence || (hasThreat ? 0.91 : 0),
+            detections: res.analysis.detections || prev.detections || []
+          } : null);
+        }
+      }
+    } catch (e: any) {
+      setAnalysisResult({ error: e.message || 'Frame inference request failed' });
+    } finally {
+      setAnalyzingCamId(null);
+    }
+  };
 
   const fetchCameras = useCallback(async () => {
     try {
@@ -204,6 +253,15 @@ export default function SurveillancePage() {
                   <span className="text-[9px] text-faint">{cam.resolution}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
+                  {(cam as any).is_simulated ? (
+                    <span className="text-[9px] bg-caution/15 text-caution border border-caution/30 px-1.5 py-0.5 rounded font-mono">
+                      BENCHMARK
+                    </span>
+                  ) : cam.feed_url?.endsWith('.m3u8') ? (
+                    <span className="text-[9px] bg-cyber/15 text-cyber border border-cyber/30 px-1.5 py-0.5 rounded font-mono">
+                      HLS LIVE
+                    </span>
+                  ) : null}
                   {isAlert ? (
                     <span className="badge-critical text-[10px] py-0 px-1.5 animate-siren-pulse">THREAT DETECTED</span>
                   ) : (
@@ -222,26 +280,44 @@ export default function SurveillancePage() {
 
               {/* Bottom Telemetry */}
               <div className="flex-shrink-0 bg-abyss/90 border-t border-white/5 p-2 flex items-center justify-between">
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1 mr-2">
                   <p className="text-xs font-semibold text-ink leading-tight truncate">{cam.name}</p>
                   <p className="text-[10px] text-mink truncate">{cam.ward}</p>
                 </div>
-                <div className="text-right flex-shrink-0 ml-2">
-                  {isAlert ? (
-                    <>
-                      <p className="text-[11px] font-bold font-mono text-siren truncate">
-                        {cam.active_threat?.replace(/_/g, ' ').toUpperCase()}
-                      </p>
-                      <p className="text-[9px] text-faint">
-                        {Math.round((cam.threat_confidence || 0) * 100)}% confidence
-                      </p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-[11px] font-bold font-mono text-cyber">All Clear</p>
-                      <p className="text-[9px] text-faint">No threats</p>
-                    </>
-                  )}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAnalyzeFrame(cam.id);
+                    }}
+                    disabled={analyzingCamId === cam.id}
+                    className="flex items-center gap-1 text-[10px] bg-cyber/15 hover:bg-cyber/25 text-cyber border border-cyber/30 px-2 py-1 rounded transition-colors"
+                    title="Analyze current CCTV frame with YOLOv8"
+                  >
+                    {analyzingCamId === cam.id ? (
+                      <RefreshCw size={10} className="animate-spin" />
+                    ) : (
+                      <AlertTriangle size={10} />
+                    )}
+                    <span>{analyzingCamId === cam.id ? 'Running' : 'Analyze'}</span>
+                  </button>
+                  <div className="text-right min-w-[65px]">
+                    {isAlert ? (
+                      <>
+                        <p className="text-[11px] font-bold font-mono text-siren truncate">
+                          {cam.active_threat?.replace(/_/g, ' ').toUpperCase()}
+                        </p>
+                        <p className="text-[9px] text-faint">
+                          {Math.round((cam.threat_confidence || 0) * 100)}%
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-[11px] font-bold font-mono text-cyber">All Clear</p>
+                        <p className="text-[9px] text-faint">Normal</p>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -304,7 +380,42 @@ export default function SurveillancePage() {
                   ))}
                 </div>
               )}
+              {analysisResult && (
+                <div className="p-3 bg-abyss border border-cyber/30 rounded-lg text-xs space-y-1">
+                  <div className="flex items-center justify-between text-cyber font-mono font-bold">
+                    <span>⚡ YOLOv8 LIVE INFERENCE</span>
+                    <span>{analysisResult.inference_ms || 12} ms</span>
+                  </div>
+                  <div className="text-ink">
+                    Mode: <span className="font-mono text-safe">{analysisResult.detection_mode || 'LIVE_YOLO'}</span>
+                  </div>
+                  <div className="text-mink">
+                    Primary Threat: <span className="text-ink font-bold">{analysisResult.primary_threat || 'Nominal (Zero Hazards)'}</span>
+                  </div>
+                  <div className="text-mink">
+                    Detections: <span className="text-ink font-mono">{analysisResult.detections?.length || 0} objects</span>
+                  </div>
+                  {analysisResult.detections && analysisResult.detections.length > 0 && (
+                    <div className="pt-1 flex flex-wrap gap-1">
+                      {analysisResult.detections.map((det: any, dIdx: number) => (
+                        <span key={dIdx} className="bg-siren/15 text-siren border border-siren/30 px-2 py-0.5 rounded text-[10px] font-mono">
+                          {det.label} ({Math.round((det.confidence || 0.9) * 100)}%)
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
               <div className="flex gap-2">
+                <button
+                  onClick={() => handleAnalyzeFrame(selectedCam.id)}
+                  disabled={analyzingCamId === selectedCam.id}
+                  className="btn-cyber text-xs flex-1 flex items-center justify-center gap-1.5"
+                >
+                  {analyzingCamId === selectedCam.id ? <RefreshCw size={12} className="animate-spin" /> : <AlertTriangle size={12} />}
+                  {analyzingCamId === selectedCam.id ? 'Running YOLO...' : '🔍 Analyze Live Frame (YOLO)'}
+                </button>
                 <button
                   onClick={() => {
                     const canvas = document.createElement('canvas');

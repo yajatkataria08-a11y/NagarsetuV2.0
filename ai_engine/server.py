@@ -34,15 +34,33 @@ from unified_civic_ai import (
 )
 from vision_service import analyze_incident_image
 from gemini_civic_core import triage_civic_report
+import infra_vision
 
 # ── Lifespan Handler for Eager Model Hydration ────────────────────────────────
 _START_TIME = time.time()
 _MODELS_LOADED = False
+_YOLO_LOADED = False
+
+def _try_load_yolo():
+    """Attempt to import ultralytics YOLO and record load status."""
+    global _YOLO_LOADED
+    try:
+        from ultralytics import YOLO  # noqa: F401
+        _YOLO_LOADED = True
+        print("[AI Microservice] ✅ YOLO (ultralytics) loaded successfully — vision engine ready.")
+    except ImportError as e:
+        _YOLO_LOADED = False
+        print(f"[AI Microservice] ⚠️  YOLO NOT loaded (ultralytics missing): {e} — vision will degrade gracefully.")
+    except Exception as e:
+        _YOLO_LOADED = False
+        print(f"[AI Microservice] ⚠️  YOLO load failed: {e}")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global _MODELS_LOADED
     print("[AI Microservice] Initializing persistent models in memory...")
+    _try_load_yolo()
+    infra_vision._load_models()
     if not os.path.exists(RISK_MODEL_FILE) or not os.path.exists(NLP_MODEL_FILE):
         train_scikit_learn_models()
     # Warm up models with dry runs
@@ -50,7 +68,7 @@ async def lifespan(app: FastAPI):
         predict_spatial_risk(23.2599, 77.4126, 22, 4)
         verify_incident_report({"description": "warmup check road pothole", "severity": 3})
         _MODELS_LOADED = True
-        print("[AI Microservice] ✅ Scikit-Learn and Vision pipelines primed & resident.")
+        print("[AI Microservice] [OK] Scikit-Learn and Vision pipelines primed & resident.")
     except Exception as e:
         print(f"[AI Microservice] Startup priming notice: {e}")
         _MODELS_LOADED = True
@@ -113,9 +131,20 @@ class TriageRequest(BaseModel):
     image_url: Optional[str] = None
     existing_incidents: Optional[List[Dict[str, Any]]] = None
 
+class InfraDetectRequest(BaseModel):
+    image: Optional[str] = None
+    photo: Optional[str] = None
+    conf_threshold: Optional[float] = 0.25
+
+class InfraSegmentRequest(BaseModel):
+    image: Optional[str] = None
+    photo: Optional[str] = None
+    conf_threshold: Optional[float] = 0.25
+
 # ── Endpoints ─────────────────────────────────────────────────────────────────
 @app.get("/health")
 async def health_check():
+    infra_status = infra_vision.get_load_status()
     return {
         "status": "ok",
         "service": "NagarSetu Resident AI Engine",
@@ -123,6 +152,9 @@ async def health_check():
         "uptime_seconds": round(time.time() - _START_TIME, 1),
         "models_resident": _MODELS_LOADED,
         "sklearn_available": SKLEARN_AVAILABLE,
+        "yolo_loaded": _YOLO_LOADED,
+        "infra_loaded": infra_status.get("infra_loaded", False),
+        "seg_loaded": infra_status.get("seg_loaded", False),
         "timestamp": int(time.time() * 1000)
     }
 
@@ -175,6 +207,16 @@ async def triage_endpoint(req: TriageRequest):
         existing_incidents=req.existing_incidents
     )
     return result
+
+@app.post("/infra/detect")
+async def infra_detect_endpoint(req: InfraDetectRequest):
+    img = req.image or req.photo
+    return infra_vision.detect_infra_defects(img, conf_threshold=req.conf_threshold or 0.25)
+
+@app.post("/infra/segment")
+async def infra_segment_endpoint(req: InfraSegmentRequest):
+    img = req.image or req.photo
+    return infra_vision.segment_cracks(img, conf_threshold=req.conf_threshold or 0.25)
 
 if __name__ == "__main__":
     import uvicorn

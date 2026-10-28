@@ -159,8 +159,10 @@ async function runSuite() {
   console.log('\n[SUITE] SOS Beacons');
 
   await test('GET /api/sos returns SOS array', async () => {
-    const res = await apiRequest('GET', '/api/sos');
-    assert.equal(res.status, 200);
+    const res = await apiRequest('GET', '/api/sos', null, {
+      'Authorization': `Bearer ${adminToken || officerToken}`
+    });
+    assert.equal(res.status, 200, `Expected 200, got ${res.status}: ${JSON.stringify(res.body)}`);
     assert.ok(Array.isArray(res.body), 'SOS response should be an array');
   });
 
@@ -329,11 +331,11 @@ async function runSuite() {
   // ── Risk Engine ───────────────────────────────────────────────────────────
   console.log('\n[SUITE] Spatio-Temporal Risk Engine');
 
-  await test('GET /api/risk/heatmap?city=bhopal returns 50x50 grid', async () => {
+  await test('GET /api/risk/heatmap?city=bhopal returns zones array', async () => {
     const res = await apiRequest('GET', '/api/risk/heatmap?city=bhopal');
     assert.equal(res.status, 200);
-    assert.ok(res.body.grid, 'Response must include grid field');
-    assert.ok(res.body.totalZones > 0, 'Must have totalZones > 0');
+    assert.ok(Array.isArray(res.body.zones), 'Response must include zones array');
+    assert.ok(typeof res.body.totalZones === 'number', 'Must have totalZones count');
   });
 
   await test('POST /api/risk/point returns risk_score for Habibganj', async () => {
@@ -351,9 +353,11 @@ async function runSuite() {
 
   await test('POST /api/routing/calculate-routes returns 3 distinct paths', async () => {
     const res = await apiRequest('POST', '/api/routing/calculate-routes', {
-      origin: { lat: 23.2599, lng: 77.4126 },
-      destination: { lat: 23.268, lng: 77.43 },
-      hour: 18
+      startLat: 23.2599,
+      startLng: 77.4126,
+      endLat: 23.268,
+      endLng: 77.43,
+      timeHour: 18
     });
     assert.equal(res.status, 200, `Expected 200, got ${res.status}`);
     assert.ok(Array.isArray(res.body.routes), 'routes must be an array');

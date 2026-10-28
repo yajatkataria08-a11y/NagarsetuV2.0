@@ -10,17 +10,39 @@
 
 @layer base {
   :root {
+    color-scheme: light;
+    /* Civic Light Theme (Fresh, high-clarity daylight municipal view) */
+    --void: 248, 250, 252;      /* #f8fafc */
+    --abyss: 241, 245, 249;     /* #f1f5f9 */
+    --surface: 255, 255, 255;   /* #ffffff */
+    --raised: 226, 232, 240;    /* #e2e8f0 */
+    --muted: 203, 213, 225;     /* #cbd5e1 */
+    --ink: 15, 23, 42;          /* #0f172a */
+    --mink: 71, 85, 105;        /* #475569 */
+    --faint: 148, 163, 184;     /* #94a3b8 */
+  }
+
+  .dark, html.dark {
     color-scheme: dark;
+    /* Tactical Dark Theme (NagarSetu Night Operations) */
+    --void: 7, 7, 20;           /* #070714 */
+    --abyss: 14, 14, 36;        /* #0E0E24 */
+    --surface: 19, 19, 46;      /* #13132E */
+    --raised: 26, 26, 60;       /* #1A1A3C */
+    --muted: 37, 37, 72;        /* #252548 */
+    --ink: 232, 232, 255;       /* #E8E8FF */
+    --mink: 136, 136, 170;      /* #8888AA */
+    --faint: 74, 74, 122;       /* #4A4A7A */
   }
 
   html {
-    @apply bg-void text-ink scroll-smooth;
+    @apply bg-void text-ink scroll-smooth transition-colors duration-200;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply font-sans overflow-hidden;
+    @apply font-sans overflow-hidden bg-void text-ink;
   }
 
   /* Custom scrollbar */
@@ -37,11 +59,11 @@
 @layer components {
   /* ─── Glass Card ──────────────────────────────────── */
   .glass-card {
-    @apply bg-surface/80 backdrop-blur-sm border border-white/5 rounded-xl shadow-card;
+    @apply bg-surface/90 backdrop-blur-sm border border-black/5 dark:border-white/5 rounded-xl shadow-card transition-colors duration-200;
   }
 
   .glass-card-hover {
-    @apply glass-card hover:border-cyber/20 hover:shadow-card-hover transition-all duration-200;
+    @apply glass-card hover:border-cyber/30 hover:shadow-card-hover transition-all duration-200;
   }
 
   /* ─── Severity Badges ─────────────────────────────── */

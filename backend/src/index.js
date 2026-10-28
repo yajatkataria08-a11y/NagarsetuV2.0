@@ -8,6 +8,7 @@
  */
 
 require('dotenv').config();
+const config    = require('./config');
 const express   = require('express');
 const http      = require('http');
 const { Server } = require('socket.io');
@@ -149,16 +150,6 @@ app.get('/api/health', (req, res) => res.json({
   timestamp: Date.now(),
   backend:   'NagarSetu V2 API Gateway',
 }));
-
-// ── Wards ─────────────────────────────────────────────────────────────────────
-app.get('/api/wards', async (req, res) => {
-  try {
-    const wards = await db.getWards();
-    res.json(wards);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
 
 // ── Responders ────────────────────────────────────────────────────────────────
 app.get('/api/responders', async (req, res) => {

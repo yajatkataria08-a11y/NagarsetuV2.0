@@ -42,6 +42,8 @@ android {
             "\"${localProperties["GATEWAY_BASE_URL"] ?: "http://10.0.2.2:4000"}\"")
         buildConfigField("String", "TWILIO_PHONE_NUMBER",
             "\"${localProperties["TWILIO_PHONE_NUMBER"] ?: ""}\"")
+        buildConfigField("String", "SENDGRID_API_KEY",
+            "\"${localProperties["SENDGRID_API_KEY"] ?: ""}\"")
 
         // ── LLM backends (AssistantModule / RAG) ──
         buildConfigField("String", "GROQ_API_KEY",
@@ -75,7 +77,19 @@ android {
             localProperties["GOOGLE_MAPS_API_KEY"] ?: ""
     }
 
+    signingConfigs {
+        getByName("debug") {
+            storeFile = rootProject.file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(

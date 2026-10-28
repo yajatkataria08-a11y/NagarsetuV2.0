@@ -1,4 +1,4 @@
-path: d:/COODING/Projects/Hackathon/Nagarsetu/repo_v2/ai_engine/data/hazard_vision
+path: ..
 train: images/train
 val: images/val
 names:

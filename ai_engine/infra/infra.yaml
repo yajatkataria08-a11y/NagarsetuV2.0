@@ -1,0 +1,14 @@
+﻿# NagarSetu V2.0 — Structural Health Monitoring (SHM) Multi-Class Defect Detection
+# Incorporates CODEBRIM & SDNET2018 normalized annotations
+
+path: ../data/infra
+train: images/train
+val: images/val
+test: images/test
+
+names:
+  0: crack
+  1: spalling
+  2: exposed_rebar
+  3: corrosion
+  4: efflorescence

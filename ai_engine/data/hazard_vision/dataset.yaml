@@ -1,4 +1,5 @@
-path: d:/COODING/Projects/Hackathon/Nagarsetu/repo_v2/ai_engine/data/hazard_vision
+# Dynamically generated for portable multi-platform training
+path: ..
 train: images/train
 val: images/val
 names:

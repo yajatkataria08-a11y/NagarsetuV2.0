@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 """
-NagarSetu V2.0 — Production NLP Civic Grievance Triage Classifier Training
-──────────────────────────────────────────────────────────────────────────
-Trains a high-accuracy, multi-class text triage classifier for civic grievances
-using real-world citizen grievance data:
+NagarSetu V2.0 — NLP Civic Grievance Triage Classifier Training
+──────────────────────────────────────────────────────────────
+Trains a multi-class text triage classifier for civic grievances using
+a curated municipal benchmark corpus across 6 municipal departments:
   - ROAD_HAZARD
   - WATER_SUPPLY
   - SEWAGE_OVERFLOW
   - GARBAGE_CLEANUP
   - ELECTRICAL_SAFETY
   - WOMEN_SAFETY
+
+Methodology:
+  - Dataset: Curated municipal ticket benchmark (102 domain-verified samples,
+    balanced across 6 categories in bilingual English & Hindi/Hinglish).
+  - Validation: Rigorous 5-Fold Stratified Cross-Validation with out-of-fold metrics.
+  - Final Model: Refit on full curated benchmark corpus for maximum vocabulary coverage.
 
 Exports:
   ai_engine/models/nlp_classifier.joblib
@@ -18,11 +24,12 @@ Exports:
 import os
 import sys
 import joblib
+import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold, cross_val_score, cross_val_predict
 from sklearn.pipeline import Pipeline
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -32,41 +39,53 @@ MODEL_OUT = os.path.join(MODELS_DIR, "nlp_classifier.joblib")
 os.makedirs(MODELS_DIR, exist_ok=True)
 
 def train():
-    print(f"[NLP Triage Trainer] Loading real grievance reports from {DATA_CSV}...")
+    print("=" * 70)
+    print(" NagarSetu V2 — Civic Grievance NLP Classifier (5-Fold Stratified CV)")
+    print("=" * 70)
+    print(f"[NLP Trainer] Loading curated benchmark corpus from {DATA_CSV}...")
     df = pd.read_csv(DATA_CSV)
-    # Support both column namings: 'text' & 'category' or 'label'
+
     col_text = "text"
     col_label = "category" if "category" in df.columns else "label"
 
-    print(f"[NLP Triage Trainer] Loaded {len(df)} curated real grievance records across {df[col_label].nunique()} categories.")
-    print("[NLP Triage Trainer] Category Distribution:")
+    total_records = len(df)
+    num_classes = df[col_label].nunique()
+    print(f"[NLP Trainer] Corpus Scale: {total_records} curated civic tickets across {num_classes} departments.")
+    print("[NLP Trainer] Class Distribution (Balanced Benchmark):")
     for cat, count in df[col_label].value_counts().items():
-        print(f"  • {cat}: {count} records")
+        print(f"  • {cat:18}: {count} tickets ({count/total_records*100:.1f}%)")
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        df[col_text], df[col_label], test_size=0.2, random_state=42, stratify=df[col_label]
-    )
-
-    model = Pipeline([
+    # Pipeline definition
+    pipeline = Pipeline([
         ("tfidf", TfidfVectorizer(ngram_range=(1, 2), max_features=10000, sublinear_tf=True)),
-        ("clf", LogisticRegression(C=1.5, max_iter=1000, class_weight="balanced"))
+        ("clf", LogisticRegression(C=1.5, max_iter=1000, class_weight="balanced", solver="lbfgs"))
     ])
 
-    print("\n[NLP Triage Trainer] Training TF-IDF + LogisticRegression pipeline...")
-    model.fit(X_train, y_train)
+    # 5-Fold Stratified Cross-Validation
+    print("\n[NLP Trainer] Running 5-Fold Stratified Cross-Validation...")
+    skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+    fold_scores = cross_val_score(pipeline, df[col_text], df[col_label], cv=skf, scoring="accuracy")
 
-    y_pred = model.predict(X_test)
-    acc = accuracy_score(y_test, y_pred)
-    print(f"\n[NLP Triage Trainer] Validation Holdout Accuracy: {acc * 100:.2f}%\n")
-    print(classification_report(y_test, y_pred))
+    for fold_idx, score in enumerate(fold_scores, 1):
+        print(f"  Fold {fold_idx}: {score * 100:.2f}% accuracy")
 
-    # Refit on entire dataset for maximum production vocabulary
-    print("[NLP Triage Trainer] Refitting pipeline on 100% of authentic real grievance reports...")
-    model.fit(df[col_text], df[col_label])
+    mean_acc = np.mean(fold_scores)
+    std_acc = np.std(fold_scores)
+    print(f"\n[NLP Trainer] 5-Fold Cross-Validated Accuracy: {mean_acc * 100:.2f}% (± {std_acc * 100:.2f}%)")
 
-    joblib.dump(model, MODEL_OUT)
-    print(f"[NLP Triage Trainer] Production weights successfully saved to: {MODEL_OUT}")
-    print(f"[NLP Triage Trainer] Serialized file size: {os.path.getsize(MODEL_OUT) / 1024:.2f} KB")
+    # Generate Out-Of-Fold Predictions across the entire dataset
+    oof_predictions = cross_val_predict(pipeline, df[col_text], df[col_label], cv=skf)
+    print("\n[NLP Trainer] Out-Of-Fold Evaluation Report (All 102 Samples Evaluated as Unseen Test Folds):\n")
+    print(classification_report(df[col_label], oof_predictions, digits=3))
+
+    # Refit on 100% of the curated benchmark corpus for production inference
+    print("[NLP Trainer] Refitting pipeline on 100% of benchmark corpus for deployment...")
+    pipeline.fit(df[col_text], df[col_label])
+
+    joblib.dump(pipeline, MODEL_OUT)
+    print(f"[NLP Trainer] Successfully serialized model to: {MODEL_OUT}")
+    print(f"[NLP Trainer] File size: {os.path.getsize(MODEL_OUT) / 1024:.2f} KB")
+    print("=" * 70)
 
 if __name__ == "__main__":
     train()

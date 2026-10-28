@@ -11,9 +11,17 @@ export async function apiFetch<T = unknown>(
   options: RequestInit = {}
 ): Promise<T> {
   const url = `${API_BASE}${path}`;
+  const authHeaders: Record<string, string> = {};
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('nagarsetu_token') || localStorage.getItem('token');
+    if (token) {
+      authHeaders['Authorization'] = `Bearer ${token}`;
+    }
+  }
   const res = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
+      ...authHeaders,
       ...options.headers,
     },
     ...options,
@@ -49,6 +57,10 @@ export const cctvApi = {
   list: () => api.get<CctvCamera[]>('/api/cctv'),
   detect: (id: string, body: { threat: string; confidence: number; detections: Detection[] }) =>
     api.post(`/api/cctv/${id}/detect`, body),
+  analyzeFrame: (id: string, body?: { image?: string; photo?: string; type?: string; description?: string }) =>
+    api.post<{ success: boolean; analysis: any; infra_analysis?: any }>(`/api/cctv/${id}/analyze-frame`, body || {}),
+  analyzeInfra: (id: string, body?: { image?: string; photo?: string; conf_threshold?: number }) =>
+    api.post<{ success: boolean; cameraId: string; defects: any; segmentation: any }>(`/api/cctv/${id}/analyze-infra`, body || {}),
 };
 
 export const legalApi = {
@@ -131,6 +143,8 @@ export interface CctvCamera {
   active_threat?: string;
   threat_confidence: number;
   detections?: Detection[];
+  is_simulated?: boolean;
+  scenario_label?: string;
 }
 
 export interface Detection {

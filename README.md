@@ -15,7 +15,7 @@
 ![Twilio](https://img.shields.io/badge/Twilio_Gateway-F22F46?style=flat-square&logo=twilio&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker_Compose-2496ED?style=flat-square&logo=docker&logoColor=white)
 
-[📘 Project Guide](PROJECT_GUIDE.md) · [🎤 5-min demo script](PROJECT_GUIDE.md#17-hackathon-5-minute-live-demonstration-script) · [🛠 API catalog](PROJECT_GUIDE.md#13-developer-api-reference-with-curl-examples)
+[📘 Project Guide](PROJECT_GUIDE.md) · [🎤 5-min demo script](PROJECT_GUIDE.md#19-hackathon-5-minute-live-demonstration-script) · [🛠 API catalog](PROJECT_GUIDE.md#15-developer-api-reference-with-curl-examples)
 
 
 <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" width="100%" height="3" alt=""/>
@@ -105,7 +105,7 @@ flowchart LR
 **Zero-Trust Security:**
 - JWT authentication with 4 enforced RBAC roles (`SUPER_ADMIN`, `WARD_OFFICER`, `DISPATCHER`, `FIELD_ENGINEER`).
 - Socket.IO handshakes strictly authenticated with token verification.
-- Twilio credentials managed 100% server-side — zero sensitive API keys compiled into client APKs.
+- Twilio & AI cloud API keys (Gemini/Groq) strictly isolated behind backend & AI microservices — zero secrets in client APKs or browser code.
 - Real tracking endpoint returns strict `404 Not Found` for unverified sessions (zero simulated data leakage).
 - Sensor telemetry protected with `x-sensor-api-key` validation and capped sliding windows.
 
@@ -128,12 +128,12 @@ All trained model weights and spatial index caches are pre-compiled and tracked 
 
 | | |
 |---|---|
-| Android | **16 Gradle modules**, **230+ Kotlin files**, Shake-to-SOS, Quick Settings Tile, Room offline queue, TTS radar |
+| Android | **16 Gradle modules**, **229 files**, Shake-to-SOS, Quick Settings Tile, Room offline queue, TTS radar |
 | Command center | **14** page views, Next.js 15 + React 19 + Tailwind CSS |
 | Backend Gateway | **15 route groups**, Socket.IO realtime with handshake auth, Server-side Twilio OTP |
 | AI Neural Suite | **3 production models shipped** (`best.pt`, `risk_regressor.joblib`, `nlp_classifier.joblib`) + Gemini 1.5 Flash |
 | Legal dataset | **154 violations × 7 nations** (BIMSTEC regional harmonization) |
-| Tests | **29-case** end-to-end API regression suite (`backend/test/api.test.js`) |
+| Tests | **35-case** end-to-end API regression suite (`backend/test/api.test.js`) |
 | Deploy | Docker Compose: NGINX gateway, Next.js frontend, Express backend, FastAPI AI engine, PostGIS |
 
 ---
@@ -177,6 +177,8 @@ Full stack with one command: `docker compose up --build`
 - **Shipped Neural Weights:** Unlike standard hackathon prototypes with placeholder weights, NagarSetu ships with pre-trained YOLOv8 weights (`ai_engine/models/best.pt`) and serialized Scikit-learn regressors and NLP classifiers ready to run out of the box.
 - **Enterprise Security Posture:** Full RBAC middleware, authenticated Socket.IO handshakes, server-side Twilio credential shielding, and real 404 responses for invalid tracking sessions are enforced across the running code.
 - **Hardware Integration:** The Android client directly interfaces with native hardware sensors — physical accelerometer jerk listeners for Shake-to-SOS, Android Quick Settings system tiles, and Text-to-Speech synthesis for real-time proximity alerts.
+- **Synthetic Data Notice:** Baseline incident records, flood sensor telemetry, and demo beacon histories are synthetically seeded around actual Bhopal and Indore coordinates for isolated, repeatable evaluation. In production, these plug directly into SCADA flood sensors, live RTSP CCTV cameras, and municipal databases without architectural modification.
+- **API Key & Cloud Model Isolation:** All external LLM (Gemini/Groq) and communication (Twilio) API keys are maintained strictly server-side behind the backend gateway and FastAPI AI microservice. No secret keys or cloud provider credentials are ever baked into client-side web bundles or Android APKs.
 
 ---
 

@@ -13,11 +13,13 @@ function isValidGeoCoord(lat, lng) {
   return !isNaN(pLat) && !isNaN(pLng) && pLat >= -90 && pLat <= 90 && pLng >= -180 && pLng <= 180;
 }
 
-// GET /api/sos — list active SOS events
-router.get('/', async (req, res) => {
+// GET /api/sos — list active SOS events (restricted to dispatch staff)
+router.get('/', requireAuth(['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER']), async (req, res) => {
   try {
     const events = await db.getSosEvents(req.query.status);
-    res.json(events);
+    // Strip PII fields from list response
+    const safe = events.map(({ tracking_token, phone, ...rest }) => rest);
+    res.json(safe);
   } catch (e) {
     sendError(res, e, 500, 'Failed to fetch SOS events');
   }

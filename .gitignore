@@ -54,6 +54,8 @@ nodejs.zip
 
 # ── Android ────────────────────────────────────────────────────────────
 .gradle/
+.kotlin/
+**/.kotlin/
 build/
 */build/
 */*/build/
@@ -68,3 +70,11 @@ local.properties
 *.key
 *.pem
 *.p12
+*.keystore
+
+# ── Runtime Data ────────────────────────────────
+backend/data/store.json
+backend/data/*.json
+
+# ── GitHub Actions (requires workflow scope on PAT) ──
+.github/

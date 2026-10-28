@@ -205,6 +205,56 @@ const aiMicroservice = {
         fallback: true
       };
     }
+  },
+
+  /**
+   * Analyze infrastructure defects (crack, spalling, exposed_rebar, corrosion, efflorescence)
+   * via resident infra_defects.pt YOLO model
+   */
+  async analyzeInfraFrame(payload) {
+    try {
+      return await postJson('/infra/detect', payload, 1500);
+    } catch (err) {
+      logger.debug('[AI-Client] HTTP microservice fallback for infra detect:', { error: err.message });
+      return {
+        model: 'infra_defects',
+        detections: [
+          {
+            label: 'crack',
+            class_id: 0,
+            confidence: 0.82,
+            bbox_xyxy: [50, 60, 200, 220],
+            department: 'PWD_BRIDGES',
+            priority: 'HIGH'
+          }
+        ],
+        primary_defect: 'crack',
+        highest_priority: 'HIGH',
+        defect_count: 1,
+        departments: ['PWD_BRIDGES'],
+        fallback: true
+      };
+    }
+  },
+
+  /**
+   * Segment cracks and measure crack width/length via crack_seg.pt
+   */
+  async segmentCracks(payload) {
+    try {
+      return await postJson('/infra/segment', payload, 1500);
+    } catch (err) {
+      logger.debug('[AI-Client] HTTP microservice fallback for crack segment:', { error: err.message });
+      return {
+        model: 'crack_seg',
+        polygons: [],
+        crack_count: 0,
+        estimated_width_px: 0,
+        estimated_length_px: 0,
+        severity: 'LOW',
+        fallback: true
+      };
+    }
   }
 };
 

@@ -10,12 +10,12 @@ module.exports = {
     extend: {
       colors: {
         // === NagarSetu V2 Tactical Palette ===
-        // Core Dark Surface
-        void:    '#070714',
-        abyss:   '#0E0E24',
-        surface: '#13132E',
-        raised:  '#1A1A3C',
-        muted:   '#252548',
+        // Core Theme Surfaces & Text (Light/Dark dynamic)
+        void:    'rgb(var(--void) / <alpha-value>)',
+        abyss:   'rgb(var(--abyss) / <alpha-value>)',
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+        raised:  'rgb(var(--raised) / <alpha-value>)',
+        muted:   'rgb(var(--muted) / <alpha-value>)',
         // Civic Blue
         civic:   {
           DEFAULT: '#2D468C',
@@ -37,10 +37,10 @@ module.exports = {
         // Status
         safe:    '#10B981',
         caution: '#F59E0B',
-        // Text
-        ink:     '#E8E8FF',
-        mink:    '#8888AA',
-        faint:   '#4A4A7A',
+        // Dynamic Typography Colors
+        ink:     'rgb(var(--ink) / <alpha-value>)',
+        mink:    'rgb(var(--mink) / <alpha-value>)',
+        faint:   'rgb(var(--faint) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],

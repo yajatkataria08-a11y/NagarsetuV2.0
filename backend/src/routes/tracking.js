@@ -11,6 +11,24 @@ function isValidGeoCoord(lat, lng) {
   return !isNaN(pLat) && !isNaN(pLng) && pLat >= -90 && pLat <= 90 && pLng >= -180 && pLng <= 180;
 }
 
+// GET /api/tracking/public/:token — public route for tracking link viewers
+// Returns ONLY {lat, lng, updatedAt} — no PII exposed to unauthenticated viewers
+router.get('/public/:token', async (req, res) => {
+  try {
+    const session = await db.getTrackingSession(req.params.token);
+    if (!session) {
+      return res.status(404).json({ error: 'Tracking session not found or expired' });
+    }
+    res.json({
+      lat: session.lat,
+      lng: session.lng,
+      updatedAt: new Date(session.created_at || Date.now()).getTime()
+    });
+  } catch (e) {
+    sendError(res, e, 500, 'Failed to fetch tracking location');
+  }
+});
+
 // POST /api/tracking/start — initiates a new live tracking session
 router.post('/start', async (req, res) => {
   try {
@@ -122,6 +140,23 @@ router.post('/ping', async (req, res) => {
     res.json({ success: true, timestamp: Date.now() });
   } catch (e) {
     sendError(res, e, 500, 'Failed to record tracking ping');
+  }
+});
+
+// GET /api/tracking/:token — public route returning only {lat, lng, updatedAt} for a valid token
+router.get('/:token', async (req, res) => {
+  try {
+    const session = await db.getTrackingSession(req.params.token);
+    if (!session) {
+      return res.status(404).json({ error: 'Tracking session not found or expired' });
+    }
+    res.json({
+      lat: session.lat,
+      lng: session.lng,
+      updatedAt: new Date(session.created_at || Date.now()).getTime()
+    });
+  } catch (e) {
+    sendError(res, e, 500, 'Failed to fetch tracking location');
   }
 });
 

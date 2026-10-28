@@ -27,7 +27,8 @@ const supabase = (SUPABASE_URL && SUPABASE_SERVICE)
 
 // ── Local Disk Store Setup ────────────────────────────────────────────────────
 const DATA_DIR = path.resolve(__dirname, '../../data');
-const STORE_FILE = path.join(DATA_DIR, 'store.json');
+// DATA_FILE env var lets tests redirect to a temp store and avoid polluting the real store
+const STORE_FILE = process.env.DATA_FILE || path.join(DATA_DIR, 'store.json');
 
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -165,12 +166,12 @@ const DEFAULT_STORE = {
     { id: 'haz002', name: 'Hamidia Bus Stand Crowd Surge', lat: 23.2550, lng: 77.4050, radius_meters: 100, risk_boost: 25.0, active: true, expires_at: new Date(Date.now() + 60 * 60000).toISOString(), note: 'Dense unmanaged crowd' }
   ],
   cctv_cameras: [
-    { id: 'cam001', name: 'CAM-01 · Roshanpura Square', ward: 'Ward 5 — TT Nagar', lat: 23.2430, lng: 77.4020, feed_url: process.env.CAM001_URL || '/streams/cam-01.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: 'ROAD_HAZARD', threat_confidence: 0.91, detections: ['pothole', 'dense_traffic'] },
-    { id: 'cam002', name: 'CAM-02 · Habibganj Station Underpass', ward: 'Ward 9 — Habibganj', lat: 23.2680, lng: 77.4300, feed_url: process.env.CAM002_URL || '/streams/cam-02.mp4', status: 'online', fps: 28, resolution: '1080p', active_threat: 'WATER_LOGGING', threat_confidence: 0.94, detections: ['submerged_road', 'stalled_vehicle'] },
-    { id: 'cam003', name: 'CAM-03 · Arera Colony 10 No. Market', ward: 'Ward 7 — Arera Colony', lat: 23.2599, lng: 77.4126, feed_url: process.env.CAM003_URL || '/streams/cam-03.mp4', status: 'online', fps: 30, resolution: '4K', active_threat: null, threat_confidence: 0, detections: ['clear_pedestrians'] },
-    { id: 'cam004', name: 'CAM-04 · MP Nagar Zone-1 Axis', ward: 'Ward 3 — MP Nagar', lat: 23.2310, lng: 77.4350, feed_url: process.env.CAM004_URL || '/streams/cam-04.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: 'POOR_LIGHTING', threat_confidence: 0.78, detections: ['unlit_segment'] },
-    { id: 'cam005', name: 'CAM-05 · Kolar Main Road Junction', ward: 'Ward 12 — Kolar', lat: 23.1850, lng: 77.4200, feed_url: process.env.CAM005_URL || '/streams/cam-05.mp4', status: 'online', fps: 25, resolution: '720p', active_threat: 'CROWD_SURGE', threat_confidence: 0.85, detections: ['crowd_density_high'] },
-    { id: 'cam006', name: 'CAM-06 · Rajwada Palace Perimeter', ward: 'Ward 18 — Indore', lat: 22.7185, lng: 75.8560, feed_url: process.env.CAM006_URL || '/streams/cam-06.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: null, threat_confidence: 0, detections: ['normal_flow'] },
+    { id: 'cam001', name: 'CAM-01 · Roshanpura Square (Live Feed)', ward: 'Ward 5 — TT Nagar', lat: 23.2430, lng: 77.4020, feed_url: process.env.CAM001_URL || '/streams/cam-01.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: null, threat_confidence: 0, detections: [], is_simulated: false, stream_source: process.env.CAM001_URL ? 'HLS_STREAM' : 'LOCAL_FEED' },
+    { id: 'cam002', name: 'CAM-02 · Habibganj Underpass (Incident Benchmark)', ward: 'Ward 9 — Habibganj', lat: 23.2680, lng: 77.4300, feed_url: process.env.CAM002_URL || '/streams/cam-02.mp4', status: 'alert', fps: 28, resolution: '1080p', active_threat: 'waterlogging', threat_confidence: 0.94, detections: [{ label: 'waterlogging', confidence: 0.94, bbox: [100, 210, 440, 120] }], is_simulated: true, scenario_label: 'BENCHMARK_SCENARIO' },
+    { id: 'cam003', name: 'CAM-03 · Arera Colony 10 No. Market', ward: 'Ward 7 — Arera Colony', lat: 23.2599, lng: 77.4126, feed_url: process.env.CAM003_URL || '/streams/cam-03.mp4', status: 'online', fps: 30, resolution: '4K', active_threat: null, threat_confidence: 0, detections: ['clear_pedestrians'], is_simulated: false },
+    { id: 'cam004', name: 'CAM-04 · MP Nagar Zone-1 Axis', ward: 'Ward 3 — MP Nagar', lat: 23.2310, lng: 77.4350, feed_url: process.env.CAM004_URL || '/streams/cam-04.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: null, threat_confidence: 0, detections: [], is_simulated: false },
+    { id: 'cam005', name: 'CAM-05 · Kolar Main Road Junction', ward: 'Ward 12 — Kolar', lat: 23.1850, lng: 77.4200, feed_url: process.env.CAM005_URL || '/streams/cam-05.mp4', status: 'online', fps: 25, resolution: '720p', active_threat: null, threat_confidence: 0, detections: [], is_simulated: false },
+    { id: 'cam006', name: 'CAM-06 · Rajwada Palace Perimeter', ward: 'Ward 18 — Indore', lat: 22.7185, lng: 75.8560, feed_url: process.env.CAM006_URL || '/streams/cam-06.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: null, threat_confidence: 0, detections: ['normal_flow'], is_simulated: false },
   ],
   tracking_sessions: {}
 };

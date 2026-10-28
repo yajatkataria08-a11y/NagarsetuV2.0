@@ -9,3 +9,6 @@ Pillow>=10.3.0
 google-generativeai>=0.7.0
 aiohttp>=3.9.0
 python-multipart>=0.0.9
+ultralytics==8.3.40
+pytest>=7.4.0
+httpx>=0.25.0
