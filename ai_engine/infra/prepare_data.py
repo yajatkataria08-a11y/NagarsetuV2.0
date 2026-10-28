@@ -1,9 +1,13 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 NagarSetu V2.0 — Infrastructure Structural Health Monitoring (SHM)
 Dataset Ingestion, Normalization & YOLO Format Converter
 ─────────────────────────────────────────────────────────────────────────────
-Supports:
+!! CURRENT BEHAVIOUR: this script GENERATES SYNTHETIC samples (generate_synthetic_shm_sample).
+!! It does not download or convert any real dataset. For real mask-style data use
+!! convert_masks.py. The list below is the *intended* source material, not what runs.
+
+Intended sources:
   1. CODEBRIM (Multi-target Defect Detection: crack, spalling, exposed_rebar, corrosion, efflorescence)
      License: CC BY 4.0 (Zenodo / TU Darmstadt)
   2. Crack500 / CrackForest (Crack Boundary Segmentation)

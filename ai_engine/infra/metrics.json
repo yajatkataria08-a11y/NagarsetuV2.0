@@ -1,0 +1,47 @@
+{
+  "anomaly": {
+    "data_source": "simulated",
+    "warning": "SIMULATED damped-oscillator data. Not a result on a real structure.",
+    "fs_hz": 128.0,
+    "window_s": 2.0,
+    "baseline_freq_hz": 4.981456873505622,
+    "split": {
+      "unit": "record",
+      "healthy_train_windows": 1062,
+      "healthy_val_windows": 354,
+      "healthy_test_windows": 354,
+      "damaged_test_windows": 1888
+    },
+    "threshold_rule": "99th percentile of healthy validation score",
+    "isolation_forest": {
+      "roc_auc": 0.7976889423537297,
+      "f1": 0.3837606837606838,
+      "false_positive_rate": 0.00847457627118644,
+      "recall": 0.2378177966101695,
+      "threshold": 0.6145129653722261,
+      "per_damage_level": {
+        "D1_k5": {
+          "roc_auc": 0.5462929713683808,
+          "recall_at_threshold": 0.01059322033898305
+        },
+        "D2_k10": {
+          "roc_auc": 0.7443502824858756,
+          "recall_at_threshold": 0.03177966101694915
+        },
+        "D3_k20": {
+          "roc_auc": 0.9161519678253376,
+          "recall_at_threshold": 0.1885593220338983
+        },
+        "D4_k30": {
+          "roc_auc": 0.983960547735325,
+          "recall_at_threshold": 0.7203389830508474
+        }
+      }
+    },
+    "lstm_autoencoder": {
+      "status": "not_run",
+      "reason": "torch not installed in this environment"
+    },
+    "train_seconds": 4.9
+  }
+}

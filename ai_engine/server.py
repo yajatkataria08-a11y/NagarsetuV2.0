@@ -35,6 +35,7 @@ from unified_civic_ai import (
 from vision_service import analyze_incident_image
 from gemini_civic_core import triage_civic_report
 import infra_vision
+from infra.api import router as infra_router
 
 # ── Lifespan Handler for Eager Model Hydration ────────────────────────────────
 _START_TIME = time.time()
@@ -217,6 +218,8 @@ async def infra_detect_endpoint(req: InfraDetectRequest):
 async def infra_segment_endpoint(req: InfraSegmentRequest):
     img = req.image or req.photo
     return infra_vision.segment_cracks(img, conf_threshold=req.conf_threshold or 0.25)
+
+app.include_router(infra_router)
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,5 +1,6 @@
-﻿# NagarSetu V2.0 — High-Precision Concrete Crack Boundary Segmentation
-# Incorporates Crack500 & CrackForest (CFD) contour polygons
+# NagarSetu V2.0 — High-Precision Concrete Crack Boundary Segmentation
+# DATA NOTE: data/crack_seg currently holds SYNTHETIC images (prepare_data.py), NOT Crack500 / CFD.
+# Use convert_masks.py to build a real dataset, then re-train.
 
 path: ../data/crack_seg
 train: images/train

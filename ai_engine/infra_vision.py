@@ -63,8 +63,15 @@ def _load_models():
         print("[InfraVision] ultralytics not available — running heuristic fallback.", file=sys.stderr)
         return
 
+    # Never treat a copy of the hazard detector as an infra model (see infra/provenance.py)
+    from infra.provenance import weight_status
+    infra_ws, seg_ws = weight_status("infra_defects.pt"), weight_status("crack_seg.pt")
+    for _n, _ws in (("infra_defects.pt", infra_ws), ("crack_seg.pt", seg_ws)):
+        if _ws["exists"] and not _ws["trained_for_task"]:
+            print(f"[InfraVision] WARNING: {_n} NOT loaded - {_ws['reason']}", file=sys.stderr)
+
     # infra_defects model
-    if os.path.exists(INFRA_MODEL_PATH) and os.path.getsize(INFRA_MODEL_PATH) > 1000:
+    if infra_ws["trained_for_task"]:
         try:
             _INFRA_MODEL = _YOLO(INFRA_MODEL_PATH)
             _INFRA_LOADED = True
@@ -75,7 +82,7 @@ def _load_models():
         print(f"[InfraVision] infra_defects.pt not found at {INFRA_MODEL_PATH}", file=sys.stderr)
 
     # crack_seg model
-    if os.path.exists(SEG_MODEL_PATH) and os.path.getsize(SEG_MODEL_PATH) > 1000:
+    if seg_ws["trained_for_task"]:
         try:
             _SEG_MODEL = _YOLO(SEG_MODEL_PATH)
             _SEG_LOADED = True
