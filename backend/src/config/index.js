@@ -107,6 +107,10 @@ if (env.NODE_ENV === 'production' && env.JWT_SECRET === 'nagarsetu_dev_secret_ch
   throw new Error('[Config Fatal] JWT_SECRET must be set to a secure custom secret in production environment!');
 }
 
+if (env.NODE_ENV === 'production' && env.SENSOR_API_KEY === 'nagarsetu_iot_sensor_key_2026') {
+  throw new Error('[Config Fatal] SENSOR_API_KEY must be set to a custom secret in production environment!');
+}
+
 // Derived and normalized paths
 const config = {
   ...env,

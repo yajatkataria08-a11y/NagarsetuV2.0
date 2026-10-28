@@ -78,3 +78,9 @@ backend/data/*.json
 
 # ── GitHub Actions (requires workflow scope on PAT) ──
 .github/
+
+# ── Local runtime data (infra) ────────────────
+backend/data/store.json
+backend/data/store.json.tmp.*
+backend/data/inspections/
+ai_engine/infra/runs/

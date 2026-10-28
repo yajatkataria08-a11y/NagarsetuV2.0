@@ -100,17 +100,22 @@ def measure_crack_mask(mask: np.ndarray, scale_mm_per_px: Optional[float] = None
 def classical_crack_mask(gray: np.ndarray) -> np.ndarray:
     """Non-learned fallback: cracks are thin and darker than their surroundings.
 
-    Black-hat morphology isolates thin dark structures, Otsu thresholds them.
-    This is a stand-in until crack_seg.pt is genuinely trained; responses that
-    use it are labelled mask_source='classical_cv'.
+    Black-hat morphology isolates dark structures *narrower than its kernel*, so a
+    single kernel misses wide cracks. We take the maximum response over several
+    kernel sizes (up to ~1/6 of the image) and threshold with Otsu. Large dark
+    regions (shadows, holes) can still produce false positives - this is a
+    stand-in until crack_seg.pt is genuinely trained; responses that use it are
+    labelled mask_source='classical_cv'.
     """
     import cv2
 
-    g = gray.astype(np.uint8)
-    g = cv2.GaussianBlur(g, (3, 3), 0)
-    k = max(9, (min(g.shape) // 40) | 1)
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
-    bh = cv2.morphologyEx(g, cv2.MORPH_BLACKHAT, kernel)
+    g = cv2.GaussianBlur(gray.astype(np.uint8), (3, 3), 0)
+    kmax = max(9, min(g.shape) // 6)
+    sizes = sorted({k | 1 for k in (9, 15, 25, 41, 65) if k <= kmax} or {9})
+    bh = np.zeros_like(g)
+    for k in sizes:
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
+        bh = np.maximum(bh, cv2.morphologyEx(g, cv2.MORPH_BLACKHAT, kernel))
     if bh.max() < 12:  # nothing darker than its surroundings by a meaningful margin
         return np.zeros_like(g, dtype=bool)
     t, bw = cv2.threshold(bh, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)

@@ -1,4 +1,4 @@
-"""FastAPI router: /infra/analyze-image, /infra/anomaly, /infra/health."""
+"""FastAPI router: /infra/analyze-image, /infra/anomaly, /infra/score, /infra/health, /infra/status."""
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
@@ -25,10 +25,16 @@ class AnomalyRequest(BaseModel):
 
 
 class RulParams(BaseModel):
-    crack_length_mm: float = Field(..., gt=0)
+    crack_length_mm: Optional[float] = Field(None, gt=0, description="omit to use the length measured from the image")
     critical_length_mm: float = Field(50.0, gt=0)
     delta_sigma_mpa: float = Field(50.0, gt=0)
     cycles_per_day: float = Field(10_000.0, gt=0)
+
+
+class ScoreRequest(BaseModel):
+    defect: Optional[float] = Field(None, ge=0, le=100)
+    anomaly: Optional[float] = Field(None, ge=0, le=100)
+    rul: Optional[float] = Field(None, ge=0, le=100)
 
 
 class HealthRequest(BaseModel):
@@ -64,24 +70,37 @@ async def anomaly_endpoint(req: AnomalyRequest):
         raise HTTPException(status_code=422, detail=str(e))
 
 
+@router.post("/score")
+async def score_endpoint(req: ScoreRequest):
+    """Combine already-computed 0-100 risk components (None = not measured) into a health score."""
+    return health.health_score(req.defect, req.anomaly, req.rul)
+
+
 @router.post("/health")
 async def health_endpoint(req: HealthRequest):
     """One request -> defects, anomaly flag, RUL range, health score (any subset of inputs)."""
     out: Dict[str, Any] = {"defects": None, "anomaly": None, "rul": None}
     d_risk = a_risk = r_risk = None
     try:
-        max_w_mm = None
         if req.image:
             out["defects"] = analyze.analyze_image(req.image, req.reference_mm, req.reference_px)
-            max_w_mm = out["defects"]["crack"]["max_width_mm"]
-            d_risk = health.defect_risk(max_w_mm, out["defects"]["detections"])
+            d_risk = health.defect_risk(out["defects"]["crack"]["max_width_mm"], out["defects"]["detections"])
         if req.samples:
             out["anomaly"] = anomaly.score_window(req.samples, req.fs)
             a_risk = health.anomaly_risk(out["anomaly"]["ratio"])
         if req.rul:
-            out["rul"] = rul.estimate_rul(req.rul.crack_length_mm / 1000.0, req.rul.critical_length_mm / 1000.0,
-                                          req.rul.delta_sigma_mpa, req.rul.cycles_per_day)
-            r_risk = health.rul_risk(out["rul"]["p10_years"])
+            length_mm = req.rul.crack_length_mm
+            if length_mm is None and out["defects"]:
+                length_mm = out["defects"]["crack"].get("length_mm")
+            if not length_mm and out["defects"] is None:
+                raise ValueError("RUL needs crack_length_mm, or an image with a reference scale that yields a measurable crack length")
+            if not length_mm:
+                # defects were analysed but no length is available: keep them, skip RUL, say why
+                out["rul_note"] = "RUL not computed: no measurable crack length (need a visible crack and a reference scale)."
+            else:
+                out["rul"] = rul.estimate_rul(length_mm / 1000.0, req.rul.critical_length_mm / 1000.0,
+                                              req.rul.delta_sigma_mpa, req.rul.cycles_per_day)
+                r_risk = health.rul_risk(out["rul"]["p10_years"])
     except RuntimeError as e:
         raise HTTPException(status_code=503, detail=str(e))
     except ValueError as e:

@@ -1,7 +1,7 @@
 /**
  * NagarSetu V2.0 — Enterprise Authentication & Role-Based Access Control (RBAC)
  * ─────────────────────────────────────────────────────────────────────────────
- * Roles: SUPER_ADMIN | WARD_OFFICER | DISPATCHER | FIELD_ENGINEER
+ * Roles: SUPER_ADMIN | WARD_OFFICER | DISPATCHER | FIELD_ENGINEER | STRUCTURAL_INSPECTOR
  *
  * Provides:
  *  - Secure credential validation with salted cryptographic hashing
@@ -20,7 +20,7 @@ const twilio  = require('../services/twilio');
 const router = express.Router();
 
 const JWT_SECRET = process.env.JWT_SECRET || config.JWT_SECRET || 'nagarsetu_dev_secret_change_in_production';
-const VALID_ROLES = ['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER', 'FIELD_ENGINEER'];
+const VALID_ROLES = ['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER', 'FIELD_ENGINEER', 'STRUCTURAL_INSPECTOR'];
 
 // Helper for salted password hashing
 function hashPassword(password, salt) {
@@ -64,8 +64,36 @@ const SEED_USERS = [
     // Hash of "FieldEng@MP041!"
     passwordHash: hashPassword('FieldEng@MP041!', 'a87ff679a2f3e71d9181a67b7542122c'),
     ward: 'Ward 7 — Arera Colony'
+  },
+  {
+    phone: '+919876543214',
+    name: 'Meera Joshi (Structural Inspector PWD-BR-03)',
+    role: 'STRUCTURAL_INSPECTOR',
+    salt: 'e4da3b7fbbce2345d7772b0674a318d5',
+    // Hash of "Inspector@Infra2026!"
+    passwordHash: hashPassword('Inspector@Infra2026!', 'e4da3b7fbbce2345d7772b0674a318d5'),
+    ward: 'PWD Bridges Division'
   }
 ];
+
+// Production safety: the demo accounts above ship with passwords that are public in
+// this repository. Override each via SEED_PW_<ROLE> (e.g. SEED_PW_SUPER_ADMIN); the
+// server refuses to start in production while any demo account keeps its default.
+for (const u of SEED_USERS) {
+  const override = process.env[`SEED_PW_${u.role}`];
+  if (override) {
+    u.passwordHash = hashPassword(override, u.salt);
+    u.defaultPassword = false;
+  } else {
+    u.defaultPassword = true;
+  }
+}
+if (config.isProduction) {
+  const stillDefault = SEED_USERS.filter(u => u.defaultPassword).map(u => u.role);
+  if (stillDefault.length) {
+    throw new Error(`[Config Fatal] Demo account(s) still use the default password in production: ${stillDefault.join(', ')}. Set SEED_PW_<ROLE> for each.`);
+  }
+}
 
 // In-memory OTP store for phone authentication: Map<phone, { code, expiresAt, attempts }>
 const otpStore = new Map();

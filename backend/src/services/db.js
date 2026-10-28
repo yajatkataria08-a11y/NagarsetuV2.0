@@ -173,7 +173,11 @@ const DEFAULT_STORE = {
     { id: 'cam005', name: 'CAM-05 · Kolar Main Road Junction', ward: 'Ward 12 — Kolar', lat: 23.1850, lng: 77.4200, feed_url: process.env.CAM005_URL || '/streams/cam-05.mp4', status: 'online', fps: 25, resolution: '720p', active_threat: null, threat_confidence: 0, detections: [], is_simulated: false },
     { id: 'cam006', name: 'CAM-06 · Rajwada Palace Perimeter', ward: 'Ward 18 — Indore', lat: 22.7185, lng: 75.8560, feed_url: process.env.CAM006_URL || '/streams/cam-06.mp4', status: 'online', fps: 30, resolution: '1080p', active_threat: null, threat_confidence: 0, detections: ['normal_flow'], is_simulated: false },
   ],
-  tracking_sessions: {}
+  tracking_sessions: {},
+  // Infrastructure health (structures / inspections / readings)
+  structures: [],
+  inspections: [],
+  readings: []
 };
 
 // ── In-Memory State & Disk Hydration ──────────────────────────────────────────
@@ -627,6 +631,71 @@ function subscribeToChanges(io) {
   logger.info('[DB] Registered Supabase PostGIS Realtime listener');
 }
 
+
+// 10. Infrastructure health — structures, inspections, telemetry readings
+// Local-store implementation only. The Supabase/PostGIS tables exist in
+// database/infra_schema.sql, but this layer does not read/write them yet.
+const MAX_HISTORY_PER_STRUCTURE = 200;
+const MAX_READINGS_PER_STRUCTURE = 500;
+
+async function getStructures() {
+  return memoryStore.structures;
+}
+
+async function getStructureById(id) {
+  return memoryStore.structures.find(x => x.id === id) || null;
+}
+
+async function createStructure(data) {
+  const item = {
+    id: data.id || 'str_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    health: { score: null, band: 'unknown', updated_at: null, components: { defect: null, anomaly: null, rul: null }, components_used: [] },
+    health_history: [],
+    created_at: new Date().toISOString(),
+    ...data,
+  };
+  memoryStore.structures.push(item);
+  saveDiskStore();
+  return item;
+}
+
+/** Replace a structure's health snapshot and append to its bounded history. */
+async function setStructureHealth(id, health, source) {
+  const st = memoryStore.structures.find(x => x.id === id);
+  if (!st) return null;
+  const snapshot = { ...health, updated_at: new Date().toISOString(), source };
+  st.health = snapshot;
+  st.health_history.push({ score: snapshot.score, band: snapshot.band, at: snapshot.updated_at, source });
+  if (st.health_history.length > MAX_HISTORY_PER_STRUCTURE) st.health_history.splice(0, st.health_history.length - MAX_HISTORY_PER_STRUCTURE);
+  saveDiskStore();
+  return st;
+}
+
+async function addInspection(data) {
+  const item = { id: 'insp_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), created_at: new Date().toISOString(), ...data };
+  memoryStore.inspections.unshift(item);
+  saveDiskStore();
+  return item;
+}
+
+async function getInspections(structureId, limit = 50) {
+  return memoryStore.inspections.filter(i => i.structure_id === structureId).slice(0, limit);
+}
+
+async function addReading(data) {
+  const item = { id: 'rd_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), created_at: new Date().toISOString(), ...data };
+  memoryStore.readings.unshift(item);
+  // bounded per structure so a chatty sensor cannot grow store.json without limit
+  let seen = 0;
+  memoryStore.readings = memoryStore.readings.filter(r => r.structure_id !== data.structure_id || ++seen <= MAX_READINGS_PER_STRUCTURE);
+  saveDiskStore();
+  return item;
+}
+
+async function getReadings(structureId, limit = 100) {
+  return memoryStore.readings.filter(r => r.structure_id === structureId).slice(0, limit);
+}
+
 module.exports = {
   supabase,
   getSosEvents, addSosEvent, updateSos,
@@ -638,6 +707,8 @@ module.exports = {
   checkHazardCollision, getHazardSummary,
   getCctvCameras, updateCctvDetection,
   createTrackingSession, getTrackingSession, updateTrackingLocation,
+  getStructures, getStructureById, createStructure, setStructureHealth,
+  addInspection, getInspections, addReading, getReadings,
   getDashboardStats,
   subscribeToChanges,
 };

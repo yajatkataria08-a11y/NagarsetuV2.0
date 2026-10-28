@@ -233,3 +233,34 @@ def test_convert_masks_splits_by_parent_without_leakage(tmp_path):
         for f in (tmp_path / "out" / "images" / s).glob("*"):
             seen.setdefault(f.stem.split("__")[0], set()).add(s)
     assert all(len(v) == 1 for v in seen.values())
+
+
+def test_score_endpoint_and_rul_from_image_length(client):
+    j = client.post("/infra/score", json={"defect": 90, "anomaly": None, "rul": None}).json()
+    assert j["components_used"] == ["defect"] and j["band"] != "good"
+    body = {"image": _crack_image_b64(4), "reference_mm": 10, "reference_px": 100, "rul": {}}
+    j = client.post("/infra/health", json=body).json()
+    assert j["rul"]["a0_m"] == pytest.approx(j["defects"]["crack"]["length_mm"] / 1000, rel=1e-6)
+    # RUL without any length source is a client error, not a made-up number
+    assert client.post("/infra/health", json={"rul": {}}).status_code == 422
+
+
+@pytest.mark.parametrize("width_px", [3, 9, 20])
+def test_classical_mask_finds_thin_and_wide_cracks(width_px):
+    import cv2
+    rng = np.random.default_rng(2)
+    img = np.clip(150 + rng.normal(0, 4, (300, 400)), 0, 255).astype(np.uint8)
+    cv2.line(img, (30, 80), (370, 220), 25, width_px)
+    r = measure.measure_crack_mask(measure.classical_crack_mask(img), 0.1)
+    assert r["found"], f"{width_px}px crack not found"
+    assert abs(r["max_width_px"] - width_px) <= max(2.0, 0.25 * width_px)
+
+
+def test_rul_skipped_not_fatal_when_image_has_no_crack(client):
+    import cv2
+    blank = np.full((200, 200, 3), 150, np.uint8)
+    b64 = "data:image/png;base64," + base64.b64encode(cv2.imencode(".png", blank)[1].tobytes()).decode()
+    r = client.post("/infra/health", json={"image": b64, "reference_mm": 10, "reference_px": 100, "rul": {}})
+    assert r.status_code == 200
+    j = r.json()
+    assert j["rul"] is None and "not computed" in j["rul_note"] and j["defects"]["crack"]["found"] is False

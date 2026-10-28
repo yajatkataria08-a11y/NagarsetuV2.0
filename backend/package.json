@@ -1,14 +1,14 @@
 {
   "name": "nagarsetu-api-gateway",
   "version": "2.0.0",
-  "description": "NagarSetu V2 — Unified API Gateway (Phase 3)",
+  "description": "NagarSetu V2 \u2014 Unified API Gateway (Phase 3)",
   "main": "src/index.js",
   "type": "commonjs",
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
     "lint": "eslint src/",
-    "test": "node test/api.test.js"
+    "test": "node test/api.test.js && node test/structures.test.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.46.1",
@@ -27,7 +27,8 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "socket.io-client": "^4.8.4"
   },
   "engines": {
     "node": ">=18.0.0"

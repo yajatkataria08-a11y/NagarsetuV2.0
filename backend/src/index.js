@@ -36,6 +36,7 @@ const wardsRoutes         = require('./routes/wards');
 const sensorsRoutes       = require('./routes/sensors');
 const legalRoutes         = require('./routes/legal');
 const contractorRoutes    = require('./routes/contractors');
+const structureRoutes     = require('./routes/structures');
 // Note: DISABLE_AUTH=true in .env — dashboard works in demo mode without login
 const authRoutes          = require('./middleware/auth');
 
@@ -107,6 +108,7 @@ app.use('/api/wards',         wardsRoutes);
 app.use('/api/ingest',        sensorsRoutes);
 app.use('/api/legal',         legalRoutes);
 app.use('/api/contractors',   contractorRoutes);
+app.use('/api/structures',    structureRoutes);
 app.use('/api/auth',          authRoutes);
 
 // ── Dashboard Master Stats ───────────────────────────────────────────────────
@@ -137,6 +139,7 @@ app.get('/api/docs', (req, res) => {
       { path: '/api/notifications', methods: ['GET', 'POST'], desc: 'Municipal multi-channel notification stream' },
       { path: '/api/wards', methods: ['GET'], desc: 'Ward leaderboard & SLA compliance tracking' },
       { path: '/api/legal/violations', methods: ['GET', 'POST'], desc: 'BIMSTEC 154-violation traffic code engine & fine calculator' },
+      { path: '/api/structures', methods: ['GET', 'POST'], desc: 'Infrastructure health: bridge inspections (crack widths), vibration telemetry, RUL & health score' },
       { path: '/api/stats', methods: ['GET'], desc: 'Composite municipal KPI aggregates' },
     ]
   });

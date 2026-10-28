@@ -73,7 +73,18 @@ function postJson(path, payload, timeoutMs = 800) {
   });
 }
 
+/**
+ * Infrastructure-health calls. Unlike the civic helpers above these have NO
+ * heuristic fallback: a structural health score must never be fabricated, so
+ * failures propagate and the route answers 503.
+ */
+const infraClient = {
+  health: (body, timeoutMs = 20000) => postJson('/infra/health', body, timeoutMs),
+  score:  (components) => postJson('/infra/score', components, 5000),
+};
+
 const aiMicroservice = {
+  infra: infraClient,
   /**
    * Verify an incident report via resident Scikit-Learn NLP pipeline
    */
