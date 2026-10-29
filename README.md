@@ -103,9 +103,9 @@ flowchart LR
 - If cellular internet drops, the Android client queues alerts in Room DB and broadcasts SMS fallbacks.
 
 **Zero-Trust Security:**
-- JWT authentication with 4 enforced RBAC roles (`SUPER_ADMIN`, `WARD_OFFICER`, `DISPATCHER`, `FIELD_ENGINEER`).
-- Socket.IO handshakes strictly authenticated with token verification.
-- Twilio & AI cloud API keys (Gemini/Groq) strictly isolated behind backend & AI microservices — zero secrets in client APKs or browser code.
+- JWT authentication with 5 enforced RBAC roles (`SUPER_ADMIN`, `WARD_OFFICER`, `DISPATCHER`, `FIELD_ENGINEER`, `STRUCTURAL_INSPECTOR`).
+- Socket.IO verifies the JWT whenever one is supplied. Anonymous connections are still accepted (public tracking viewers), so staff-only events such as `structure:health_update` are delivered only to sockets with a staff role.
+- Twilio credentials and the web dashboard's AI calls stay server-side. **Caveat:** the Android build injects `GROQ_API_KEY`, `GEMINI_API_KEY` and `SENDGRID_API_KEY` from `local.properties` into `BuildConfig`, which is compiled into the APK and extractable. Moving those calls behind the backend is not done yet; until then treat any key placed there as public and restrict it by quota/referrer.
 - Real tracking endpoint returns strict `404 Not Found` for unverified sessions (zero simulated data leakage).
 - Sensor telemetry protected with `x-sensor-api-key` validation and capped sliding windows.
 
@@ -113,7 +113,7 @@ flowchart LR
 
 ## Production AI Models (Shipped in Repository)
 
-All trained model weights and spatial index caches are pre-compiled and tracked directly in [`ai_engine/models/`](file:///d:/COODING/Projects/Hackathon/Nagarsetu/repo_v2/ai_engine/models/):
+All trained model weights and spatial index caches are pre-compiled and tracked directly in [`ai_engine/models/`](ai_engine/models/):
 
 | Model Artifact | Type / Framework | Purpose | Metrics / Output |
 | :--- | :--- | :--- | :--- |
@@ -121,6 +121,8 @@ All trained model weights and spatial index caches are pre-compiled and tracked 
 | **`risk_regressor.joblib`** (792 KB) | **GradientBoostingRegressor** | Dual-city spatio-temporal risk scoring | $R^2 = 0.9659$, $\text{MAE} = 1.70$ on held-out empirical split |
 | **`spatial_risk_matrix.json`** (232 KB) | **50×50 Geo Cache** | Sub-millisecond (<5ms) corridor safety risk lookup | Pre-computed Gaussian decay grid for Bhopal & Indore |
 | **`nlp_classifier.joblib`** (119 KB) | **TF-IDF + LogisticRegression** | Automatic citizen grievance triage | 6 municipal categories with department routing codes |
+| **`anomaly_iforest.joblib`** | **Isolation Forest** | Bridge vibration anomaly flag | **Trained on simulated data only** (ROC-AUC 0.80 overall, 0.55 at 5 % stiffness loss, 0.98 at 30 %); see [`docs/EVALUATION.md`](docs/EVALUATION.md) |
+| `infra_defects.pt`, `crack_seg.pt` | *placeholders* | Intended: bridge defect detection / crack segmentation | **Not trained.** Byte-identical copies of `best.pt`; the service detects this and refuses to load them. Crack widths currently come from a classical (non-learned) segmenter. |
 
 ---
 
@@ -128,12 +130,12 @@ All trained model weights and spatial index caches are pre-compiled and tracked 
 
 | | |
 |---|---|
-| Android | **16 Gradle modules**, **229 files**, Shake-to-SOS, Quick Settings Tile, Room offline queue, TTS radar |
+| Android | **30 Gradle modules**, **229 Kotlin files**, Shake-to-SOS, Quick Settings Tile, Room offline queue, TTS radar |
 | Command center | **14** page views, Next.js 15 + React 19 + Tailwind CSS |
 | Backend Gateway | **15 route groups**, Socket.IO realtime with handshake auth, Server-side Twilio OTP |
 | AI Neural Suite | **3 production models shipped** (`best.pt`, `risk_regressor.joblib`, `nlp_classifier.joblib`) + Gemini 1.5 Flash |
 | Legal dataset | **154 violations × 7 nations** (BIMSTEC regional harmonization) |
-| Tests | **35-case** end-to-end API regression suite (`backend/test/api.test.js`) |
+| Tests | Backend: **35** core API (`api.test.js`) + **20** infrastructure (`structures.test.js`) + **7** input-validation (`validation.test.js`); AI engine: pytest suite (`ai_engine/tests`). CI runs all of them (`.github/workflows/ci.yml`). |
 | Deploy | Docker Compose: NGINX gateway, Next.js frontend, Express backend, FastAPI AI engine, PostGIS |
 
 ---
@@ -174,11 +176,11 @@ Full stack with one command: `docker compose up --build`
 
 ## Honest notes & Production Readiness
 
-- **Shipped Neural Weights:** Unlike standard hackathon prototypes with placeholder weights, NagarSetu ships with pre-trained YOLOv8 weights (`ai_engine/models/best.pt`) and serialized Scikit-learn regressors and NLP classifiers ready to run out of the box.
+- **Shipped Neural Weights:** `ai_engine/models/best.pt` (YOLOv8 hazard detector) and the scikit-learn risk/NLP models are trained and ship ready to run. The infrastructure-defect weights are **not** trained yet (see the table above).
 - **Enterprise Security Posture:** Full RBAC middleware, authenticated Socket.IO handshakes, server-side Twilio credential shielding, and real 404 responses for invalid tracking sessions are enforced across the running code.
 - **Hardware Integration:** The Android client directly interfaces with native hardware sensors — physical accelerometer jerk listeners for Shake-to-SOS, Android Quick Settings system tiles, and Text-to-Speech synthesis for real-time proximity alerts.
-- **Synthetic Data Notice:** Baseline incident records, flood sensor telemetry, and demo beacon histories are synthetically seeded around actual Bhopal and Indore coordinates for isolated, repeatable evaluation. In production, these plug directly into SCADA flood sensors, live RTSP CCTV cameras, and municipal databases without architectural modification.
-- **API Key & Cloud Model Isolation:** All external LLM (Gemini/Groq) and communication (Twilio) API keys are maintained strictly server-side behind the backend gateway and FastAPI AI microservice. No secret keys or cloud provider credentials are ever baked into client-side web bundles or Android APKs.
+- **Synthetic Data Notice:** The infrastructure training sets in `ai_engine/data/infra` and `ai_engine/data/crack_seg` and the vibration data behind the anomaly model are **synthetic** — they are not CODEBRIM, SDNET2018, Crack500 or LANL, and results on them say nothing about real bridges. Structures in `scripts/seed_infra.js` are fictional. Baseline incident records, flood sensor telemetry, and demo beacon histories are synthetically seeded around actual Bhopal and Indore coordinates for isolated, repeatable evaluation. In production, these plug directly into SCADA flood sensors, live RTSP CCTV cameras, and municipal databases without architectural modification.
+- **API Key & Cloud Model Isolation:** Twilio credentials are server-side, and the web bundle contains no provider keys. The Android app is the exception: Gemini/Groq/SendGrid keys are injected into `BuildConfig` at build time and are recoverable from the APK (see Security above). The Firebase client key in `android/frontend/app/google-services.json` is public by design but should be restricted to the app package and SHA-1 in Google Cloud Console.
 
 ---
 
