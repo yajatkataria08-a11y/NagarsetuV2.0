@@ -4,7 +4,11 @@
  * Uses environment variable NEXT_PUBLIC_API_URL for cross-environment support
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+import type {
+  StructureSummary, StructureHistory, InspectionSummary, HealthBand, HealthComponents,
+} from '@/types';
+
+export const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 export async function apiFetch<T = unknown>(
   path: string,
@@ -28,7 +32,9 @@ export async function apiFetch<T = unknown>(
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
-    throw new Error(err?.error || `API error ${res.status}`);
+    const apiErr = new Error(err?.error || `API error ${res.status}`) as Error & { status?: number };
+    apiErr.status = res.status;
+    throw apiErr;
   }
   return res.json() as T;
 }
@@ -212,3 +218,48 @@ export interface WardRaw {
   budget_spent?: number;
   resolution_rate?: number;
 }
+
+
+// ── Auth ─────────────────────────────────────────────────────────────────────
+export const TOKEN_KEY = 'nagarsetu_token';
+export const getToken = (): string | null =>
+  typeof window === 'undefined' ? null : localStorage.getItem(TOKEN_KEY) || localStorage.getItem('token');
+export const clearToken = () => {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem('token');
+};
+
+export const authApi = {
+  login: async (phone: string, password: string) => {
+    const r = await api.post<{ token: string; user?: { name?: string; role?: string } }>('/api/auth/login', { phone, password });
+    localStorage.setItem(TOKEN_KEY, r.token);
+    return r;
+  },
+};
+
+// ── Infrastructure health ────────────────────────────────────────────────────
+export const structuresApi = {
+  list: () => api.get<StructureSummary[]>('/api/structures'),
+  history: (id: string) => api.get<StructureHistory>(`/api/structures/${id}/history`),
+  inspect: (id: string, body: {
+    image: string; reference_mm?: number; reference_px?: number;
+    rul?: { delta_sigma_mpa?: number; cycles_per_day?: number; critical_length_mm?: number; crack_length_mm?: number };
+  }) => api.post<{
+    inspection: InspectionSummary;
+    health: { score: number | null; band: HealthBand; components: HealthComponents };
+    escalation: { hazard_id: string; existing?: boolean } | null;
+  }>(`/api/structures/${id}/inspect`, body),
+  telemetry: (id: string, body: { samples: number[]; fs?: number }) => api.post<{
+    anomaly: { flag: boolean; ratio: number; score: number; threshold: number; data_source: string; warning?: string };
+    health: { score: number | null; band: HealthBand };
+    warnings: string[];
+    escalation: { hazard_id: string; existing?: boolean } | null;
+  }>(`/api/structures/${id}/telemetry`, body),
+  /** Annotated images sit behind auth, so <img src> cannot fetch them; return a blob URL. */
+  imageBlobUrl: async (path: string): Promise<string> => {
+    const token = getToken();
+    const res = await fetch(`${API_BASE}${path}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+    if (!res.ok) throw new Error(`image ${res.status}`);
+    return URL.createObjectURL(await res.blob());
+  },
+};

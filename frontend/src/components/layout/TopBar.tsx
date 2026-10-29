@@ -11,6 +11,7 @@ const PAGE_TITLES: Record<Page, { title: string; subtitle: string }> = {
   map:           { title: 'Tactical GIS Map',                   subtitle: 'Dual Bhopal-Indore GIS layers, risk heatmaps & fly-to-ward' },
   surveillance:  { title: 'Tactical 6-Camera Vision Wall',      subtitle: 'Zero-scroll municipal CCTV grid with automated YOLOv8 hazard detection' },
   hazards:       { title: 'Dynamic Hazard Geofences',           subtitle: 'Temporary danger zones with automated TTL expiration & broadcast' },
+  infra: { title: 'Infrastructure Health', subtitle: 'Bridge inspection, vibration anomaly & fatigue-life scenarios' },
 
   incidents:     { title: 'Incidents Management & Triage',      subtitle: 'Multi-select bulk verification, officer assignment & AI triage' },
   analytics:     { title: 'Ward Analytics & SLA Metrics',       subtitle: 'Performance benchmarks, complaint volume & resolution rates' },

@@ -11,6 +11,7 @@ import SosPage from '@/components/pages/SosPage';
 import LiveGisMapPage from '@/components/pages/LiveGisMapPage';
 import SurveillancePage from '@/components/pages/SurveillancePage';
 import HazardsPage from '@/components/pages/HazardsPage';
+import InfraHealthPage from '@/components/pages/InfraHealthPage';
 import IncidentsPage from '@/components/pages/IncidentsPage';
 import AnalyticsPage from '@/components/pages/AnalyticsPage';
 import WardsLeaderboardPage from '@/components/pages/WardsLeaderboardPage';
@@ -104,6 +105,7 @@ export default function Home() {
           {activePage === 'map'           && <LiveGisMapPage store={store} />}
           {activePage === 'surveillance'  && <SurveillancePage />}
           {activePage === 'hazards'       && <HazardsPage />}
+          {activePage === 'infra'         && <InfraHealthPage />}
           {activePage === 'incidents'     && <IncidentsPage store={store} />}
           {activePage === 'analytics'     && <AnalyticsPage store={store} />}
           {activePage === 'wards'         && <WardsLeaderboardPage store={store} />}

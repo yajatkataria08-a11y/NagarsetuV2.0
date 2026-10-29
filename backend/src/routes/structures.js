@@ -146,7 +146,14 @@ async function publishHealth(req, st, health, source, aiWarnings = []) {
     score: health.score, band: health.band, previous_band: previousBand,
     components: health.components, updated_at: updated.health.updated_at, source,
   };
-  req.app.get('io')?.emit('structure:health_update', payload);
+  // Staff-only: the socket server also accepts anonymous connections (public tracking
+  // viewers), and structural weakness data must not be broadcast to them.
+  const io = req.app.get('io');
+  if (io) {
+    for (const [, sock] of io.of('/').sockets) {
+      if (sock.user && READ_ROLES.includes(sock.user.role)) sock.emit('structure:health_update', payload);
+    }
+  }
 
   let escalation = null;
   if (typeof health.score === 'number' && health.score < 40) {
@@ -175,7 +182,7 @@ async function publishHealth(req, st, health, source, aiWarnings = []) {
 router.get('/', requireAuth(READ_ROLES), async (req, res) => {
   const list = await db.getStructures();
   res.json(list.map(s => ({
-    id: s.id, name: s.name, type: s.type, ward: s.ward, lat: s.lat, lng: s.lng,
+    id: s.id, name: s.name, type: s.type, ward: s.ward, lat: s.lat, lng: s.lng, fictional: !!s.fictional,
     health: { score: s.health.score, band: s.health.band, updated_at: s.health.updated_at },
   })));
 });

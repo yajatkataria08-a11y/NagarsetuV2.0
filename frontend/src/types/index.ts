@@ -156,3 +156,101 @@ export interface NotificationItem {
   targetPage?: string;
 }
 
+
+
+// ── Infrastructure health ───────────────────────────────────────────────────
+export type HealthBand = 'good' | 'watch' | 'critical' | 'unknown';
+
+export interface HealthComponents {
+  defect: number | null;
+  anomaly: number | null;
+  rul: number | null;
+}
+
+export interface StructureHealth {
+  score: number | null;
+  band: HealthBand;
+  updated_at: string | null;
+  components?: HealthComponents;
+  components_used?: string[];
+}
+
+export interface StructureSummary {
+  id: string;
+  name: string;
+  type: string;
+  ward: string;
+  lat: number;
+  lng: number;
+  fictional?: boolean;
+  health: StructureHealth;
+}
+
+export interface CrackMeasurement {
+  found: boolean;
+  length_px: number;
+  max_width_px: number;
+  mean_width_px: number;
+  length_mm: number | null;
+  max_width_mm: number | null;
+  mean_width_mm: number | null;
+  mm_per_px: number | null;
+  severity: 'hairline' | 'moderate' | 'severe' | null;
+  components: number;
+}
+
+export interface RulResult {
+  p10_years: number;
+  p50_years: number;
+  p90_years: number;
+  already_critical: boolean;
+  a0_m: number;
+  a_c_m: number;
+  delta_sigma_mpa?: number;
+  cycles_per_day?: number;
+  assumptions: Record<string, string | number>;
+}
+
+export interface InspectionSummary {
+  id: string;
+  created_at: string;
+  inspector?: string;
+  detector?: string;
+  mask_source?: string;
+  crack?: CrackMeasurement;
+  severity?: string | null;
+  detections: { label: string; confidence: number }[];
+  rul: RulResult | null;
+  notes: string[];
+  image_url: string | null;
+}
+
+export interface ReadingRecord {
+  id: string;
+  created_at: string;
+  score: number;
+  threshold: number;
+  ratio: number;
+  flag: boolean;
+  data_source?: string;
+}
+
+export interface StructureHistory {
+  structure_id: string;
+  health_history: { score: number | null; band: HealthBand; at: string; source: string }[];
+  inspections: InspectionSummary[];
+  readings: ReadingRecord[];
+}
+
+export interface StructureHealthEvent {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  score: number | null;
+  band: HealthBand;
+  previous_band: HealthBand;
+  components: HealthComponents;
+  updated_at: string;
+  source: string;
+}

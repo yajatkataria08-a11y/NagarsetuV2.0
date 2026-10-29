@@ -1,16 +1,31 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import type { SosEvent, Incident } from '@/types';
+import type { SosEvent, Incident, StructureSummary } from '@/types';
+
+/** Escape text interpolated into Leaflet popup HTML. */
+const esc = (v: unknown) =>
+  String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+
+const BAND_COLOR: Record<string, string> = {
+  good: '#10B981', watch: '#F59E0B', critical: '#E53935', unknown: '#64748B',
+};
 
 // Leaflet is client-only — dynamic import via useEffect
 interface TacticalMapProps {
   sos: SosEvent[];
   incidents: Incident[];
   selectedSosId?: string;
+  /** Bridges/structures, coloured by health band. */
+  structures?: StructureSummary[];
+  selectedStructureId?: string | null;
+  onSelectStructure?: (id: string) => void;
+  center?: [number, number];
 }
 
-export default function TacticalMap({ sos, incidents, selectedSosId }: TacticalMapProps) {
+export default function TacticalMap({ sos, incidents, selectedSosId, structures = [], selectedStructureId, onSelectStructure, center }: TacticalMapProps) {
+  const onSelectRef = useRef(onSelectStructure);
+  onSelectRef.current = onSelectStructure;
   const mapRef   = useRef<HTMLDivElement>(null);
   const leafRef  = useRef<any>(null);
   const mapInst  = useRef<any>(null);
@@ -25,7 +40,7 @@ export default function TacticalMap({ sos, incidents, selectedSosId }: TacticalM
       leafRef.current = L;
 
       const map = L.map(mapRef.current!, {
-        center: [23.2599, 77.4126], // Bhopal centre
+        center: center ?? [23.2599, 77.4126], // Bhopal centre unless overridden
         zoom: 13,
         zoomControl: false,
         attributionControl: false,
@@ -142,7 +157,32 @@ export default function TacticalMap({ sos, incidents, selectedSosId }: TacticalM
           `);
         markersRef.current.push(marker);
       });
-  }, [sos, incidents, selectedSosId]);
+
+    // Structure markers (coloured by health band)
+    structures.forEach(st => {
+      const color = BAND_COLOR[st.health.band] ?? BAND_COLOR.unknown;
+      const selected = st.id === selectedStructureId;
+      const label = st.health.score === null ? '–' : Math.round(st.health.score);
+      const icon = L.divIcon({
+        className: '',
+        iconSize: [34, 34],
+        iconAnchor: [17, 17],
+        html: `<div style="width:34px;height:34px;border-radius:8px;background:${color};
+          border:${selected ? '3px solid #00D4FF' : '2px solid rgba(255,255,255,0.75)'};
+          display:flex;align-items:center;justify-content:center;font:700 12px/1 ui-monospace,monospace;color:#0B1020;
+          box-shadow:0 0 ${selected ? '14px rgba(0,212,255,0.8)' : '6px rgba(0,0,0,0.5)'};">${label}</div>`,
+      });
+      const marker = L.marker([st.lat, st.lng], { icon, zIndexOffset: selected ? 900 : 500 })
+        .addTo(map)
+        .bindPopup(`<div style="font-family:system-ui;min-width:170px">
+          <p style="font-weight:700;margin:0 0 4px;color:#fff">${esc(st.name)}</p>
+          <p style="margin:2px 0;font-size:12px;color:#ccc">${esc(st.type.replace(/_/g, ' '))} · ${esc(st.ward)}</p>
+          <p style="margin:4px 0 0;font-size:12px;color:${color}">Health: ${st.health.score ?? 'not assessed'} (${esc(st.health.band)})</p></div>`);
+      marker.on('click', () => onSelectRef.current?.(st.id));
+      if (selected) map.flyTo([st.lat, st.lng], Math.max(map.getZoom(), 14), { duration: 0.8 });
+      markersRef.current.push(marker);
+    });
+  }, [sos, incidents, selectedSosId, structures, selectedStructureId]);
 
   return (
     <div className="relative w-full h-full overflow-hidden rounded-xl">

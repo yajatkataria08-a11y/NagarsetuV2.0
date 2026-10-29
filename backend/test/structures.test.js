@@ -159,6 +159,10 @@ async function run() {
   const sock = io(API_BASE, { auth: { token: admin }, transports: ['websocket'] });
   await new Promise((ok, no) => { sock.on('connect', ok); sock.on('connect_error', no); });
   sock.on('structure:health_update', d => events.push(['health', d]));
+  const anon = io(API_BASE, { transports: ['websocket'] });          // no token: public observer
+  const anonEvents = [];
+  await new Promise((ok, no) => { anon.on('connect', ok); anon.on('connect_error', no); });
+  anon.on('structure:health_update', d => anonEvents.push(d));
   sock.on('hazard:auto_created', d => events.push(['hazard', d]));
 
   let iid;
@@ -172,6 +176,7 @@ async function run() {
     iid = r.body.inspection.id;
     await new Promise(r2 => setTimeout(r2, 300));
     assert.ok(events.some(([k, d]) => k === 'health' && d.id === sid && d.source === 'inspection'), 'socket event');
+    assert.equal(anonEvents.length, 0, 'anonymous socket must NOT receive structure health data');
   });
   await test('GET inspection image requires auth and returns image/jpeg', async () => {
     const url = `/api/structures/${sid}/inspections/${iid}/image`;
@@ -236,7 +241,7 @@ async function run() {
     assert.ok(!JSON.stringify(r.body).includes('annotated_image'), 'no inline base64 in history');
   });
 
-  sock.close(); stub.close();
+  sock.close(); anon.close(); stub.close();
   const total = pass + fail;
   console.log(`\n${'='.repeat(60)}\nInfra API Test Results: ${pass}/${total} PASSED\n${'='.repeat(60)}`);
   failures.forEach(f => console.log('  - ' + f));

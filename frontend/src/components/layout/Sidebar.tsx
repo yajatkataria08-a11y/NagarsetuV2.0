@@ -4,7 +4,7 @@ import { useState } from 'react';
 import {
   LayoutDashboard, AlertOctagon, Map, Video, ShieldAlert,
   ClipboardList, BarChart3, Building2, Users, Bell, Settings,
-  Zap, Sun, Moon, ShieldCheck, Scale
+  Zap, Sun, Moon, ShieldCheck, Scale, Landmark
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -14,6 +14,7 @@ export type Page =
   | 'map'
   | 'surveillance'
   | 'hazards'
+  | 'infra'
   | 'incidents'
   | 'analytics'
   | 'wards'
@@ -49,6 +50,7 @@ const NAV_ITEMS: {
   // Tactical Intelligence
   { id: 'surveillance', icon: Video,            label: 'CCTV Vision Wall',   section: 'TACTICAL INTELLIGENCE', badge: () => 2, badgeClass: 'bg-siren text-white' },
   { id: 'hazards',      icon: ShieldAlert,      label: 'Hazard Geofences',   section: 'TACTICAL INTELLIGENCE' },
+  { id: 'infra',        icon: Landmark,         label: 'Infrastructure Health', section: 'TACTICAL INTELLIGENCE' },
 
 
   // Operations
