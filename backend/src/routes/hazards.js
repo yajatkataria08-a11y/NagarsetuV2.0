@@ -11,6 +11,8 @@
  */
 
 const express = require('express');
+const { validateBody } = require('../middleware/validate');
+const schemas = require('../validation/schemas');
 const router  = express.Router();
 const db      = require('../services/db');
 const { requireAuth } = require('../middleware/auth');
@@ -60,7 +62,7 @@ router.post('/check-point', async (req, res) => {
 });
 
 // ── POST /api/hazards (Requires Auth) ─────────────────────────────────────────
-router.post('/', requireAuth(['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER']), async (req, res) => {
+router.post('/', requireAuth(['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER']), validateBody(schemas.HazardSchema), async (req, res) => {
   try {
     const { name, lat, lng, radiusMeters, riskBoost, durationMinutes, note } = req.body;
     if (!name || typeof name !== 'string' || !name.trim()) {

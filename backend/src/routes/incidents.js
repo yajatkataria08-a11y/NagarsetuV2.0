@@ -1,4 +1,6 @@
 const express = require('express');
+const { validateBody } = require('../middleware/validate');
+const schemas = require('../validation/schemas');
 const router = express.Router();
 const db = require('../services/db');
 const logger = require('../utils/logger');
@@ -60,7 +62,7 @@ router.post('/triage', async (req, res) => {
 });
 
 // POST /api/incidents — submit new incident
-router.post('/', async (req, res) => {
+router.post('/', validateBody(schemas.IncidentSchema), async (req, res) => {
   try {
     const { type, description, lat, lng, address, ward, severity, photos, source, reportedBy } = req.body;
     

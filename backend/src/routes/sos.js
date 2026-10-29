@@ -1,4 +1,6 @@
 const express  = require('express');
+const { validateBody } = require('../middleware/validate');
+const schemas = require('../validation/schemas');
 const router   = express.Router();
 const db       = require('../services/db');
 const twilio   = require('../services/twilio');
@@ -26,7 +28,7 @@ router.get('/', requireAuth(['SUPER_ADMIN', 'WARD_OFFICER', 'DISPATCHER']), asyn
 });
 
 // POST /api/sos — trigger new SOS (from Android app or Wear OS)
-router.post('/', async (req, res) => {
+router.post('/', validateBody(schemas.SosSchema), async (req, res) => {
   try {
     const { userId, userName, phone, ward, lat, lng, batteryLevel, heartRate, contacts, sirenType } = req.body;
     

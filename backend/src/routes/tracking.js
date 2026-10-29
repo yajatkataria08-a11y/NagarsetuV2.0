@@ -1,4 +1,6 @@
 const express = require('express');
+const { validateBody } = require('../middleware/validate');
+const schemas = require('../validation/schemas');
 const router = express.Router();
 const db = require('../services/db');
 const twilio = require('../services/twilio');
@@ -30,7 +32,7 @@ router.get('/public/:token', async (req, res) => {
 });
 
 // POST /api/tracking/start — initiates a new live tracking session
-router.post('/start', async (req, res) => {
+router.post('/start', validateBody(schemas.TrackingStartSchema), async (req, res) => {
   try {
     const { userId, userName, lat, lng, contacts = [] } = req.body;
 
@@ -107,7 +109,7 @@ router.get('/history', async (req, res) => {
 });
 
 // POST /api/tracking/ping — mobile device sending current coordinates
-router.post('/ping', async (req, res) => {
+router.post('/ping', validateBody(schemas.TrackingPingSchema), async (req, res) => {
   try {
     const { sessionId, lat, lng, batteryLevel, heartRate } = req.body;
     if (!sessionId) {
